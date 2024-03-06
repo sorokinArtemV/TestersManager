@@ -5,7 +5,7 @@
 /// </summary>
 public class DevStream
 {
-    public Guid Id { get; set; }
+    public Guid DevStreamId { get; set; }
 
     public string? DevStreamName { get; set; }
 }

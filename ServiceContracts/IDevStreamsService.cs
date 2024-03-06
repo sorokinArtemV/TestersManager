@@ -6,7 +6,7 @@ namespace ServiceContracts;
 /// <summary>
 /// Represents business logic for manipulating DevStream entity
 /// </summary>
-public interface IDevStreamService
+public interface IDevStreamsService
 {
     /// <summary>
     /// Adds new DevStream

@@ -18,7 +18,7 @@ public static class DevStreamExtensions
     {
         return new DevStreamResponse
         {
-            DevStreamId = devStream.Id,
+            DevStreamId = devStream.DevStreamId,
             DevStreamName = devStream.DevStreamName
         };
     }
