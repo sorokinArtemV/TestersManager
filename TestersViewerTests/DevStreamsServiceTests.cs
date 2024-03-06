@@ -27,7 +27,7 @@ public class DevStreamsServiceTests
     {
         var request = new DevStreamAddRequest { DevStreamName = null };
 
-        Assert.Throws<ArgumentException>(() => _devStreamsService.AddDevStream(request));
+        Assert.Throws<ArgumentNullException>(() => _devStreamsService.AddDevStream(request));
     }
 
     [Fact]
