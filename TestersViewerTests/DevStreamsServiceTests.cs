@@ -83,12 +83,12 @@ public class DevStreamsServiceTests
         {
             devStreamsExpectedResponses.Add(_devStreamsService.AddDevStream(devStreamAddRequest));
         }
-        
+
         var devStreamsList = _devStreamsService.GetAllDevStreams();
 
         foreach (var expectedResponse in devStreamsExpectedResponses)
         {
-            Assert.Contains(expectedResponse, devStreamsList);
+            Assert.Contains(expectedResponse, devStreamsList); // calls equals method, so compare ref not val!
         }
     }
 
