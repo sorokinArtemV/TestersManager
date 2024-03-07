@@ -14,4 +14,10 @@ public interface IDevStreamsService
     /// <param name="devStreamAddRequest">DevStream to add</param>
     /// <returns>Added DevStream</returns>
     public DevStreamResponse AddDevStream(DevStreamAddRequest? devStreamAddRequest);
+
+    /// <summary>
+    /// Gets all DevStreams
+    /// </summary>
+    /// <returns>List of DevStreams</returns>
+    List<DevStreamResponse> GetAllDevStreams();
 }
