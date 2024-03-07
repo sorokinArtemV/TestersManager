@@ -35,6 +35,10 @@ public class DevStreamsService : IDevStreamsService
 
     public DevStreamResponse? GetDevStreamById(Guid? devStreamId)
     {
-        throw new NotImplementedException();
+        ArgumentNullException.ThrowIfNull(devStreamId);
+
+        var devStreamResponse = _devStreams.FirstOrDefault(x => x.DevStreamId == devStreamId)?.ToDevStreamResponse();
+            
+        return devStreamResponse ?? null;
     }
 }
