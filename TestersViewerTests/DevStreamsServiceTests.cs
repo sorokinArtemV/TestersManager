@@ -93,4 +93,28 @@ public class DevStreamsServiceTests
     }
 
     #endregion
+
+    #region GetDevStreamById
+
+    [Fact]
+    public void GetDevStreamById_ShouldThrowArgumentNullException_IfDevStreamIdIsNull()
+    {
+        Guid? devStreamId = null;
+
+        Assert.Throws<ArgumentNullException>(() => _devStreamsService.GetDevStreamById(devStreamId));
+    }
+
+    [Fact]
+    public void GetDevStreamById_ShouldReturnDevStream_IfDevStreamExists()
+    {
+        var devStreamAddRequest = new DevStreamAddRequest { DevStreamName = "Crew" };
+        var devStreamResponse = _devStreamsService.AddDevStream(devStreamAddRequest);
+        var devStreamIdExpected = devStreamResponse.DevStreamId;
+
+        var devStreamId = _devStreamsService.GetDevStreamById(devStreamIdExpected);
+
+        Assert.Equal(devStreamIdExpected, devStreamId?.DevStreamId);
+    }
+
+    #endregion
 }

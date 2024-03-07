@@ -32,4 +32,9 @@ public class DevStreamsService : IDevStreamsService
     {
         return _devStreams.Select(x => x.ToDevStreamResponse()).ToList();
     }
+
+    public DevStreamResponse? GetDevStreamById(Guid? devStreamId)
+    {
+        throw new NotImplementedException();
+    }
 }
