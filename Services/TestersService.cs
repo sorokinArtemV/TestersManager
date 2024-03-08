@@ -5,7 +5,7 @@ namespace Services;
 
 public class TestersService : ITestersService
 {
-    public TesterResponse AddTester(TesterAddRequest testerAddRequest)
+    public TesterResponse AddTester(TesterAddRequest? testerAddRequest)
     {
         throw new NotImplementedException();
     }

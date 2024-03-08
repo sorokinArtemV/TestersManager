@@ -12,8 +12,8 @@ public interface ITestersService
     /// </summary>
     /// <param name="testerAddRequest">TesterAddRequest</param>
     /// <returns>Returns TesterResponse with generated TesterId</returns>
-    TesterResponse AddTester(TesterAddRequest testerAddRequest);
-    
+    TesterResponse AddTester(TesterAddRequest? testerAddRequest);
+
     /// <summary>
     /// Gets all Testers
     /// </summary>
