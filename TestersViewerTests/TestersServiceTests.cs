@@ -1,6 +1,7 @@
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
+using Services;
 
 namespace TestersViewerTests;
 
@@ -8,9 +9,9 @@ public class TestersServiceTests
 {
     private readonly ITestersService _testersService;
 
-    public TestersServiceTests(ITestersService testersService)
+    public TestersServiceTests()
     {
-        _testersService = testersService;
+        _testersService = new TestersService();
     }
 
     #region AddTester

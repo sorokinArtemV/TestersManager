@@ -14,7 +14,7 @@ public class TesterResponse : IEquatable<TesterResponse>
     public DateTime? BirthDate { get; init; }
     public int? Age { get; set; }
     public Guid? DevStreamId { get; init; }
-    public string? DevStream { get; init; }
+    public string? DevStream { get; set; }
     public string? Position { get; init; }
     public int? MonthsOfWorkExperience { get; init; }
     public bool HasMobileDeviceExperience { get; init; }
