@@ -12,12 +12,12 @@ public class TesterResponse : IEquatable<TesterResponse>
     public string? TesterName { get; set; }
     public string? Email { get; set; }
     public string? Gender { get; set; }
-    public DateTime BirthDate { get; set; }
-    public int Age { get; set; }
+    public DateTime? BirthDate { get; set; }
+    public int? Age { get; set; }
     public Guid? DevStreamId { get; set; }
-    public string? DevStreamName { get; set; }
+    public string? DevStream { get; set; }
     public string? Position { get; set; }
-    public int MonthsOfWorkExperience { get; set; }
+    public int? MonthsOfWorkExperience { get; set; }
     public bool HasMobileDeviceExperience { get; set; }
     public string? Skills { get; set; }
 
@@ -38,7 +38,7 @@ public class TesterResponse : IEquatable<TesterResponse>
                    && Gender == testerResponse.Gender
                    && BirthDate == testerResponse.BirthDate
                    && DevStreamId == testerResponse.DevStreamId
-                   && DevStreamName == testerResponse.DevStreamName
+                   && DevStream == testerResponse.DevStream
                    && Position == testerResponse.Position
                    && MonthsOfWorkExperience == testerResponse.MonthsOfWorkExperience
                    && HasMobileDeviceExperience == testerResponse.HasMobileDeviceExperience;
@@ -53,7 +53,7 @@ public class TesterResponse : IEquatable<TesterResponse>
         if (ReferenceEquals(this, other)) return true;
         return TesterId.Equals(other.TesterId) && TesterName == other.TesterName && Email == other.Email &&
                Gender == other.Gender && BirthDate.Equals(other.BirthDate) &&
-               Nullable.Equals(DevStreamId, other.DevStreamId) && DevStreamName == other.DevStreamName &&
+               Nullable.Equals(DevStreamId, other.DevStreamId) && DevStream == other.DevStream &&
                Position == other.Position && MonthsOfWorkExperience == other.MonthsOfWorkExperience &&
                HasMobileDeviceExperience == other.HasMobileDeviceExperience && Equals(Skills, other.Skills);
     }
@@ -67,7 +67,7 @@ public class TesterResponse : IEquatable<TesterResponse>
         hashCode.Add(Gender);
         hashCode.Add(BirthDate);
         hashCode.Add(DevStreamId);
-        hashCode.Add(DevStreamName);
+        hashCode.Add(DevStream);
         hashCode.Add(Position);
         hashCode.Add(MonthsOfWorkExperience);
         hashCode.Add(HasMobileDeviceExperience);
@@ -86,7 +86,6 @@ public class TesterResponse : IEquatable<TesterResponse>
     }
 }
 
-
 public static class TesterExtensions
 {
     /// <summary>
@@ -94,22 +93,20 @@ public static class TesterExtensions
     /// </summary>
     /// <param name="tester"></param>
     /// <returns></returns>
-    public static TesterResponse ToTesterResponse(this Tester tester)
+    public static TesterResponse ToTesterResponse(this Tester tester) => new()
+
     {
-        return new TesterResponse
-        {
-            TesterId = tester.TesterId,
-            TesterName = tester.TesterName,
-            Email = tester.Email,
-            Gender = tester.Gender,
-            BirthDate = tester.BirthDate,
-            Age = DateTime.Now.Year - tester.BirthDate.Year,
-            DevStreamId = tester.DevStreamId,
-            DevStreamName = tester.DevStreamName,
-            Position = tester.Position,
-            MonthsOfWorkExperience = tester.MonthsOfWorkExperience,
-            HasMobileDeviceExperience = tester.HasMobileDeviceExperience,
-            Skills = tester.Skills
-        };
-    }
+        TesterId = tester.TesterId,
+        TesterName = tester.TesterName,
+        Email = tester.Email,
+        Gender = tester.Gender,
+        BirthDate = tester.BirthDate,
+        Age = tester.BirthDate != null ? DateTime.Now.Year - tester.BirthDate.Value.Year : null,
+        DevStream = tester.DevStream?.DevStreamName,
+        DevStreamId = tester.DevStreamId,
+        Position = tester.Position,
+        MonthsOfWorkExperience = tester.MonthsOfWorkExperience,
+        HasMobileDeviceExperience = tester.HasMobileDeviceExperience,
+        Skills = tester.Skills,
+    };
 }
