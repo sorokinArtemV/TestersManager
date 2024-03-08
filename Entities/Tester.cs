@@ -14,5 +14,5 @@ public class Tester
     public string? Position { get; set; }
     public int MonthsOfWorkExperience { get; set; }
     public bool HasMobileDeviceExperience { get; set; }
-    public IEnumerable<string>? Skills { get; set; }
+    public string? Skills { get; set; }
 }

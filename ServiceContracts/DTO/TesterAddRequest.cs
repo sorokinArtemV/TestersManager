@@ -1,3 +1,4 @@
+using Entities;
 using ServiceContracts.Enums;
 
 namespace ServiceContracts.DTO;
@@ -15,5 +16,26 @@ public class TesterAddRequest
     public string? Position { get; set; }
     public int MonthsOfWorkExperience { get; set; }
     public bool HasMobileDeviceExperience { get; set; }
-    public IEnumerable<SkillsOptions>? Skills { get; set; }
+    public string? Skills { get; set; }
+
+
+    /// <summary>
+    /// Converts TesterAddRequest to Tester
+    /// </summary>
+    /// <returns>Tester object</returns>
+    public Tester ToTester()
+    {
+        return new Tester
+        {
+            TesterName = TesterName,
+            Email = Email,
+            Gender = Gender.ToString(),
+            BirthDate = BirthDate,
+            DevStreamId = DevStreamId,
+            Position = Position,
+            MonthsOfWorkExperience = MonthsOfWorkExperience,
+            HasMobileDeviceExperience = HasMobileDeviceExperience,
+            Skills = string.Join(", ", Skills != null ? Skills.Select(x => x.ToString()) : "")
+        };
+    }
 }
