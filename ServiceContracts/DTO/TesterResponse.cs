@@ -1,5 +1,4 @@
 using Entities;
-using ServiceContracts.Enums;
 
 namespace ServiceContracts.DTO;
 
@@ -8,18 +7,18 @@ namespace ServiceContracts.DTO;
 /// </summary>
 public class TesterResponse : IEquatable<TesterResponse>
 {
-    public Guid TesterId { get; set; }
-    public string? TesterName { get; set; }
-    public string? Email { get; set; }
-    public string? Gender { get; set; }
-    public DateTime? BirthDate { get; set; }
+    public Guid TesterId { get; init; }
+    public string? TesterName { get; init; }
+    public string? Email { get; init; }
+    public string? Gender { get; init; }
+    public DateTime? BirthDate { get; init; }
     public int? Age { get; set; }
-    public Guid? DevStreamId { get; set; }
-    public string? DevStream { get; set; }
-    public string? Position { get; set; }
-    public int? MonthsOfWorkExperience { get; set; }
-    public bool HasMobileDeviceExperience { get; set; }
-    public string? Skills { get; set; }
+    public Guid? DevStreamId { get; init; }
+    public string? DevStream { get; init; }
+    public string? Position { get; init; }
+    public int? MonthsOfWorkExperience { get; init; }
+    public bool HasMobileDeviceExperience { get; init; }
+    public string? Skills { get; init; }
 
 
     /// <summary>
