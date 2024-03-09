@@ -19,4 +19,11 @@ public interface ITestersService
     /// </summary>
     /// <returns>Returns a List of TestersResponse objects</returns>
     List<TesterResponse> GetAllTesters();
+
+    /// <summary>
+    /// Gets Tester by id
+    /// </summary>
+    /// <param name="id">Tester Guid</param>
+    /// <returns>Returns TesterResponse object</returns>
+    TesterResponse? GetTesterById(Guid? id);
 }

@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Entities;
 using ServiceContracts;
 using ServiceContracts.DTO;
@@ -28,16 +27,21 @@ public class TestersService : ITestersService
     {
         ArgumentNullException.ThrowIfNull(testerAddRequest);
         ModelValidationHelper.IsValid(testerAddRequest);
-        
+
         var tester = testerAddRequest.ToTester();
         tester.TesterId = new Guid();
 
         _testers.Add(tester);
-        
+
         return ConvertTesterToTesterResponse(tester);
     }
 
     public List<TesterResponse> GetAllTesters()
+    {
+        throw new NotImplementedException();
+    }
+
+    public TesterResponse? GetTesterById(Guid? id)
     {
         throw new NotImplementedException();
     }

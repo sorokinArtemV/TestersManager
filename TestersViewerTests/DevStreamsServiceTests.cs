@@ -17,7 +17,7 @@ public class DevStreamsServiceTests
     #region AddDevStream
 
     [Fact]
-    public void AddDevStream_ShouldThrowArgumentNullException_WhenDevStreamAddRequestIsNull()
+    public void AddDevStream_ShallThrowArgumentNullException_WhenDevStreamAddRequestIsNull()
     {
         DevStreamAddRequest? request = null;
 
@@ -25,7 +25,7 @@ public class DevStreamsServiceTests
     }
 
     [Fact]
-    public void AddDevStream_ShouldThrowArgumentException_WhenDevStreamAddRequestNameIsNull()
+    public void AddDevStream_ShallThrowArgumentException_WhenDevStreamAddRequestNameIsNull()
     {
         var request = new DevStreamAddRequest { DevStreamName = null };
 
@@ -33,7 +33,7 @@ public class DevStreamsServiceTests
     }
 
     [Fact]
-    public void AddDevStream_ShouldThrowArgumentException_WhenDevStreamAddRequestNameIsDuplicated()
+    public void AddDevStream_ShallThrowArgumentException_WhenDevStreamAddRequestNameIsDuplicated()
     {
         var requestOne = new DevStreamAddRequest { DevStreamName = "Crew" };
         var requestTwo = new DevStreamAddRequest { DevStreamName = "Crew" };
@@ -46,7 +46,7 @@ public class DevStreamsServiceTests
     }
 
     [Fact]
-    public void AddDevStream_ShouldTAddDevStreamToListOfDevStreams_WhenDevStreamAddRequestIsValid()
+    public void AddDevStream_ShallTAddDevStreamToListOfDevStreams_WhenDevStreamAddRequestIsValid()
     {
         var request = new DevStreamAddRequest() { DevStreamName = "Crew" };
 
@@ -60,7 +60,7 @@ public class DevStreamsServiceTests
     #region GetAllDevStreams
 
     [Fact]
-    public void GetAllDevStreams_ShouldBeEmpty_BeforeAddingDevStreams()
+    public void GetAllDevStreams_ShallBeEmpty_BeforeAddingDevStreams()
     {
         var devStreamsList = _devStreamsService.GetAllDevStreams();
 
@@ -68,7 +68,7 @@ public class DevStreamsServiceTests
     }
 
     [Fact]
-    public void GetAllDevStreams_ShouldShowAllDevStreams_WheDevStreamsAreAdded()
+    public void GetAllDevStreams_ShallShowAllDevStreams_WheDevStreamsAreAdded()
     {
         List<DevStreamResponse> devStreamsExpectedResponses = [];
 
@@ -97,7 +97,7 @@ public class DevStreamsServiceTests
     #region GetDevStreamById
 
     [Fact]
-    public void GetDevStreamById_ShouldThrowArgumentNullException_IfDevStreamIdIsNull()
+    public void GetDevStreamById_ShallThrowArgumentNullException_IfDevStreamIdIsNull()
     {
         Guid? devStreamId = null;
 
@@ -105,7 +105,7 @@ public class DevStreamsServiceTests
     }
 
     [Fact]
-    public void GetDevStreamById_ShouldReturnDevStream_IfDevStreamExists()
+    public void GetDevStreamById_ShallReturnDevStream_IfDevStreamExists()
     {
         var devStreamAddRequest = new DevStreamAddRequest { DevStreamName = "Crew" };
         var devStreamResponse = _devStreamsService.AddDevStream(devStreamAddRequest);
