@@ -43,6 +43,11 @@ public class TestersService : ITestersService
 
     public TesterResponse? GetTesterById(Guid? id)
     {
-        throw new NotImplementedException();
+        return id is null
+            ? null
+            : _testers
+                .Where(tester => tester.TesterId == id)
+                .Select(ConvertTesterToTesterResponse)
+                .FirstOrDefault();
     }
 }
