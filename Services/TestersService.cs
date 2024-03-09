@@ -52,4 +52,9 @@ public class TestersService : ITestersService
                 .Select(ConvertTesterToTesterResponse)
                 .FirstOrDefault();
     }
+
+    public List<TesterResponse> GetFilteredTesters(string searchBy, string searchString)
+    {
+        throw new NotImplementedException();
+    }
 }

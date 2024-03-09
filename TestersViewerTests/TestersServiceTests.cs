@@ -174,4 +174,147 @@ public class TestersServiceTests
     }
 
     #endregion
+
+    #region GetFilteredTesters
+
+    [Fact]
+    public void GetFilteredTesters_ShallReturnListWithAllTesters_IfSearchStringIsEmpty_AndSearchByIsTesterName()
+    {
+        var devStreamAddRequestOne = new DevStreamAddRequest() { DevStreamName = "Crew" };
+        var devStreamAddRequestTwo = new DevStreamAddRequest() { DevStreamName = "New Year" };
+        var devStreamResponseOne = _devStreamsService.AddDevStream(devStreamAddRequestOne);
+        var devStreamResponseTwo = _devStreamsService.AddDevStream(devStreamAddRequestTwo);
+        var testerAddRequestOne = new TesterAddRequest
+        {
+            TesterName = "Sakura",
+            Email = "fXw5g@example.com",
+            Gender = GenderOptions.Female,
+            BirthDate = DateTime.Now,
+            DevStreamId = devStreamResponseOne.DevStreamId,
+            Position = "Tester",
+            MonthsOfWorkExperience = 1,
+            HasMobileDeviceExperience = true,
+            Skills = "C#"
+        };
+
+        var testerAddRequestTwo = new TesterAddRequest
+        {
+            TesterName = "Sayaka",
+            Email = "fXw5g@example.com",
+            Gender = GenderOptions.Female,
+            BirthDate = DateTime.Now,
+            DevStreamId = devStreamResponseTwo.DevStreamId,
+            Position = "Junior QA",
+            MonthsOfWorkExperience = 1,
+            HasMobileDeviceExperience = true,
+            Skills = "C#"
+        };
+
+        List<TesterAddRequest> testerAddRequests =
+        [
+            testerAddRequestOne,
+            testerAddRequestTwo
+        ];
+
+        List<TesterResponse> testerResponsesFromAdd = [];
+
+        foreach (var testerAddRequest in testerAddRequests)
+        {
+            testerResponsesFromAdd.Add(_testersService.AddTester(testerAddRequest));
+        }
+
+        var testerResponsesFromSearch = _testersService.GetFilteredTesters(nameof(TesterResponse.TesterName), "");
+
+        foreach (var testerResponse in testerResponsesFromAdd)
+        {
+            Assert.Contains(testerResponse, testerResponsesFromSearch); // calls equals method, so compare ref not val()
+        }
+
+
+        // Check what is in the list
+        _testOutputHelper.WriteLine("Expected:");
+        foreach (var testers in testerResponsesFromAdd)
+        {
+            _testOutputHelper.WriteLine(testers.ToString());
+        }
+
+        _testOutputHelper.WriteLine("Actual:");
+        foreach (var testers in testerResponsesFromSearch)
+        {
+            _testOutputHelper.WriteLine(testers.ToString());
+        }
+    }
+
+    [Fact]
+    public void GetFilteredTesters_ShallReturnListWithFilteredTesters_IfSearchStringParamIsSet()
+    {
+        var devStreamAddRequestOne = new DevStreamAddRequest() { DevStreamName = "Crew" };
+        var devStreamAddRequestTwo = new DevStreamAddRequest() { DevStreamName = "New Year" };
+        var devStreamResponseOne = _devStreamsService.AddDevStream(devStreamAddRequestOne);
+        var devStreamResponseTwo = _devStreamsService.AddDevStream(devStreamAddRequestTwo);
+        var testerAddRequestOne = new TesterAddRequest
+        {
+            TesterName = "Sakura",
+            Email = "fXw5g@example.com",
+            Gender = GenderOptions.Female,
+            BirthDate = DateTime.Now,
+            DevStreamId = devStreamResponseOne.DevStreamId,
+            Position = "Tester",
+            MonthsOfWorkExperience = 1,
+            HasMobileDeviceExperience = true,
+            Skills = "C#"
+        };
+
+        var testerAddRequestTwo = new TesterAddRequest
+        {
+            TesterName = "Sayaka",
+            Email = "fXw5g@example.com",
+            Gender = GenderOptions.Female,
+            BirthDate = DateTime.Now,
+            DevStreamId = devStreamResponseTwo.DevStreamId,
+            Position = "Junior QA",
+            MonthsOfWorkExperience = 1,
+            HasMobileDeviceExperience = true,
+            Skills = "C#"
+        };
+
+        List<TesterAddRequest> testerAddRequests =
+        [
+            testerAddRequestOne,
+            testerAddRequestTwo
+        ];
+
+        List<TesterResponse> testerResponsesFromAdd = [];
+
+        foreach (var testerAddRequest in testerAddRequests)
+        {
+            testerResponsesFromAdd.Add(_testersService.AddTester(testerAddRequest));
+        }
+
+        var testerResponsesFromSearch = _testersService.GetFilteredTesters(nameof(TesterResponse.TesterName), "sa");
+
+        foreach (var testerResponse in testerResponsesFromAdd)
+        {
+            if (testerResponse.TesterName is not null &&
+                testerResponse.TesterName.Contains("sa", StringComparison.OrdinalIgnoreCase))
+            {
+                Assert.Contains(testerResponse, testerResponsesFromSearch);
+            }
+        }
+        
+        // Check what is in the list
+        _testOutputHelper.WriteLine("Expected:");
+        foreach (var testers in testerResponsesFromAdd)
+        {
+            _testOutputHelper.WriteLine(testers.ToString());
+        }
+
+        _testOutputHelper.WriteLine("Actual:");
+        foreach (var testers in testerResponsesFromSearch)
+        {
+            _testOutputHelper.WriteLine(testers.ToString());
+        }
+    }
+
+    #endregion
 }

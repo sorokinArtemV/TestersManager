@@ -26,4 +26,12 @@ public interface ITestersService
     /// <param name="id">Tester Guid</param>
     /// <returns>Returns TesterResponse object</returns>
     TesterResponse? GetTesterById(Guid? id);
+
+    /// <summary>
+    ///  Returns filtered list of Testers filtered by searchBy and searchString
+    /// </summary>
+    /// <param name="searchBy">Search field to filter</param>
+    /// <param name="searchString">Search string to search</param>
+    /// <returns>Return filtered list based on searchBy and searchString</returns>
+    List<TesterResponse> GetFilteredTesters(string searchBy, string searchString);
 }
