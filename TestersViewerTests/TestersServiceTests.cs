@@ -94,4 +94,68 @@ public class TestersServiceTests
     }
 
     #endregion
+
+    #region GetAllTesters
+
+    [Fact]
+    public void GetAllTesters_ShallReturnEmptyList_BeforeTestersAreAdded()
+    {
+        Assert.Empty(_testersService.GetAllTesters());
+    }
+
+    [Fact]
+    public void GetAllTesters_ShallReturnListWithAllTesters_IfTestersAreAdded()
+    {
+        var devStreamAddRequestOne = new DevStreamAddRequest() { DevStreamName = "Crew" };
+        var devStreamAddRequestTwo = new DevStreamAddRequest() { DevStreamName = "New Year" };
+        var devStreamResponseOne = _devStreamsService.AddDevStream(devStreamAddRequestOne);
+        var devStreamResponseTwo = _devStreamsService.AddDevStream(devStreamAddRequestTwo);
+        var testerAddRequestOne = new TesterAddRequest
+        {
+            TesterName = "Tester",
+            Email = "fXw5g@example.com",
+            Gender = GenderOptions.Male,
+            BirthDate = DateTime.Now,
+            DevStreamId = devStreamResponseOne.DevStreamId,
+            Position = "Tester",
+            MonthsOfWorkExperience = 1,
+            HasMobileDeviceExperience = true,
+            Skills = "C#"
+        };
+
+        var testerAddRequestTwo = new TesterAddRequest
+        {
+            TesterName = "Sayaka",
+            Email = "fXw5g@example.com",
+            Gender = GenderOptions.Female,
+            BirthDate = DateTime.Now,
+            DevStreamId = devStreamResponseTwo.DevStreamId,
+            Position = "Junior QA",
+            MonthsOfWorkExperience = 1,
+            HasMobileDeviceExperience = true,
+            Skills = "C#"
+        };
+
+        List<TesterAddRequest> testerAddRequests =
+        [
+            testerAddRequestOne,
+            testerAddRequestTwo
+        ];
+
+        List<TesterResponse> testerResponsesFromAdd = [];
+
+        foreach (var testerAddRequest in testerAddRequests)
+        {
+            testerResponsesFromAdd.Add(_testersService.AddTester(testerAddRequest));
+        }
+
+        var testerResponsesFromGet = _testersService.GetAllTesters();
+
+        foreach (var testerResponse in testerResponsesFromAdd)
+        {
+            Assert.Contains(testerResponse, testerResponsesFromGet); // calls equals method, so compare ref not val()
+        }
+    }
+
+    #endregion
 }
