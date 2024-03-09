@@ -38,7 +38,9 @@ public class TestersService : ITestersService
 
     public List<TesterResponse> GetAllTesters()
     {
-        throw new NotImplementedException();
+        return _testers
+            .Select(ConvertTesterToTesterResponse)
+            .ToList();
     }
 
     public TesterResponse? GetTesterById(Guid? id)
