@@ -29,7 +29,7 @@ public class TestersServiceTests
     {
         var testerAddRequest = new TesterAddRequest { TesterName = null };
 
-        Assert.Throws<ArgumentNullException>(() => _testersService.AddTester(testerAddRequest));
+        Assert.Throws<ArgumentException>(() => _testersService.AddTester(testerAddRequest));
     }
 
     [Fact]

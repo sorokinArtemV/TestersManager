@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Entities;
 using ServiceContracts;
 using ServiceContracts.DTO;
@@ -25,7 +26,14 @@ public class TestersService : ITestersService
     public TesterResponse AddTester(TesterAddRequest? testerAddRequest)
     {
         ArgumentNullException.ThrowIfNull(testerAddRequest);
-        ArgumentException.ThrowIfNullOrEmpty(testerAddRequest.TesterName, "Tester name cannot be null or empty");
+
+        ValidationContext validationContext = new(testerAddRequest);
+        List<ValidationResult> validationResults = [];
+        
+        // Model validation
+        bool isValid = Validator.TryValidateObject(testerAddRequest, validationContext, validationResults, true);
+        if (!isValid) throw new ArgumentException(validationResults.FirstOrDefault()?.ErrorMessage);
+
 
         var tester = testerAddRequest.ToTester();
         tester.TesterId = new Guid();
