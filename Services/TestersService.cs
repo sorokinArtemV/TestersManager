@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Entities;
 using ServiceContracts;
 using ServiceContracts.DTO;
+using Services.Helpers;
 
 namespace Services;
 
@@ -26,20 +27,13 @@ public class TestersService : ITestersService
     public TesterResponse AddTester(TesterAddRequest? testerAddRequest)
     {
         ArgumentNullException.ThrowIfNull(testerAddRequest);
-
-        ValidationContext validationContext = new(testerAddRequest);
-        List<ValidationResult> validationResults = [];
+        ModelValidationHelper.IsValid(testerAddRequest);
         
-        // Model validation
-        bool isValid = Validator.TryValidateObject(testerAddRequest, validationContext, validationResults, true);
-        if (!isValid) throw new ArgumentException(validationResults.FirstOrDefault()?.ErrorMessage);
-
-
         var tester = testerAddRequest.ToTester();
         tester.TesterId = new Guid();
 
         _testers.Add(tester);
-
+        
         return ConvertTesterToTesterResponse(tester);
     }
 
