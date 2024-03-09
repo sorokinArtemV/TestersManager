@@ -2,16 +2,19 @@ using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using Services;
+using Xunit.Abstractions;
 
 namespace TestersViewerTests;
 
 public class TestersServiceTests
 {
+    private readonly ITestOutputHelper _testOutputHelper;
     private readonly ITestersService _testersService;
     private readonly IDevStreamsService _devStreamsService;
 
-    public TestersServiceTests()
+    public TestersServiceTests(ITestOutputHelper testOutputHelper)
     {
+        _testOutputHelper = testOutputHelper;
         _testersService = new TestersService();
         _devStreamsService = new DevStreamsService();
     }
@@ -154,6 +157,19 @@ public class TestersServiceTests
         foreach (var testerResponse in testerResponsesFromAdd)
         {
             Assert.Contains(testerResponse, testerResponsesFromGet); // calls equals method, so compare ref not val()
+        }
+
+
+        _testOutputHelper.WriteLine("Expected:");
+        foreach (var testers in testerResponsesFromAdd)
+        {
+            _testOutputHelper.WriteLine(testers.ToString());
+        }
+
+        _testOutputHelper.WriteLine("Actual:");
+        foreach (var testers in testerResponsesFromGet)
+        {
+            _testOutputHelper.WriteLine(testers.ToString());
         }
     }
 

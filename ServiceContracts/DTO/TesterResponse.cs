@@ -83,6 +83,14 @@ public class TesterResponse : IEquatable<TesterResponse>
     {
         return !Equals(left, right);
     }
+
+    public override string ToString()
+    {
+        return
+            $"{TesterId} {TesterName} {Email} {Gender} {BirthDate?.ToString()} " +
+            $"{DevStreamId} {DevStream} {Position} " +
+            $"{MonthsOfWorkExperience} {HasMobileDeviceExperience}";
+    }
 }
 
 public static class TesterExtensions

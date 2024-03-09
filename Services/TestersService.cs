@@ -29,7 +29,7 @@ public class TestersService : ITestersService
         ModelValidationHelper.IsValid(testerAddRequest);
 
         var tester = testerAddRequest.ToTester();
-        tester.TesterId = new Guid();
+        tester.TesterId = Guid.NewGuid();
 
         _testers.Add(tester);
 
