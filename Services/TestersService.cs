@@ -96,6 +96,11 @@ public class TestersService : ITestersService
         return string.IsNullOrEmpty(sortBy) ? allTesters : SorterHelper.SortByProperty(allTesters, sortBy, sortOrder);
     }
 
+    public TesterResponse UpdateTester(TesterUpdateRequest? testerUpdateRequest)
+    {
+        throw new NotImplementedException();
+    }
+
     private TesterResponse ConvertTesterToTesterResponse(Tester tester)
     {
         var testerResponse = tester.ToTesterResponse();

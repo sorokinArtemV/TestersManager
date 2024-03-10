@@ -9,16 +9,16 @@ namespace ServiceContracts.DTO;
 public class TesterResponse : IEquatable<TesterResponse>
 {
     public Guid TesterId { get; init; }
-    public string? TesterName { get; init; }
-    public string? Email { get; init; }
-    public string? Gender { get; init; }
-    public DateTime? BirthDate { get; init; }
+    public string? TesterName { get; set; }
+    public string? Email { get; set; }
+    public string? Gender { get; set; }
+    public DateTime? BirthDate { get; set; }
     public string? DevStream { get; set; }
-    public string? Position { get; init; }
-    public string? Skills { get; init; }
-    public Guid? DevStreamId { get; init; }
-    public int? MonthsOfWorkExperience { get; init; }
-    public bool HasMobileDeviceExperience { get; init; }
+    public string? Position { get; set; }
+    public string? Skills { get; set; }
+    public Guid? DevStreamId { get; set; }
+    public int? MonthsOfWorkExperience { get; set; }
+    public bool HasMobileDeviceExperience { get; set; }
     public int? Age { get; set; }
 
 
@@ -93,20 +93,20 @@ public class TesterResponse : IEquatable<TesterResponse>
             $"{MonthsOfWorkExperience} {HasMobileDeviceExperience}";
     }
 
-    public TesterUpdateRequest ToTesterUpdateRequest(TesterResponse testerResponse)
+    public TesterUpdateRequest ToTesterUpdateRequest()
     {
         return new TesterUpdateRequest
         {
-            TesterId = testerResponse.TesterId,
-            TesterName = testerResponse.TesterName,
-            Email = testerResponse.Email,
+            TesterId = TesterId,
+            TesterName = TesterName,
+            Email = Email,
             Gender = (GenderOptions)Enum.Parse(typeof(GenderOptions), Gender, true),
-            BirthDate = testerResponse.BirthDate,
-            DevStreamId = testerResponse.DevStreamId,
-            Position = testerResponse.Position,
-            MonthsOfWorkExperience = testerResponse.MonthsOfWorkExperience,
-            HasMobileDeviceExperience = testerResponse.HasMobileDeviceExperience,
-            Skills = testerResponse.Skills
+            BirthDate = BirthDate,
+            DevStreamId = DevStreamId,
+            Position = Position,
+            MonthsOfWorkExperience = MonthsOfWorkExperience,
+            HasMobileDeviceExperience = HasMobileDeviceExperience,
+            Skills = Skills
         };
     }
 }

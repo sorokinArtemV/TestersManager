@@ -393,4 +393,78 @@ public class TestersServiceTests
     }
 
     #endregion
+
+    #region UpdateTester
+
+    [Fact]
+    public void UpdateTester_ShallThrowArgumentNullException_IfTesterUpdateRequestIsNull()
+    {
+        TesterUpdateRequest? testerUpdateRequest = null;
+        Assert.Throws<ArgumentNullException>(() => _testersService.UpdateTester(testerUpdateRequest));
+    }
+
+    [Fact]
+    public void UpdateTester_ShallThrowArgumentException_IfTesterUpdateRequestIdIsInvalid()
+    {
+        var testerUpdateRequest = new TesterUpdateRequest { TesterId = Guid.NewGuid() };
+
+        Assert.Throws<ArgumentException>(() => _testersService.UpdateTester(testerUpdateRequest));
+    }
+
+    [Fact]
+    public void UpdateTester_ShallThrowArgumentNullException_IfTesterUpdateRequestTesterNameIsNull()
+    {
+        var devStreamAddRequest = new DevStreamAddRequest() { DevStreamName = "Crew" };
+        var devStreamResponse = _devStreamsService.AddDevStream(devStreamAddRequest);
+        var testerAddRequest = new TesterAddRequest
+        {
+            TesterName = "Sakura",
+            Email = "fXw5g@example.com",
+            Gender = GenderOptions.Female,
+            BirthDate = DateTime.Now,
+            DevStreamId = devStreamResponse.DevStreamId,
+            Position = "Tester",
+            MonthsOfWorkExperience = 1,
+            HasMobileDeviceExperience = true,
+            Skills = "C#"
+        };
+
+        var testerResponse = _testersService.AddTester(testerAddRequest);
+        var testerUpdateRequest = testerResponse.ToTesterUpdateRequest();
+        testerUpdateRequest.TesterName = null;
+
+        Assert.Throws<ArgumentNullException>(() => _testersService.UpdateTester(testerUpdateRequest));
+    }
+    
+    [Fact]
+    public void UpdateTester_ShallUpdateTester_IfTesterUpdateRequestIsValid()
+    {
+        var devStreamAddRequest = new DevStreamAddRequest() { DevStreamName = "Crew" };
+        var devStreamResponse = _devStreamsService.AddDevStream(devStreamAddRequest);
+        var testerAddRequest = new TesterAddRequest
+        {
+            TesterName = "Sakura",
+            Email = "fXw5g@example.com",
+            Gender = GenderOptions.Female,
+            BirthDate = DateTime.Now,
+            DevStreamId = devStreamResponse.DevStreamId,
+            Position = "Tester",
+            MonthsOfWorkExperience = 1,
+            HasMobileDeviceExperience = true,
+            Skills = "C#"
+        };
+
+        var testerResponse = _testersService.AddTester(testerAddRequest);
+        testerResponse.TesterName = "Villanelle";
+        testerResponse.Position = "Senior QA";
+        var testerUpdateRequest = testerResponse.ToTesterUpdateRequest();
+        
+        var updatedTesterResponse = _testersService.UpdateTester(testerUpdateRequest);
+        var testerFromGetById = _testersService.GetTesterById(testerResponse.TesterId); 
+        
+        Assert.Equal(updatedTesterResponse, testerFromGetById);
+
+    }
+    
+    #endregion
 }

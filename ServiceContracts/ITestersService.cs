@@ -45,4 +45,12 @@ public interface ITestersService
     /// <param name="sortOrder">Sort order</param>
     /// <returns>Returns sorted list Asc or Desc</returns>
     List<TesterResponse> GetSortedTesters(List<TesterResponse> allTesters, string sortBy, SortOrderOptions sortOrder);
+
+
+    /// <summary>
+    /// Updates Tester based on TesterUpdateRequest id
+    /// </summary>
+    /// <param name="testerUpdateRequest">Tester details to update</param>
+    /// <returns>Returns TesterResponse after update</returns>
+    TesterResponse UpdateTester(TesterUpdateRequest? testerUpdateRequest);
 }
