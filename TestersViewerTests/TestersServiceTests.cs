@@ -433,9 +433,9 @@ public class TestersServiceTests
         var testerUpdateRequest = testerResponse.ToTesterUpdateRequest();
         testerUpdateRequest.TesterName = null;
 
-        Assert.Throws<ArgumentNullException>(() => _testersService.UpdateTester(testerUpdateRequest));
+        Assert.Throws<ArgumentException>(() => _testersService.UpdateTester(testerUpdateRequest));
     }
-    
+
     [Fact]
     public void UpdateTester_ShallUpdateTester_IfTesterUpdateRequestIsValid()
     {
@@ -458,13 +458,12 @@ public class TestersServiceTests
         testerResponse.TesterName = "Villanelle";
         testerResponse.Position = "Senior QA";
         var testerUpdateRequest = testerResponse.ToTesterUpdateRequest();
-        
-        var updatedTesterResponse = _testersService.UpdateTester(testerUpdateRequest);
-        var testerFromGetById = _testersService.GetTesterById(testerResponse.TesterId); 
-        
-        Assert.Equal(updatedTesterResponse, testerFromGetById);
 
+        var updatedTesterResponse = _testersService.UpdateTester(testerUpdateRequest);
+        var testerFromGetById = _testersService.GetTesterById(testerResponse.TesterId);
+
+        Assert.Equal(updatedTesterResponse, testerFromGetById);
     }
-    
+
     #endregion
 }

@@ -98,7 +98,24 @@ public class TestersService : ITestersService
 
     public TesterResponse UpdateTester(TesterUpdateRequest? testerUpdateRequest)
     {
-        throw new NotImplementedException();
+        ArgumentNullException.ThrowIfNull(testerUpdateRequest);
+        ModelValidationHelper.IsValid(testerUpdateRequest);
+
+        var tester = _testers.FirstOrDefault(tester => tester.TesterId == testerUpdateRequest.TesterId);
+
+        ArgumentNullException.ThrowIfNull(tester);
+
+        tester.TesterName = testerUpdateRequest.TesterName;
+        tester.Email = testerUpdateRequest.Email;
+        tester.Gender = testerUpdateRequest.Gender.ToString();
+        tester.BirthDate = testerUpdateRequest.BirthDate;
+        tester.DevStreamId = testerUpdateRequest.DevStreamId;
+        tester.Position = testerUpdateRequest.Position;
+        tester.MonthsOfWorkExperience = testerUpdateRequest.MonthsOfWorkExperience;
+        tester.HasMobileDeviceExperience = testerUpdateRequest.HasMobileDeviceExperience;
+        tester.Skills = string.Join(", ", testerUpdateRequest.Skills);
+
+        return ConvertTesterToTesterResponse(tester);
     }
 
     private TesterResponse ConvertTesterToTesterResponse(Tester tester)
