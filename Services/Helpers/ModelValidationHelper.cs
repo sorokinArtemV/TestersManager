@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Services.Helpers;
 
-public class ModelValidationHelper
+public static class ModelValidationHelper
 {
     public static bool IsValid(object obj)
     {

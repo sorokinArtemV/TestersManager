@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Reflection;
 using ServiceContracts.Enums;
 
@@ -22,10 +21,8 @@ public static class SorterHelper
 
             int result = StringComparer.OrdinalIgnoreCase.Compare(xValue, yValue);
 
-            if (order == SortOrderOptions.Desc)
-            {
-                result = -result;
-            }
+            if (order == SortOrderOptions.Desc) result = -result;
+
 
             return result;
         });

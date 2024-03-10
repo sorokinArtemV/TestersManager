@@ -1,4 +1,5 @@
 using Entities;
+using ServiceContracts.Enums;
 
 namespace ServiceContracts.DTO;
 
@@ -90,6 +91,23 @@ public class TesterResponse : IEquatable<TesterResponse>
             $"{TesterId} {TesterName} {Email} {Gender} {BirthDate?.ToString()} " +
             $"{DevStreamId} {DevStream} {Position} " +
             $"{MonthsOfWorkExperience} {HasMobileDeviceExperience}";
+    }
+
+    public TesterUpdateRequest ToTesterUpdateRequest(TesterResponse testerResponse)
+    {
+        return new TesterUpdateRequest
+        {
+            TesterId = testerResponse.TesterId,
+            TesterName = testerResponse.TesterName,
+            Email = testerResponse.Email,
+            Gender = (GenderOptions)Enum.Parse(typeof(GenderOptions), Gender, true),
+            BirthDate = testerResponse.BirthDate,
+            DevStreamId = testerResponse.DevStreamId,
+            Position = testerResponse.Position,
+            MonthsOfWorkExperience = testerResponse.MonthsOfWorkExperience,
+            HasMobileDeviceExperience = testerResponse.HasMobileDeviceExperience,
+            Skills = testerResponse.Skills
+        };
     }
 }
 
