@@ -57,63 +57,38 @@ public class TestersService : ITestersService
         matchingTesters = searchBy switch
         {
             nameof(Tester.TesterName) =>
-                allTesters.Where(x =>
-                        string.IsNullOrEmpty(x.TesterName) ||
-                        x.TesterName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                    .ToList(),
+                FilterHelper.FilterBy(allTesters, x => x.TesterName, searchString),
 
             nameof(Tester.Email) =>
-                allTesters.Where(x =>
-                        string.IsNullOrEmpty(x.Email) ||
-                        x.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                    .ToList(),
+                FilterHelper.FilterBy(allTesters, x => x.Email, searchString),
 
             nameof(Tester.Gender) =>
-                allTesters.Where(x =>
-                        string.IsNullOrEmpty(x.Gender) ||
-                        x.Gender.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                    .ToList(),
+                FilterHelper.FilterBy(allTesters, x => x.Gender, searchString),
 
             nameof(Tester.DevStream) =>
-                allTesters.Where(x =>
-                        string.IsNullOrEmpty(x.DevStream) ||
-                        x.DevStream.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                    .ToList(),
+                FilterHelper.FilterBy(allTesters, x => x.DevStream, searchString),
 
             nameof(Tester.Position) =>
-                allTesters.Where(x =>
-                        string.IsNullOrEmpty(x.Position) ||
-                        x.Position.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                    .ToList(),
+                FilterHelper.FilterBy(allTesters, x => x.Position, searchString),
 
             nameof(Tester.DevStreamId) =>
-                allTesters.Where(x => x.DevStreamId is null || x.DevStreamId.Value.ToString()
-                    .Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList(),
+                FilterHelper.FilterBy(allTesters, x => x.DevStreamId?.ToString(), searchString),
 
             nameof(Tester.BirthDate) =>
-                allTesters.Where(x => x.BirthDate is null || x.BirthDate.Value.ToString("dd MMMM yyyy")
-                    .Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList(),
+                FilterHelper.FilterBy(allTesters, x => x.BirthDate?.ToString("dd MMMM yyyy"), searchString),
 
             nameof(Tester.MonthsOfWorkExperience) =>
-                allTesters.Where(x => x.MonthsOfWorkExperience is null || x.MonthsOfWorkExperience.Value
-                    .ToString()
-                    .Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList(),
+                FilterHelper.FilterBy(allTesters, x => x.MonthsOfWorkExperience?.ToString(), searchString),
 
             nameof(Tester.Skills) =>
-                allTesters.Where(x =>
-                        string.IsNullOrEmpty(x.Skills) ||
-                        x.Skills.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                    .ToList(),
+                FilterHelper.FilterBy(allTesters, x => x.Skills, searchString),
 
             _ => matchingTesters
-            // matchingTesters = allTesters
-            //     .Where(x => (!string.IsNullOrEmpty(x.TesterName)
-            //         ? x.TesterName.Contains(searchString, StringComparison.OrdinalIgnoreCase)
-            //         : true)).ToList();
         };
 
         return matchingTesters;
     }
+
 
     public List<TesterResponse> GetSortedTesters(List<TesterResponse> allTesters, string sortBy,
         SortOrderOptions sortOrder)
