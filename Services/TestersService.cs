@@ -115,10 +115,10 @@ public class TestersService : ITestersService
         return matchingTesters;
     }
 
-    public List<TesterResponse> GetSortedTesters(List<TesterResponse> allPersons, string sortBy,
+    public List<TesterResponse> GetSortedTesters(List<TesterResponse> allTesters, string sortBy,
         SortOrderOptions sortOrder)
     {
-        throw new NotImplementedException();
+        return string.IsNullOrEmpty(sortBy) ? allTesters : SorterHelper.SortByProperty(allTesters, sortBy, sortOrder);
     }
 
     private TesterResponse ConvertTesterToTesterResponse(Tester tester)

@@ -40,9 +40,9 @@ public interface ITestersService
     /// <summary>
     /// Returns list of sorted Testers
     /// </summary>
-    /// <param name="allPersons">List of all persons</param>
+    /// <param name="allTesters">List of all persons</param>
     /// <param name="sortBy">Sort field to sort</param>
     /// <param name="sortOrder">Sort order</param>
     /// <returns>Returns sorted list Asc or Desc</returns>
-    List<TesterResponse> GetSortedTesters(List<TesterResponse> allPersons, string sortBy, SortOrderOptions sortOrder);
+    List<TesterResponse> GetSortedTesters(List<TesterResponse> allTesters, string sortBy, SortOrderOptions sortOrder);
 }

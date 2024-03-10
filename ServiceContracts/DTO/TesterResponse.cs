@@ -12,13 +12,13 @@ public class TesterResponse : IEquatable<TesterResponse>
     public string? Email { get; init; }
     public string? Gender { get; init; }
     public DateTime? BirthDate { get; init; }
-    public int? Age { get; set; }
-    public Guid? DevStreamId { get; init; }
     public string? DevStream { get; set; }
     public string? Position { get; init; }
+    public string? Skills { get; init; }
+    public Guid? DevStreamId { get; init; }
     public int? MonthsOfWorkExperience { get; init; }
     public bool HasMobileDeviceExperience { get; init; }
-    public string? Skills { get; init; }
+    public int? Age { get; set; }
 
 
     /// <summary>
