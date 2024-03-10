@@ -1,6 +1,7 @@
 using Entities;
 using ServiceContracts;
 using ServiceContracts.DTO;
+using ServiceContracts.Enums;
 using Services.Helpers;
 
 namespace Services;
@@ -103,7 +104,7 @@ public class TestersService : ITestersService
                         string.IsNullOrEmpty(x.Skills) ||
                         x.Skills.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                     .ToList(),
-            
+
             _ => matchingTesters
             // matchingTesters = allTesters
             //     .Where(x => (!string.IsNullOrEmpty(x.TesterName)
@@ -112,6 +113,12 @@ public class TestersService : ITestersService
         };
 
         return matchingTesters;
+    }
+
+    public List<TesterResponse> GetSortedTesters(List<TesterResponse> allPersons, string sortBy,
+        SortOrderOptions sortOrder)
+    {
+        throw new NotImplementedException();
     }
 
     private TesterResponse ConvertTesterToTesterResponse(Tester tester)

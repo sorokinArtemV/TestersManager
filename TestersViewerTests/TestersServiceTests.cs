@@ -301,7 +301,7 @@ public class TestersServiceTests
                 Assert.Contains(testerResponse, testerResponsesFromSearch);
             }
         }
-        
+
         // Check what is in the list
         _testOutputHelper.WriteLine("Expected:");
         foreach (var testers in testerResponsesFromAdd)
@@ -311,6 +311,82 @@ public class TestersServiceTests
 
         _testOutputHelper.WriteLine("Actual:");
         foreach (var testers in testerResponsesFromSearch)
+        {
+            _testOutputHelper.WriteLine(testers.ToString());
+        }
+    }
+
+    #endregion
+
+    #region GetSortedTesters
+
+    [Fact]
+    public void GetSortedTesters_ShallReturnListWithSortedTestersByNameDesc_IfSortParamIsName()
+    {
+        var devStreamAddRequestOne = new DevStreamAddRequest() { DevStreamName = "Crew" };
+        var devStreamAddRequestTwo = new DevStreamAddRequest() { DevStreamName = "New Year" };
+        var devStreamResponseOne = _devStreamsService.AddDevStream(devStreamAddRequestOne);
+        var devStreamResponseTwo = _devStreamsService.AddDevStream(devStreamAddRequestTwo);
+        var testerAddRequestOne = new TesterAddRequest
+        {
+            TesterName = "Sakura",
+            Email = "fXw5g@example.com",
+            Gender = GenderOptions.Female,
+            BirthDate = DateTime.Now,
+            DevStreamId = devStreamResponseOne.DevStreamId,
+            Position = "Tester",
+            MonthsOfWorkExperience = 1,
+            HasMobileDeviceExperience = true,
+            Skills = "C#"
+        };
+
+        var testerAddRequestTwo = new TesterAddRequest
+        {
+            TesterName = "Sayaka",
+            Email = "fXw5g@example.com",
+            Gender = GenderOptions.Female,
+            BirthDate = DateTime.Now,
+            DevStreamId = devStreamResponseTwo.DevStreamId,
+            Position = "Junior QA",
+            MonthsOfWorkExperience = 1,
+            HasMobileDeviceExperience = true,
+            Skills = "C#"
+        };
+
+        List<TesterAddRequest> testerAddRequests =
+        [
+            testerAddRequestOne,
+            testerAddRequestTwo
+        ];
+
+        List<TesterResponse> testerResponsesFromAdd = [];
+
+        foreach (var testerAddRequest in testerAddRequests)
+        {
+            testerResponsesFromAdd.Add(_testersService.AddTester(testerAddRequest));
+        }
+
+        var allTesters = _testersService.GetAllTesters();
+
+        var testerResponsesFromSort = _testersService.GetSortedTesters(
+            allTesters, nameof(TesterResponse.TesterName), SortOrderOptions.Desc);
+
+        testerResponsesFromAdd = testerResponsesFromAdd
+            .OrderByDescending(x => x.TesterName).ToList();
+
+        for (int i = 0; i < testerResponsesFromAdd.Count; i++)
+        {
+            Assert.Equal(testerResponsesFromAdd[i], testerResponsesFromSort[i]);
+        }
+
+        _testOutputHelper.WriteLine("Actual:");
+        foreach (var testers in testerResponsesFromSort)
+        {
+            _testOutputHelper.WriteLine(testers.ToString());
+        }
+
+        _testOutputHelper.WriteLine("Expected:");
+        foreach (var testers in testerResponsesFromAdd)
         {
             _testOutputHelper.WriteLine(testers.ToString());
         }
