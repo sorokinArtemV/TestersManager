@@ -118,6 +118,11 @@ public class TestersService : ITestersService
         return ConvertTesterToTesterResponse(tester);
     }
 
+    public bool DeleteTester(Guid? id)
+    {
+        throw new NotImplementedException();
+    }
+
     private TesterResponse ConvertTesterToTesterResponse(Tester tester)
     {
         var testerResponse = tester.ToTesterResponse();

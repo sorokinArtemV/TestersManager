@@ -53,4 +53,11 @@ public interface ITestersService
     /// <param name="testerUpdateRequest">Tester details to update</param>
     /// <returns>Returns TesterResponse after update</returns>
     TesterResponse UpdateTester(TesterUpdateRequest? testerUpdateRequest);
+
+    /// <summary>
+    /// Deletes Tester by id
+    /// </summary>
+    /// <param name="id">Tester Guid</param>
+    /// <returns>Returns true if deleted</returns>
+    bool DeleteTester(Guid? id);
 }

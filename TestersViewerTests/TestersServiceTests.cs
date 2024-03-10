@@ -466,4 +466,44 @@ public class TestersServiceTests
     }
 
     #endregion
+
+    #region DeleteTester
+
+    [Fact]
+    public void DeleteTester_ShallReturnTrue_IfTesterIdIsFound()
+    {
+        var devStreamAddRequest = new DevStreamAddRequest() { DevStreamName = "Crew" };
+        var devStreamResponse = _devStreamsService.AddDevStream(devStreamAddRequest);
+        var testerAddRequest = new TesterAddRequest
+        {
+            TesterName = "Sayaka",
+            Email = "fXw5g@example.com",
+            Gender = GenderOptions.Female,
+            BirthDate = DateTime.Now,
+            DevStreamId = devStreamResponse.DevStreamId,
+            Position = "Tester",
+            MonthsOfWorkExperience = 1,
+            HasMobileDeviceExperience = true,
+            Skills = "C#"
+        };
+
+        var testerResponse = _testersService.AddTester(testerAddRequest);
+        
+        var isDeleted = _testersService.DeleteTester(testerResponse.TesterId);
+        Assert.False(isDeleted);
+        
+        var testerFromGetById = _testersService.GetTesterById(testerResponse.TesterId);
+        Assert.Null(testerFromGetById);
+
+    }
+    
+    [Fact]
+    public void DeleteTester_ShallReturnFalse_IfTesterIdIsNotFound()
+    {
+        var isDeleted = _testersService.DeleteTester(Guid.NewGuid());
+        Assert.False(isDeleted);
+    }
+
+
+    #endregion
 }
