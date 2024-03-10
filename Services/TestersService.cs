@@ -118,9 +118,17 @@ public class TestersService : ITestersService
         return ConvertTesterToTesterResponse(tester);
     }
 
-    public bool DeleteTester(Guid? id)
+    public bool DeleteTester(Guid? testerId)
     {
-        throw new NotImplementedException();
+        ArgumentNullException.ThrowIfNull(testerId);
+        
+        var tester = _testers.FirstOrDefault(x => x.TesterId == testerId);
+
+        if (tester is null) return false;
+        
+        _testers.RemoveAll(x => x.TesterId == testerId);
+        
+        return true;
     }
 
     private TesterResponse ConvertTesterToTesterResponse(Tester tester)

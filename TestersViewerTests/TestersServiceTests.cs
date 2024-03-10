@@ -490,7 +490,7 @@ public class TestersServiceTests
         var testerResponse = _testersService.AddTester(testerAddRequest);
         
         var isDeleted = _testersService.DeleteTester(testerResponse.TesterId);
-        Assert.False(isDeleted);
+        Assert.True(isDeleted);
         
         var testerFromGetById = _testersService.GetTesterById(testerResponse.TesterId);
         Assert.Null(testerFromGetById);
