@@ -1,0 +1,102 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap");
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+}
+
+.navbar {
+    align-items: center;
+    box-shadow: rgba(50, 50, 93, 0.07) 0px 2px 5px -1px,
+    rgba(0, 0, 0, 0.05) 0px 1px 3px -1px;
+    z-index: 1;
+}
+
+.navbar__inner {
+    padding: 1rem 1rem;
+    max-width: 100%;
+    margin: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.navbar__logo {
+    display: flex;
+    align-items: center;
+
+}
+
+.navbar__img {
+    height: 25px;
+    width: auto;
+    margin-right: 10px;
+}
+
+
+.heading {
+    font-size: 1.6rem;
+    background: linear-gradient(to right, #b927fc 0%, #2c64fc 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.navbar__links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar__links li {
+    margin-left: 1.5rem;
+}
+
+.navbar__link {
+    transition: all 0.2s ease;
+}
+
+.navbar__link:link,
+.navbar__link:visited {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.05rem;
+    font-weight: 400;
+    padding: 5px 10px;
+}
+
+.navbar__link:hover,
+.navbar__link:active {
+    border-bottom: #b927fc 2px solid;
+    border-radius: 5px;
+    /*color: #b927fc;*/
+    background: linear-gradient(to right, #b927fc 0%, #2c64fc 100%);
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+
+.navbar__link {
+    /* Set initial border color and text color */
+    /*border-bottom: 2px solid #b927fc;*/
+    color: #b927fc;
+    /* Apply the gradient to the text */
+    -webkit-background-clip: text;
+    background-clip: text;
+    /* Hide the border by setting it to transparent */
+    border-color: transparent;
+    /* Add a smooth transition for the border */
+    transition: border-color 0.3s ease;
+}
+
+.navbar__link:hover {
+    /* Show the border on hover */
+    border-color: #b927fc;
+}

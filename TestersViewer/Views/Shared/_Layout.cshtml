@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Navbar</title>
+    <link rel="stylesheet" href="~/styles.css"/>
+</head>
+<body>
+<nav class="navbar">
+    <div class="navbar__inner">
+        <div class="navbar__logo">
+            <img src="~/Logo64x64.png" alt="logo" class="navbar__img"/>
+            <h1 class="heading">TestersViewer</h1>
+        </div>
+        <ul class="navbar__links">
+            <li>
+                <a href="~/testers/index" class="navbar__link">Home</a>
+            </li>
+            <li>
+                <a href="#" class="navbar__link">Create</a>
+            </li>
+            <li>
+                <a href="#" class="navbar__link">Delete</a>
+            </li>
+            <li>
+                <a href="#" class="navbar__link">FancyLink</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<main class="main">
+    @RenderBody()
+</main>
+
+</body>
+</html>

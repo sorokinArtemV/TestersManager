@@ -10,7 +10,7 @@ public class DevStreamsServiceTests
 
     public DevStreamsServiceTests()
     {
-        _devStreamsService = new DevStreamsService();
+        _devStreamsService = new DevStreamsService(false);
     }
 
 
@@ -48,7 +48,7 @@ public class DevStreamsServiceTests
     [Fact]
     public void AddDevStream_ShallTAddDevStreamToListOfDevStreams_WhenDevStreamAddRequestIsValid()
     {
-        var request = new DevStreamAddRequest() { DevStreamName = "Crew" };
+        var request = new DevStreamAddRequest { DevStreamName = "Crew" };
 
         var response = _devStreamsService.AddDevStream(request);
 
@@ -80,16 +80,13 @@ public class DevStreamsServiceTests
         ];
 
         foreach (var devStreamAddRequest in devStreamAddRequests)
-        {
             devStreamsExpectedResponses.Add(_devStreamsService.AddDevStream(devStreamAddRequest));
-        }
 
         var devStreamsList = _devStreamsService.GetAllDevStreams();
 
-        foreach (var expectedResponse in devStreamsExpectedResponses)
-        {
+        foreach (var expectedResponse in
+                 devStreamsExpectedResponses)
             Assert.Contains(expectedResponse, devStreamsList); // calls equals method, so compare ref not val!
-        }
     }
 
     #endregion
