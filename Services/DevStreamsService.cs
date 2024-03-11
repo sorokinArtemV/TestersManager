@@ -38,7 +38,7 @@ public class DevStreamsService : IDevStreamsService
                 new()
                 {
                     DevStreamId = Guid.Parse("78FD1D57-28E2-4CD8-82A3-5DFDBA2A212A"),
-                    DevStreamName = "Halloween"
+                    DevStreamName = "Tech"
                 }
             });
     }
