@@ -37,7 +37,7 @@ public class TestersService : ITestersService
                         TesterId = Guid.Parse("73452C7A-4206-499C-98FA-277407C2C23D"),
                         TesterName = "Tarrah McCard",
                         DevStreamId = Guid.Parse("1A76B36B-4B06-4A69-A368-7ADE27AB739E"),
-                        Email = "tmccard1@merriam-webster.com",
+                        Email = "tmccard1@webster.com",
                         Gender = "Female",
                         BirthDate = DateTime.Parse("1989-09-17"),
                         Position = "Senior QA",

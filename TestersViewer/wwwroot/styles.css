@@ -124,9 +124,30 @@ body {
     /* Additional styles */
 }
 
+
+td {
+    width: 10%;
+}
+
+.table__name {
+    width: 15%
+}
+
+.table__email {
+    width: 15%;
+}
+
+.table__age {
+    width: 5%;
+}
+
+.table__experience {
+    width: 5%;
+}
+
 th,
 td {
-    padding: 0.3rem;
+    padding: 0.4rem;
     text-align-last: left;
 }
 
