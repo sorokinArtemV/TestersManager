@@ -1,6 +1,12 @@
+using ServiceContracts;
+using Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IDevStreamsService, DevStreamsService>();
+builder.Services.AddScoped<ITestersService, TestersService>();
 
 var app = builder.Build();
 
