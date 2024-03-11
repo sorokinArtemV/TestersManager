@@ -2,40 +2,46 @@
 
 @{
     ViewBag.Title = "Testers";
+
+    string ConvertMonthsToYears(int? totalMonths)
+    {
+        if (totalMonths is null) return "Just started";
+        var years = totalMonths / 12;
+        var months = totalMonths % 12;
+        return $"{(years < 1 ? "" : years)}{(months < 1 ? "" : $"{(years >= 1 ? "." : " ")}" + months)}";
+    }
 }
 
-<h2>Testers</h2>
 
-<table class="table">
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Birth Date</th>
-        <th>Age</th>
-        <th>Gender</th>
-        <th>Stream</th>
-        <th>Position</th>
-        <th>Skills</th>
-        <th>Months of work experience</th>
-        <th>Has mobile device experience</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var tester in Model)
-    {
+<div class="container">
+    <h2 class="heading heading--dark">QA Engineers</h2>
+    <table class="table">
+        <thead>
         <tr>
-            <td>@tester.TesterName</td>
-            <td>@tester.Email</td>
-            <td>@tester.BirthDate?.ToString("dd MMMM yyyy")</td>
-            <td>@tester.Age</td>
-            <td>@tester.Gender</td>
-            <td>@tester.DevStream</td>
-            <td>@tester.Position</td>
-            <td>@tester.Skills</td>
-            <td>@tester.MonthsOfWorkExperience</td>
-            <td>@tester.HasMobileDeviceExperience</td>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Stream</th>
+            <th>Position</th>
+            <th>Skills</th>
+            <th>Experience</th>
         </tr>
-    }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        @foreach (var tester in Model)
+        {
+            <tr>
+                <td>@tester.TesterName</td>
+                <td>@tester.Email</td>
+                <td>@tester.Age</td>
+                <td>@tester.Gender</td>
+                <td>@tester.DevStream</td>
+                <td>@tester.Position</td>
+                <td>@tester.Skills</td>
+                <td>@ConvertMonthsToYears(tester.MonthsOfWorkExperience!.Value)</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
