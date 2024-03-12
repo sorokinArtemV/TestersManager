@@ -13,12 +13,12 @@ body {
 .navbar {
     align-items: center;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
-    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    rgba(0, 0, 0, 0.17) 0px 1px 3px -1px;
     z-index: 1;
 }
 
 .navbar__inner {
-    padding: 5px 2rem;
+    padding: 0.5rem 2rem;
     display: flex;
     justify-content: space-between;
 
@@ -102,7 +102,6 @@ body {
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-
 }
 
 .heading--dark {
@@ -115,7 +114,7 @@ body {
 }
 
 .table {
-    margin: 2rem auto; /* This will center the table horizontally */
+    margin: 1rem auto; /* This will center the table horizontally */
     /*width: 90%; */
     font-size: 1rem;
     border-collapse: collapse;
@@ -142,7 +141,7 @@ td {
 }
 
 .table__experience {
-    width: 5%;
+    width: 15%;
 }
 
 th,
@@ -167,4 +166,80 @@ tbody tr:nth-child(odd) {
 
 tbody tr:nth-child(even) {
     background-color: #e9ecef;
+}
+
+/*search*/
+/* General styling for the form */
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #f2f2f2;
+    border-radius: 8px;
+}
+
+/* Flexbox layout for inline elements */
+.form-container div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Styling for the select dropdown */
+.form-container__select {
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    flex-grow: 1;
+}
+
+/* Styling for the search input */
+.form-container__search {
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    flex-grow: 3;
+}
+
+/* Styling for the search button */
+.form-container__submit {
+    padding: 10px 20px;
+    border: 2px solid;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    flex-grow: 1;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+
+.form-container__submit--violet {
+    background-color: rgba(185, 39, 252, 0.6);
+    color: white;
+}
+
+
+/* Hover and focus states for interactive elements */
+.form-container__select:hover,
+.form-container__search:hover,
+.form-container__select:focus,
+.form-container__search:focus {
+    border-color: #a8a8a8;
+}
+
+
+.form-container__submit:hover,
+.form-container__submit:focus {
+    background-color: #b927fc;
+    color: white;
+}
+
+/* Placeholder styling */
+.form-container__search::placeholder {
+    color: #a8a8a8;
 }

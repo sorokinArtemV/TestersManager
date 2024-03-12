@@ -1,20 +1,30 @@
+@using Services.Helpers
 @model IEnumerable<TesterResponse>
 
 @{
     ViewBag.Title = "Testers";
-
-    string ConvertMonthsToYears(int? totalMonths)
-    {
-        if (totalMonths is null) return "Just started";
-        var years = totalMonths / 12;
-        var months = totalMonths % 12;
-        return $"{(years < 1 ? "" : years)}{(months < 1 ? "" : $"{(years >= 1 ? "." : " ")}" + months)}";
-    }
 }
+
+@* <div class=""> *@
+@*     <div class=""> *@
+@*         <select name="" id="" class="from"></select> *@
+@*     </div> *@
+@*      *@
+@*     <div class=""> *@
+@*         <input type="search" name="" id="" class="" placeholder="Search"> *@
+@*     </div> *@
+@* </div> *@
 
 
 <div class="container">
     <h2 class="heading heading--dark">QA Engineers</h2>
+    <div class="form-container">
+        <div class="form-container__inner">
+            <select name="" id="" class="form-container__select"></select>
+            <input class="form-container__search" type="search" name="" id="" placeholder="Search">
+            <input class="form-container__submit form-container__submit--violet" type="submit" value="Search">
+        </div>
+    </div>
     <table class="table">
         <thead>
         <tr>
@@ -25,7 +35,7 @@
             <th>Stream</th>
             <th>Position</th>
             <th>Skills</th>
-            <th class="table__experience">Experience</th>
+            <th class="table__experience">Work Experience</th>
         </tr>
         </thead>
         <tbody>
@@ -39,7 +49,7 @@
                 <td>@tester.DevStream</td>
                 <td>@tester.Position</td>
                 <td>@tester.Skills</td>
-                <td>@ConvertMonthsToYears(tester.MonthsOfWorkExperience!.Value)</td>
+                <td>@ConversionHelper.ConvertMonthsToYears(tester.MonthsOfWorkExperience!.Value)</td>
             </tr>
         }
         </tbody>
