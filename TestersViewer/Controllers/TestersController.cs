@@ -23,12 +23,16 @@ public class TestersController : Controller
             [nameof(TesterResponse.DevStream)] = "Stream",
             [nameof(TesterResponse.Position)] = "Position",
             [nameof(TesterResponse.Skills)] = "Skills",
+            [nameof(TesterResponse.Age)] = "Age",
             [nameof(TesterResponse.Email)] = "Email",
             [nameof(TesterResponse.Gender)] = "Gender",
             [nameof(TesterResponse.MonthsOfWorkExperience)] = "Work experience"
         };
 
-        var testers = _testersService.GetAllTesters();
+        var testers = _testersService.GetFilteredTesters(searchBy, searchString);
+
+        ViewBag.CurrentSearchBy = searchBy;
+        ViewBag.CurrentSearchString = searchString;
 
         return View(testers);
     }

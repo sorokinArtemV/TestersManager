@@ -22,7 +22,7 @@ public class TestersService : ITestersService
                     new()
                     {
                         TesterId = Guid.Parse("E83987F1-E884-446C-901F-978FC909BABF"),
-                        TesterName = "Ruthi Lightman",
+                        TesterName = "Tanya Lightman",
                         DevStreamId = Guid.Parse("248A6FE4-AC09-452C-A205-A6CC4B7E9E56"),
                         Email = "rlightman0@uol.com.br",
                         Gender = "Female",
@@ -61,7 +61,7 @@ public class TestersService : ITestersService
                     new()
                     {
                         TesterId = Guid.Parse("286E7C8D-759E-445A-9700-C82C15EE72C5"),
-                        TesterName = "Bonita Danev",
+                        TesterName = "Marie Danev",
                         DevStreamId = Guid.Parse("02DF3B54-16F9-44C7-9272-C57873F8A2CA"),
                         Email = "bdanev3@posterous.com",
                         Gender = "Female",
@@ -79,7 +79,7 @@ public class TestersService : ITestersService
                         Email = "easch5@upenn.edu",
                         Gender = "Female",
                         BirthDate = DateTime.Parse("1995-06-22"),
-                        Position = "Intern",
+                        Position = "G-ops",
                         MonthsOfWorkExperience = 52,
                         HasMobileDeviceExperience = false,
                         Skills = "JavaScript"
@@ -133,8 +133,8 @@ public class TestersService : ITestersService
                         Email = "cmumford8@histats.com",
                         Gender = "Female",
                         BirthDate = DateTime.Parse("1989-05-01"),
-                        Position = "G-ops",
-                        MonthsOfWorkExperience = 50,
+                        Position = "Intern",
+                        MonthsOfWorkExperience = 1,
                         HasMobileDeviceExperience = true,
                         Skills = "Blitz"
                     },
@@ -194,31 +194,31 @@ public class TestersService : ITestersService
 
         matchingTesters = searchBy switch
         {
-            nameof(Tester.TesterName) =>
+            nameof(TesterResponse.TesterName) =>
                 FilterHelper.FilterBy(allTesters, x => x.TesterName, searchString),
 
-            nameof(Tester.Email) =>
+            nameof(TesterResponse.Email) =>
                 FilterHelper.FilterBy(allTesters, x => x.Email, searchString),
 
-            nameof(Tester.Gender) =>
+            nameof(TesterResponse.Gender) =>
                 FilterHelper.FilterBy(allTesters, x => x.Gender, searchString),
 
-            nameof(Tester.DevStream) =>
+            nameof(TesterResponse.DevStream) =>
                 FilterHelper.FilterBy(allTesters, x => x.DevStream, searchString),
 
-            nameof(Tester.Position) =>
+            nameof(TesterResponse.Position) =>
                 FilterHelper.FilterBy(allTesters, x => x.Position, searchString),
 
-            nameof(Tester.DevStreamId) =>
+            nameof(TesterResponse.DevStreamId) =>
                 FilterHelper.FilterBy(allTesters, x => x.DevStreamId?.ToString(), searchString),
 
-            nameof(Tester.BirthDate) =>
+            nameof(TesterResponse.BirthDate) =>
                 FilterHelper.FilterBy(allTesters, x => x.BirthDate?.ToString("dd MMMM yyyy"), searchString),
 
-            nameof(Tester.MonthsOfWorkExperience) =>
+            nameof(TesterResponse.MonthsOfWorkExperience) =>
                 FilterHelper.FilterBy(allTesters, x => x.MonthsOfWorkExperience?.ToString(), searchString),
 
-            nameof(Tester.Skills) =>
+            nameof(TesterResponse.Skills) =>
                 FilterHelper.FilterBy(allTesters, x => x.Skills, searchString),
 
             _ => matchingTesters
