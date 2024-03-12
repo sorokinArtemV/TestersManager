@@ -20,7 +20,12 @@
     <h2 class="heading heading--dark">QA Engineers</h2>
     <div class="form-container">
         <div class="form-container__inner">
-            <select name="" id="" class="form-container__select"></select>
+            <select name="" id="" class="form-container__select">
+                @foreach (var field in ViewBag.SearchFields)
+                {
+                    <option value="@field.Key">@field.Value</option>
+                }
+            </select>
             <input class="form-container__search" type="search" name="" id="" placeholder="Search">
             <input class="form-container__submit form-container__submit--violet" type="submit" value="Search">
         </div>

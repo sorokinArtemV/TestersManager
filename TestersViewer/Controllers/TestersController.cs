@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ServiceContracts;
+using ServiceContracts.DTO;
 
 namespace TestersViewer.Controllers;
 
@@ -16,6 +17,17 @@ public class TestersController : Controller
     [Route("/")]
     public IActionResult Index()
     {
+        ViewBag.SearchFields = new Dictionary<string, string>
+        {
+            [nameof(TesterResponse.TesterName)] = "Name",
+            [nameof(TesterResponse.DevStream)] = "Stream",
+            [nameof(TesterResponse.Position)] = "Position",
+            [nameof(TesterResponse.Skills)] = "Skills",
+            [nameof(TesterResponse.Email)] = "Email",
+            [nameof(TesterResponse.Gender)] = "Gender",
+            [nameof(TesterResponse.MonthsOfWorkExperience)] = "Work experience"
+        };
+
         var testers = _testersService.GetAllTesters();
 
         return View(testers);
