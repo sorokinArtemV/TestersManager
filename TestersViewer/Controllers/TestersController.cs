@@ -15,7 +15,7 @@ public class TestersController : Controller
 
     [Route("testers/index")]
     [Route("/")]
-    public IActionResult Index()
+    public IActionResult Index(string searchBy, string? searchString)
     {
         ViewBag.SearchFields = new Dictionary<string, string>
         {

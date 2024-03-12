@@ -18,45 +18,47 @@
 
 <div class="container">
     <h2 class="heading heading--dark">QA Engineers</h2>
-    <div class="form-container">
-        <div class="form-container__inner">
-            <select name="" id="" class="form-container__select">
-                @foreach (var field in ViewBag.SearchFields)
-                {
-                    <option value="@field.Key">@field.Value</option>
-                }
-            </select>
-            <input class="form-container__search" type="search" name="" id="" placeholder="Search">
-            <input class="form-container__submit form-container__submit--violet" type="submit" value="Search">
+    <form action="~/testers/index" method="get" class="form">
+        <div class="form-container">
+            <div class="form-container__inner">
+                <select name="searchBy" id="" class="form-container__select">
+                    @foreach (var field in ViewBag.SearchFields)
+                    {
+                        <option value="@field.Key">@field.Value</option>
+                    }
+                </select>
+                <input class="form-container__search" type="search" name="searchString" id="" placeholder="Search">
+                <input class="form-container__submit form-container__submit--violet" type="submit" value="Search">
+            </div>
         </div>
-    </div>
-    <table class="table">
-        <thead>
-        <tr>
-            <th class="table__name">Name</th>
-            <th class="table__email">Email</th>
-            <th class="table__age">Age</th>
-            <th>Gender</th>
-            <th>Stream</th>
-            <th>Position</th>
-            <th>Skills</th>
-            <th class="table__experience">Work Experience</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var tester in Model)
-        {
+        <table class="table">
+            <thead>
             <tr>
-                <td>@tester.TesterName</td>
-                <td>@tester.Email</td>
-                <td>@tester.Age</td>
-                <td>@tester.Gender</td>
-                <td>@tester.DevStream</td>
-                <td>@tester.Position</td>
-                <td>@tester.Skills</td>
-                <td>@ConversionHelper.ConvertMonthsToYears(tester.MonthsOfWorkExperience!.Value)</td>
+                <th class="table__name">Name</th>
+                <th class="table__email">Email</th>
+                <th class="table__age">Age</th>
+                <th>Gender</th>
+                <th>Stream</th>
+                <th>Position</th>
+                <th>Skills</th>
+                <th class="table__experience">Work Experience</th>
             </tr>
-        }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            @foreach (var tester in Model)
+            {
+                <tr>
+                    <td>@tester.TesterName</td>
+                    <td>@tester.Email</td>
+                    <td>@tester.Age</td>
+                    <td>@tester.Gender</td>
+                    <td>@tester.DevStream</td>
+                    <td>@tester.Position</td>
+                    <td>@tester.Skills</td>
+                    <td>@ConversionHelper.ConvertMonthsToYears(tester.MonthsOfWorkExperience!.Value)</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </form>
 </div>
