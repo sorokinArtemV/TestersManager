@@ -24,10 +24,11 @@
                 <select name="searchBy" id="" class="form-container__select">
                     @foreach (var field in ViewBag.SearchFields)
                     {
-                        if (field.Key == ViewBag.CurrentSearchBy)
-                        {
-                            <option value="@field.Key" selected="selected">@field.Value</option>
-                        }
+                        <option
+                            value="@field.Key" @(field.Key == ViewBag.CurrentSearchBy ? "selected=\"selected\"" : "")>
+                            @field.Value
+                        </option>
+                    }
                     }
                 </select>
                 <input
