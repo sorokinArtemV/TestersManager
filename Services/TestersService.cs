@@ -212,6 +212,9 @@ public class TestersService : ITestersService
             nameof(TesterResponse.DevStreamId) =>
                 FilterHelper.FilterBy(allTesters, x => x.DevStreamId?.ToString(), searchString),
 
+            nameof(TesterResponse.Age) =>
+                FilterHelper.FilterBy(allTesters, x => x.Age.ToString(), searchString),
+
             nameof(TesterResponse.BirthDate) =>
                 FilterHelper.FilterBy(allTesters, x => x.BirthDate?.ToString("dd MMMM yyyy"), searchString),
 
