@@ -43,13 +43,45 @@
         <table class="table">
             <thead>
             <tr>
-                <th class="table__name">Name</th>
+
+                @if (ViewBag.CurrentSortBy == nameof(TesterResponse.TesterName) &&
+                     ViewBag.CurrentSortOrder == SortOrderOptions.Asc.ToString())
+                {
+                    <th class="table__name">
+                        <a class="table__link"
+                           href="~/testers/index?searchBy=@ViewBag.CurrentSearchBy&searchString=@ViewBag.CurrentSearchString&sortBy=@nameof(TesterResponse.TesterName)&sortOrder=@nameof(SortOrderOptions.Desc)">
+                            Name
+                        </a>
+                    </th>
+                }
+
+                else if (ViewBag.CurrentSortBy == nameof(TesterResponse.TesterName) &&
+                         ViewBag.CurrentSortOrder == SortOrderOptions.Desc.ToString())
+                {
+                    <th class="table__name">
+                        <a class="table__link"
+                           href="~/testers/index?searchBy=@ViewBag.CurrentSearchBy&searchString=@ViewBag.CurrentSearchString&sortBy=@nameof(TesterResponse.TesterName)&sortOrder=@nameof(SortOrderOptions.Asc)">
+                            Name
+                        </a>
+                    </th>
+                }
+
+                else
+                {
+                    <th class="table__name">
+                        <a class="table__link"
+                           href="~/testers/index?searchBy=@ViewBag.CurrentSearchBy&searchString=@ViewBag.CurrentSearchString&sortBy=@nameof(TesterResponse.TesterName)&sortOrder=@nameof(SortOrderOptions.Asc)">
+                            Name
+                        </a>
+                    </th>
+                }
+
                 <th class="table__email">Email</th>
                 <th class="table__age">Age</th>
-                <th>Gender</th>
-                <th>Stream</th>
-                <th>Position</th>
-                <th>Skills</th>
+                <th class="table__gender">Gender</th>
+                <th class="table__devstream">Stream</th>
+                <th class="table__position">Position</th>
+                <th class="table__skills">Skills</th>
                 <th class="table__experience">Work Experience</th>
             </tr>
             </thead>

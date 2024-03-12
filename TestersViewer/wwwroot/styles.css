@@ -10,6 +10,7 @@ body {
     font-family: "Poppins", sans-serif;
 }
 
+
 .navbar {
     align-items: center;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
@@ -142,6 +143,12 @@ td {
 
 .table__experience {
     width: 15%;
+}
+
+.table__link:link,
+.table__link:visited {
+    text-decoration: none;
+    color: white;
 }
 
 th,

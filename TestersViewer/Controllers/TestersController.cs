@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ServiceContracts;
 using ServiceContracts.DTO;
+using ServiceContracts.Enums;
 
 namespace TestersViewer.Controllers;
 
@@ -15,8 +16,13 @@ public class TestersController : Controller
 
     [Route("testers/index")]
     [Route("/")]
-    public IActionResult Index(string searchBy, string? searchString)
+    public IActionResult Index(
+        string searchBy,
+        string? searchString,
+        string sortBy = nameof(TesterResponse.TesterName),
+        SortOrderOptions sortOrder = SortOrderOptions.Asc)
     {
+        // Search
         ViewBag.SearchFields = new Dictionary<string, string>
         {
             [nameof(TesterResponse.TesterName)] = "Name",
@@ -33,6 +39,12 @@ public class TestersController : Controller
 
         ViewBag.CurrentSearchBy = searchBy;
         ViewBag.CurrentSearchString = searchString;
+
+        // Sort
+        var sortedTesters = _testersService.GetSortedTesters(testers, sortBy, sortOrder);
+
+        ViewBag.CurrentSortBy = sortBy;
+        ViewBag.CurrentSortOrder = sortOrder.ToString();
 
         return View(testers);
     }
