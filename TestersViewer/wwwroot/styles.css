@@ -130,7 +130,7 @@ td {
 }
 
 .table__name {
-    width: 15%
+    width: 15%;
 }
 
 .table__email {
@@ -148,6 +148,10 @@ td {
 .table__link:link,
 .table__link:visited {
     text-decoration: none;
+    color: white;
+}
+
+.table__icon {
     color: white;
 }
 
