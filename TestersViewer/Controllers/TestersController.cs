@@ -7,11 +7,13 @@ namespace TestersViewer.Controllers;
 
 public class TestersController : Controller
 {
+    private readonly IDevStreamsService _devStreamsService;
     private readonly ITestersService _testersService;
 
-    public TestersController(ITestersService testersService)
+    public TestersController(ITestersService testersService, IDevStreamsService devStreamsService)
     {
         _testersService = testersService;
+        _devStreamsService = devStreamsService;
     }
 
     [Route("testers/index")]
@@ -47,5 +49,15 @@ public class TestersController : Controller
         ViewBag.CurrentSortOrder = sortOrder.ToString();
 
         return View(sortedTesters);
+    }
+
+
+    // triggers on click create
+    [Route("testers/create")]
+    [HttpGet]
+    public IActionResult Create()
+    {
+        ViewBag.DevStreams = _devStreamsService.GetAllDevStreams();
+        return View();
     }
 }
