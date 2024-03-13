@@ -5,16 +5,6 @@
     ViewBag.Title = "Testers";
 }
 
-@* <div class=""> *@
-@*     <div class=""> *@
-@*         <select name="" id="" class="from"></select> *@
-@*     </div> *@
-@*      *@
-@*     <div class=""> *@
-@*         <input type="search" name="" id="" class="" placeholder="Search"> *@
-@*     </div> *@
-@* </div> *@
-
 
 <div class="container">
     <h2 class="heading heading--dark">QA Engineers</h2>
@@ -44,48 +34,53 @@
             <thead>
             <tr>
 
-                @if (ViewBag.CurrentSortBy == nameof(TesterResponse.TesterName) &&
-                     ViewBag.CurrentSortOrder == SortOrderOptions.Asc.ToString())
+                @await Html.PartialAsync("_GridTableHeader", new ViewDataDictionary(ViewData)
                 {
-                    <th class="table__name">
-                        <a class="table__link"
-                           href="~/testers/index?searchBy=@ViewBag.CurrentSearchBy&searchString=@ViewBag.CurrentSearchString&sortBy=@nameof(TesterResponse.TesterName)&sortOrder=@nameof(SortOrderOptions.Desc)">
-                            Name
-                        </a>
-                        <ion-icon name="chevron-down-outline" class="table__icon"></ion-icon>
-                    </th>
-                }
+                    ["ColumnName"] = nameof(TesterResponse.TesterName),
+                    ["DisplayName"] = "Name"
+                })
 
-                else if (ViewBag.CurrentSortBy == nameof(TesterResponse.TesterName) &&
-                         ViewBag.CurrentSortOrder == SortOrderOptions.Desc.ToString())
+                @await Html.PartialAsync("_GridTableHeader", new ViewDataDictionary(ViewData)
                 {
-                    <th class="table__name">
-                        <a class="table__link"
-                           href="~/testers/index?searchBy=@ViewBag.CurrentSearchBy&searchString=@ViewBag.CurrentSearchString&sortBy=@nameof(TesterResponse.TesterName)&sortOrder=@nameof(SortOrderOptions.Asc)">
-                            Name
-                        </a>
-                        <ion-icon name="chevron-up-outline" class="table__icon"></ion-icon>
-                    </th>
-                }
+                    ["ColumnName"] = nameof(TesterResponse.Email),
+                    ["DisplayName"] = "Email"
+                })
 
-                else
+                @await Html.PartialAsync("_GridTableHeader", new ViewDataDictionary(ViewData)
                 {
-                    <th class="table__name">
-                        <a class="table__link"
-                           href="~/testers/index?searchBy=@ViewBag.CurrentSearchBy&searchString=@ViewBag.CurrentSearchString&sortBy=@nameof(TesterResponse.TesterName)&sortOrder=@nameof(SortOrderOptions.Asc)">
-                            Name
-                        </a>
-                        <ion-icon name="chevron-up-outline" class="table__icon"></ion-icon>
-                    </th>
-                }
+                    ["ColumnName"] = nameof(TesterResponse.Age),
+                    ["DisplayName"] = "Age"
+                })
 
-                <th class="table__email">Email</th>
-                <th class="table__age">Age</th>
-                <th class="table__gender">Gender</th>
-                <th class="table__devstream">Stream</th>
-                <th class="table__position">Position</th>
-                <th class="table__skills">Skills</th>
-                <th class="table__experience">Work Experience</th>
+                @await Html.PartialAsync("_GridTableHeader", new ViewDataDictionary(ViewData)
+                {
+                    ["ColumnName"] = nameof(TesterResponse.Gender),
+                    ["DisplayName"] = "Gender"
+                })
+
+                @await Html.PartialAsync("_GridTableHeader", new ViewDataDictionary(ViewData)
+                {
+                    ["ColumnName"] = nameof(TesterResponse.DevStream),
+                    ["DisplayName"] = "DevStream"
+                })
+
+                @await Html.PartialAsync("_GridTableHeader", new ViewDataDictionary(ViewData)
+                {
+                    ["ColumnName"] = nameof(TesterResponse.Position),
+                    ["DisplayName"] = "Position"
+                })
+
+                @await Html.PartialAsync("_GridTableHeader", new ViewDataDictionary(ViewData)
+                {
+                    ["ColumnName"] = nameof(TesterResponse.Skills),
+                    ["DisplayName"] = "Skills"
+                })
+
+                @await Html.PartialAsync("_GridTableHeader", new ViewDataDictionary(ViewData)
+                {
+                    ["ColumnName"] = nameof(TesterResponse.MonthsOfWorkExperience),
+                    ["DisplayName"] = "Works for"
+                })
             </tr>
             </thead>
             <tbody>

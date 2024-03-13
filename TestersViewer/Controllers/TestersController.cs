@@ -32,7 +32,7 @@ public class TestersController : Controller
             [nameof(TesterResponse.Age)] = "Age",
             [nameof(TesterResponse.Email)] = "Email",
             [nameof(TesterResponse.Gender)] = "Gender",
-            [nameof(TesterResponse.MonthsOfWorkExperience)] = "Work experience"
+            [nameof(TesterResponse.MonthsOfWorkExperience)] = "Works for"
         };
 
         var testers = _testersService.GetFilteredTesters(searchBy, searchString);
@@ -46,6 +46,6 @@ public class TestersController : Controller
         ViewBag.CurrentSortBy = sortBy;
         ViewBag.CurrentSortOrder = sortOrder.ToString();
 
-        return View(testers);
+        return View(sortedTesters);
     }
 }
