@@ -135,7 +135,7 @@ td {
 /*}*/
 
 /*.table__age {*/
-/*    width: 5%;*/
+/*    width: 2%;*/
 /*}*/
 
 /*.table__experience {*/
@@ -146,6 +146,7 @@ td {
 .table__icon {
     color: white;
 }
+
 
 th,
 td {

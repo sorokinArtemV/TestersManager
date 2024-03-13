@@ -1,4 +1,3 @@
-using System.Reflection;
 using ServiceContracts.Enums;
 
 namespace Services.Helpers;
@@ -7,24 +6,31 @@ public static class SorterHelper
 {
     public static List<T> SortByProperty<T>(List<T> list, string propertyName, SortOrderOptions order)
     {
-        PropertyInfo prop = typeof(T).GetProperty(propertyName);
+        var prop = typeof(T).GetProperty(propertyName);
 
-        if (prop == null || !prop.CanRead || !typeof(IComparable).IsAssignableFrom(prop.PropertyType))
+        if (prop == null || !prop.CanRead) return list;
+
+        var comparer = Comparer<T>.Create((x, y) =>
         {
-            return list;
-        }
+            var xValue = prop.GetValue(x);
+            var yValue = prop.GetValue(y);
 
-        Comparer<T> comparer = Comparer<T>.Create((x, y) =>
-        {
-            object xValue = prop.GetValue(x);
-            object yValue = prop.GetValue(y);
+            // Check if the property type is a nullable int and convert to string for comparison
+            if (prop.PropertyType == typeof(int?) || prop.PropertyType == typeof(int))
+            {
+                var xInt = xValue as int?;
+                var yInt = yValue as int?;
+                var result = Nullable.Compare(xInt, yInt);
 
-            int result = StringComparer.OrdinalIgnoreCase.Compare(xValue, yValue);
+                return order == SortOrderOptions.Desc ? -result : result;
+            }
+            else
+            {
+                // Fallback to string comparison
+                var result = StringComparer.OrdinalIgnoreCase.Compare(xValue?.ToString(), yValue?.ToString());
 
-            if (order == SortOrderOptions.Desc) result = -result;
-
-
-            return result;
+                return order == SortOrderOptions.Desc ? -result : result;
+            }
         });
 
         list.Sort(comparer);
