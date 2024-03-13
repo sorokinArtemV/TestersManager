@@ -7,6 +7,11 @@ public static class ConversionHelper
         if (totalMonths is null) return "Just started";
         var years = totalMonths / 12;
         var months = totalMonths % 12;
-        return $"{(years < 1 ? "" : years.ToString())}{(months < 1 ? "" : $"{(years >= 1 ? "." : " ")}" + months)}";
+        return years switch
+        {
+            > 0 when months > 0 => $"{years}y {months}m",
+            > 0 => $"{years}y",
+            _ => $"{months}m"
+        };
     }
 }
