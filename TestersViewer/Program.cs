@@ -5,8 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<IDevStreamsService, DevStreamsService>();
-builder.Services.AddScoped<ITestersService, TestersService>();
+builder.Services.AddSingleton<IDevStreamsService, DevStreamsService>();
+builder.Services.AddSingleton<ITestersService, TestersService>();
 
 var app = builder.Build();
 

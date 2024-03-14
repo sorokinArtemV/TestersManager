@@ -12,15 +12,15 @@
 
             <!-- Name -->
             <label for="TesterName">Name</label>
-            <input type="text" id="TesterName" name="TesterName" required>
+            <input type="text" id="TesterName" name="TesterName">
 
             <!-- Email -->
             <label for="Email">Email</label>
-            <input type="email" id="Email" name="Email" required>
+            <input type="email" id="Email" name="Email">
 
             <!-- BirthDate -->
             <label for="BirthDate">Date of birth</label>
-            <input type="date" id="BirthDate" name="BirthDate" required>
+            <input type="date" id="BirthDate" name="BirthDate">
 
             <!-- Gender -->
             <label >Gender</label>
@@ -37,7 +37,7 @@
 
             <!-- DevStream -->
             <label for="DevStreamId">Stream</label>
-            <select name="DevStreamId" id="DevStreamId" required>
+            <select name="DevStreamId" id="DevStreamId">
                 <option value="">Select a stream</option>
                 @foreach (DevStreamResponse stream in ViewBag.DevStreams)
                 {
@@ -47,17 +47,26 @@
 
             <!-- Position -->
             <label for="Position">Position</label>
-            <input type="text" id="Position" name="Position" required>
+            <input type="text" id="Position" name="Position">
 
             <!-- Skills -->
             <label for="Skills">Skills</label>
-            <input type="text" id="Skills" name="Skills" required>
+            <input type="text" id="Skills" name="Skills">
 
             <!-- Months of work experience -->
             <label for="MonthsOfWorkExperience">Months of work experience</label>
-            <input type="number" id="MonthsOfWorkExperience" name="MonthsOfWorkExperience" min="0" required>
+            <input type="number" id="MonthsOfWorkExperience" name="MonthsOfWorkExperience" min="0">
 
             <button class="form-create__btn form-create__btn--blue" type="submit">Submit</button>
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <ul class="error-list">
+                    @foreach (var error in ViewBag.ErrorMessage)
+                    {
+                        <li>@error</li>
+                    }
+                </ul>
+            }
         </form>
     </div>
 </div>

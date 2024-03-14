@@ -401,3 +401,7 @@ tbody tr:nth-child(even) {
 .form-create select:hover {
     border: 1px solid #a8a8a8;
 }
+
+.error-list li {
+    color: red;
+}

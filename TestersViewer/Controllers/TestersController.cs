@@ -74,10 +74,12 @@ public class TestersController : Controller
             ViewBag.DevStreams = devStreams;
 
             ViewBag.Errors = ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage).ToList();
-            
+
             return View();
         }
-        
-        return View();
+
+        var testerResponse = _testersService.AddTester(tester);
+
+        return RedirectToAction("Index", "Testers");
     }
 }
