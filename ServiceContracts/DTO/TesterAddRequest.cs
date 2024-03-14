@@ -40,7 +40,8 @@ public class TesterAddRequest
             Position = Position,
             MonthsOfWorkExperience = MonthsOfWorkExperience,
             HasMobileDeviceExperience = HasMobileDeviceExperience,
-            Skills = string.Join(", ", Skills != null ? Skills.Select(x => x.ToString()) : "")
+            Skills = Skills
+            // Skills = string.Join(", ", Skills != null ? Skills.Select(x => x.ToString()) : "");
         };
     }
 }
