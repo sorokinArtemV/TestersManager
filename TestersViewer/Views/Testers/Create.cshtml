@@ -9,20 +9,21 @@
             <a href="~/testers/index" class="button button--secondary">Back to all Testers</a>
         </div>
         <form action="~/testers/create" class="form-create" method="post">
+
             <!-- Name -->
             <label for="TesterName">Name</label>
-            <input type="text" id="TesterName" name="name" required>
+            <input type="text" id="TesterName" name="TesterName" required>
 
             <!-- Email -->
             <label for="Email">Email</label>
-            <input type="email" id="Email" name="email" required>
+            <input type="email" id="Email" name="Email" required>
 
             <!-- BirthDate -->
-            <label for="BirthDate">Birth date</label>
-            <input type="date" id="BirthDate" name="birthdate" required>
+            <label for="BirthDate">Date of birth</label>
+            <input type="date" id="BirthDate" name="BirthDate" required>
 
             <!-- Gender -->
-            <label for="Gender">Gender</label>
+            <label >Gender</label>
             <div class="radio-group">
                 <div class="radio-group__inner">
                     <input type="radio" id="Male" name="Gender" value="Male">
@@ -37,21 +38,24 @@
             <!-- DevStream -->
             <label for="DevStreamId">Stream</label>
             <select name="DevStreamId" id="DevStreamId" required>
-                <option value="">Select stream</option>
-                <!-- Stream options will be populated here -->
+                <option value="">Select a stream</option>
+                @foreach (DevStreamResponse stream in ViewBag.DevStreams)
+                {
+                    <option value="@stream.DevStreamId">@stream.DevStreamName</option>
+                }
             </select>
 
             <!-- Position -->
             <label for="Position">Position</label>
-            <input type="text" id="Position" name="position" required>
+            <input type="text" id="Position" name="Position" required>
 
             <!-- Skills -->
             <label for="Skills">Skills</label>
-            <input type="text" id="Skills" name="skills" required>
+            <input type="text" id="Skills" name="Skills" required>
 
             <!-- Months of work experience -->
             <label for="MonthsOfWorkExperience">Months of work experience</label>
-            <input type="number" id="MonthsOfWorkExperience" name="experience" min="0" required>
+            <input type="number" id="MonthsOfWorkExperience" name="MonthsOfWorkExperience" min="0" required>
 
             <button class="form-create__btn form-create__btn--blue" type="submit">Submit</button>
         </form>

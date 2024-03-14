@@ -57,7 +57,9 @@ public class TestersController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        ViewBag.DevStreams = _devStreamsService.GetAllDevStreams();
+        var devStreams = _devStreamsService.GetAllDevStreams();
+        ViewBag.DevStreams = devStreams;
+
         return View();
     }
 }
