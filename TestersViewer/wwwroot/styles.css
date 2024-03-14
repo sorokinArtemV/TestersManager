@@ -355,6 +355,12 @@ tbody tr:nth-child(even) {
     margin-bottom: 1rem;
 }
 
+.container-form-create__heading {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
 .radio-group {
     margin-bottom: 15px;
 }
