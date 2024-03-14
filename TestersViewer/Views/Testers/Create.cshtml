@@ -2,90 +2,58 @@
     ViewBag.Title = "Create Tester";
 }
 
-<a href="~/testers/index" class="button button--violet">Back to all Testers</a>
-<h2>Create Tester</h2>
-
-<div class="">
-    <form action="~/testers/create" class="form-create" method="post">
-
-        @* Name *@
-        <div class="">
+<div class="container-form-wrapper">
+    <div class="container-form-create">
+        <div class="title-box">
+            <h2>Create Tester</h2>
+            <a href="~/testers/index" class="button button--secondary">Back to all Testers</a>
+        </div>
+        <form action="~/testers/create" class="form-create" method="post">
+            <!-- Name -->
             <label for="TesterName">Name</label>
-        </div>
-        <div class="">
-            <input type="text" id="TesterName">
-        </div>
+            <input type="text" id="TesterName" name="name" required>
 
-        @* Email *@
-        <div class="">
+            <!-- Email -->
             <label for="Email">Email</label>
-        </div>
-        <div class="">
-            <input type="email" id="Email">
-        </div>
+            <input type="email" id="Email" name="email" required>
 
-        @* BirthDate *@
-        <div class="">
+            <!-- BirthDate -->
             <label for="BirthDate">Birth date</label>
-        </div>
-        <div class="">
-            <input type="date" id="BirthDate">
-        </div>
+            <input type="date" id="BirthDate" name="birthdate" required>
 
-        @* Gender *@
-        <div class="">
+            <!-- Gender -->
             <label for="Gender">Gender</label>
-        </div>
-        <div class="">
-            <input type="radio" id="Male" name="Gender" value="Male">
-            <label for="Male">Male</label>
-            <input type="radio" id="Female" name="Gender" value="Female">
-            <label for="Female">Female</label>
-            <input type="radio" id="Other" name="Gender" value="Other">
-            <label for="Other">Other</label>
-        </div>
-
-        @* DevStream *@
-        <div class="">
-            <div class="">
-                <label for="DevStreamId">Stream</label>
+            <div class="radio-group">
+                <div class="radio-group__inner">
+                    <input type="radio" id="Male" name="Gender" value="Male">
+                    <label for="Male">Male</label>
+                    <input type="radio" id="Female" name="Gender" value="Female">
+                    <label for="Female">Female</label>
+                    <input type="radio" id="Other" name="Gender" value="Other">
+                    <label for="Other">Other</label>
+                </div>
             </div>
-            <div class="">
-                <select name="DevStreamId" id="DevStreamId">
-                    <option value="">Select stream</option>
-                    @foreach (DevStreamResponse stream in ViewBag.DevStreams)
-                    {
-                        <option value="@stream.DevStreamId">@stream.DevStreamName</option>
-                    }
-                </select>
-            </div>
-        </div>
 
-        @* Position *@
-        <div class="">
+            <!-- DevStream -->
+            <label for="DevStreamId">Stream</label>
+            <select name="DevStreamId" id="DevStreamId" required>
+                <option value="">Select stream</option>
+                <!-- Stream options will be populated here -->
+            </select>
+
+            <!-- Position -->
             <label for="Position">Position</label>
-        </div>
-        <div class="">
-            <input type="text" id="Position">
-        </div>
+            <input type="text" id="Position" name="position" required>
 
-        @* Skills *@
-        <div class="">
+            <!-- Skills -->
             <label for="Skills">Skills</label>
-        </div>
-        <div class="">
-            <input type="text" id="Skills">
-        </div>
+            <input type="text" id="Skills" name="skills" required>
 
-        @* Months of work experience *@
-        <div class="">
+            <!-- Months of work experience -->
             <label for="MonthsOfWorkExperience">Months of work experience</label>
-        </div>
-        <div class="">
-            <input type="number" id="MonthsOfWorkExperience">
-        </div>
+            <input type="number" id="MonthsOfWorkExperience" name="experience" min="0" required>
 
-        <button class="form-create__btn" name="Email">Submit</button>
-    </form>
-
+            <button class="form-create__btn form-create__btn--blue" type="submit">Submit</button>
+        </form>
+    </div>
 </div>

@@ -13,8 +13,7 @@ body {
 
 .navbar {
     align-items: center;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
-    rgba(0, 0, 0, 0.17) 0px 1px 3px -1px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.07);
     z-index: 1;
 }
 
@@ -230,6 +229,45 @@ tbody tr:nth-child(even) {
     color: white;
 }
 
+.button--secondary:link,
+.button--secondary:visited {
+    text-decoration: none;
+    color: #6a6a6a;
+    font-size: 95%;
+    font-weight: 400;
+    padding: 5px 10px;
+}
+
+.button--secondary:hover,
+.button--secondary:active {
+    border-bottom: #b927fc 2px solid;
+    border-radius: 5px;
+    color: #b927fc;
+    background: linear-gradient(to right, #b927fc 0%, #2c64fc 100%);
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+
+.button--secondary {
+    /* Set initial border color and text color */
+    border-bottom: 2px solid #b927fc;
+    color: #b927fc;
+    /* Apply the gradient to the text */
+    -webkit-background-clip: text;
+    background-clip: text;
+    /* Hide the border by setting it to transparent */
+    border-color: transparent;
+    /* Add a smooth transition for the border */
+    transition: border-color 0.3s ease;
+}
+
+.button--secondary:hover {
+    /* Show the border on hover */
+    border-color: #b927fc;
+}
+
 
 /* Hover and focus states for interactive elements */
 .form-container__select:hover,
@@ -251,22 +289,6 @@ tbody tr:nth-child(even) {
     color: #a8a8a8;
 }
 
-/* table links */
-/*.table__link:link,*/
-/*.table__link:visited {*/
-/*    text-decoration: none;*/
-/*    color: white;*/
-/*    padding: 5px 10px;*/
-/*    transition: all 0.4s ease;*/
-/*}*/
-
-/*.table__link:hover,*/
-/*.table__link:active {*/
-/*    background: linear-gradient(to right, #b927fc 0%, #2c64fc 100%);*/
-/*    color: transparent;*/
-/*    -webkit-background-clip: text;*/
-/*    background-clip: text;*/
-/*}*/
 
 .table__link:link,
 .table__link:visited {
@@ -274,7 +296,7 @@ tbody tr:nth-child(even) {
     color: white;
     /*padding: 5px 10px;*/
     border-bottom: 2px solid transparent;
-    transition: all 0.3s linear /* Transition for background and border color */
+    transition: all 0.3s linear
 }
 
 .table__link:hover,
@@ -285,4 +307,91 @@ tbody tr:nth-child(even) {
     -webkit-background-clip: text;
     background-clip: text;
     border-color: #3f3f3f;
+}
+
+/* Form Create */
+.container-form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-form-create {
+    align-self: center;
+    width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+}
+
+.form-create {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-create label {
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form-create input[type=text],
+.form-create input[type=email],
+.form-create input[type=date],
+.form-create input[type=number],
+.form-create select {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.title-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.radio-group {
+    margin-bottom: 15px;
+}
+
+.radio-group input[type=radio] {
+    margin-right: 5px;
+}
+
+.form-create__btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.5s linear;
+}
+
+.form-create__btn--blue {
+    background-color: #2c64fc;
+    color: white;
+}
+
+.form-create__btn--blue:hover {
+    background-color: #b927fc;
+}
+
+.radio-group__inner {
+    margin-top: 0.5rem;
+    border: solid 1px #ccc;
+    display: inline-block;
+    padding: 0.2rem 0.5rem 0.2rem 0.2rem;
+    border-radius: 4px;
+}
+
+.form-create input[type="text"]:hover,
+.form-create input[type="email"]:hover,
+.form-create input[type="date"]:hover,
+.form-create input[type="number"]:hover,
+.form-create select:hover {
+    border: 1px solid #a8a8a8;
 }
