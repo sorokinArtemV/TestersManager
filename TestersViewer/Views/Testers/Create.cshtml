@@ -58,10 +58,10 @@
             <input type="number" id="MonthsOfWorkExperience" name="MonthsOfWorkExperience" min="0">
 
             <button class="form-create__btn form-create__btn--blue" type="submit">Submit</button>
-            @if (ViewBag.ErrorMessage != null)
+            @if (ViewBag.Errors != null)
             {
                 <ul class="error-list">
-                    @foreach (var error in ViewBag.ErrorMessage)
+                    @foreach (string error in ViewBag.Errors)
                     {
                         <li>@error</li>
                     }
