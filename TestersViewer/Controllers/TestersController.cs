@@ -53,13 +53,31 @@ public class TestersController : Controller
 
 
     // triggers on click create
-    [Route("testers/create")]
     [HttpGet]
+    [Route("testers/create")]
     public IActionResult Create()
     {
         var devStreams = _devStreamsService.GetAllDevStreams();
         ViewBag.DevStreams = devStreams;
 
+        return View();
+    }
+
+    // accepts submitted form
+    [HttpPost]
+    [Route("testers/create")]
+    public IActionResult Create(TesterAddRequest tester)
+    {
+        if (!ModelState.IsValid)
+        {
+            var devStreams = _devStreamsService.GetAllDevStreams();
+            ViewBag.DevStreams = devStreams;
+
+            ViewBag.Errors = ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage).ToList();
+            
+            return View();
+        }
+        
         return View();
     }
 }

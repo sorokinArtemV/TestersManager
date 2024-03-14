@@ -365,8 +365,8 @@ tbody tr:nth-child(even) {
     margin-bottom: 15px;
 }
 
-.radio-group input[type=radio] {
-    margin-right: 5px;
+.radio-group label {
+    margin-right: 10px;
 }
 
 .form-create__btn {
