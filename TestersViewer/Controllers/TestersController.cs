@@ -5,6 +5,7 @@ using ServiceContracts.Enums;
 
 namespace TestersViewer.Controllers;
 
+[Route("[controller]")]
 public class TestersController : Controller
 {
     private readonly IDevStreamsService _devStreamsService;
@@ -16,7 +17,7 @@ public class TestersController : Controller
         _devStreamsService = devStreamsService;
     }
 
-    [Route("testers/index")]
+    [Route("[action]")]
     [Route("/")]
     public IActionResult Index(
         string searchBy,
@@ -54,7 +55,7 @@ public class TestersController : Controller
 
     // triggers on click create
     [HttpGet]
-    [Route("testers/create")]
+    [Route("[action]")]
     public IActionResult Create()
     {
         var devStreams = _devStreamsService.GetAllDevStreams();
@@ -65,7 +66,7 @@ public class TestersController : Controller
 
     // accepts submitted form
     [HttpPost]
-    [Route("testers/create")]
+    [Route("[action]")]
     public IActionResult Create(TesterAddRequest tester)
     {
         if (!ModelState.IsValid)
