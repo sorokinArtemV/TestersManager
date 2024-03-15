@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
@@ -60,7 +61,13 @@ public class TestersController : Controller
     {
         var devStreams = _devStreamsService.GetAllDevStreams();
         ViewBag.DevStreams = devStreams;
-
+        
+        ViewBag.devStreams = devStreams.Select(x => new SelectListItem()
+        {
+            Text = x.DevStreamName, 
+            Value = x.DevStreamId.ToString()
+        }); 
+    
         return View();
     }
 

@@ -13,7 +13,7 @@
         <form asp-controller="Testers" asp-action="Create" class="form-create" method="post">
 
             <!-- Name -->
-            <label for="TesterName">Name</label>
+            <label asp-for="TesterName">Name</label>
             <input asp-for="TesterName">
 
             <!-- Email -->
@@ -21,7 +21,7 @@
             <input asp-for="Email">
 
             <!-- BirthDate -->
-            <label for="BirthDate">Date of birth</label>
+            <label asp-for="BirthDate">Date of birth</label>
             <input asp-for="BirthDate">
 
             <!-- Gender -->
@@ -40,17 +40,13 @@
             </div>
 
             <!-- DevStream -->
-            <label for="DevStreamId">Stream</label>
-            <select asp-for="DevStreamId">
+            <label asp-for="DevStreamId">Stream</label>
+            <select asp-for="DevStreamId" asp-items="ViewBag.DevStreams">
                 <option value="">Select a stream</option>
-                @foreach (DevStreamResponse stream in ViewBag.DevStreams)
-                {
-                    <option value="@stream.DevStreamId">@stream.DevStreamName</option>
-                }
             </select>
 
             <!-- Position -->
-            <label for="Position">Position</label>
+            <label asp-for="Position">Position</label>
             <input asp-for="Position">
 
             <!-- Skills -->
@@ -58,7 +54,7 @@
             <input asp-for="Skills">
 
             <!-- Months of work experience -->
-            <label for="MonthsOfWorkExperience">Months of work experience</label>
+            <label asp-for="MonthsOfWorkExperience">Months of work experience</label>
             <input asp-for="MonthsOfWorkExperience" min="0">
 
             <button class="form-create__btn form-create__btn--blue" type="submit">Submit</button>
