@@ -19,7 +19,7 @@
 <nav class="navbar">
     <div class="navbar__inner">
         <div class="navbar__logo">
-            <img src="~/Logo64x64.png" alt="logo" class="navbar__img"/>
+            <img src="~/Logo64x64.png" alt="logo" class="navbar__img" asp-append-version="true"/>
             <a asp-controller="Testers" asp-action="Index" class="heading heading--violet">TestersViewer</a>
         </div>
         <ul class="navbar__links">
@@ -42,6 +42,6 @@
 <main class="main">
     @RenderBody()
 </main>
-@await RenderSectionAsync("scripts", required: false)
+@await RenderSectionAsync("scripts", false)
 </body>
 </html>
