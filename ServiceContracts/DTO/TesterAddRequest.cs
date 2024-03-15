@@ -14,10 +14,12 @@ public class TesterAddRequest
 
     [Required(ErrorMessage = "Email cannot empty")]
     [EmailAddress(ErrorMessage = "Invalid email address")]
+    [DataType(DataType.EmailAddress)]
     public string? Email { get; set; }
 
     public GenderOptions? Gender { get; set; }
 
+    [DataType(DataType.Date)]
     public DateTime? BirthDate { get; set; }
 
     public Guid? DevStreamId { get; set; }
@@ -25,11 +27,12 @@ public class TesterAddRequest
     public string? Position { get; set; }
 
     [Required(ErrorMessage = "Months of work experience is required")]
+    [Range(0, int.MaxValue, ErrorMessage = "Months of work experience cannot be negative")]
     public int? MonthsOfWorkExperience { get; set; }
 
     [Required(ErrorMessage = "Mobile device experience is required")]
     public bool HasMobileDeviceExperience { get; set; }
-    
+
     public string? Skills { get; set; }
 
 
