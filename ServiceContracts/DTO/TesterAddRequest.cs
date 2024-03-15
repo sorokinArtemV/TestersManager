@@ -9,7 +9,7 @@ namespace ServiceContracts.DTO;
 /// </summary>
 public class TesterAddRequest
 {
-    [Required(ErrorMessage = "Tester name cannot be empty")]
+    [Required(ErrorMessage = "Name cannot be empty")]
     public string? TesterName { get; set; }
 
     [Required(ErrorMessage = "Email cannot empty")]
@@ -21,10 +21,10 @@ public class TesterAddRequest
     public GenderOptions? Gender { get; set; }
 
     [DataType(DataType.Date)]
-    [Required(ErrorMessage = "BirthDate cannot be empty")]
+    [Required(ErrorMessage = "Date of birth cannot be empty")]
     public DateTime? BirthDate { get; set; }
 
-    [Required(ErrorMessage = "DevStreamId cannot be empty")]
+    [Required(ErrorMessage = "Stream cannot be empty")]
     public Guid? DevStreamId { get; set; }
 
     [Required(ErrorMessage = "Position cannot be empty")]

@@ -18,7 +18,7 @@
             <span asp-validation-for="TesterName" class="form-validation-error"></span>
 
             <!-- Email -->
-            <label for="Email">Email</label>
+            <label asp-for="Email">Email</label>
             <input asp-for="Email">
             <span asp-validation-for="Email" class="form-validation-error"></span>
 
@@ -59,7 +59,7 @@
 
 
             <!-- Skills -->
-            <label for="Skills">Skills</label>
+            <label asp-for="Skills">Skills</label>
             <input asp-for="Skills">
             <span asp-validation-for="Skills" class="form-validation-error"></span>
 
@@ -70,7 +70,7 @@
             <span asp-validation-for="MonthsOfWorkExperience" class="form-validation-error"></span>
 
             <button class="form-create__btn form-create__btn--blue" type="submit">Submit</button>
-            
+
             @if (ViewBag.Errors != null)
             {
                 <ul class="error-list">
@@ -84,21 +84,32 @@
     </div>
 </div>
 
-<script
-    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"></script>
+@section scripts
+{
 
-<script
-    src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"
-    integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+        asp-fallback-test="window.jQuery"
+        asp-fallback-src="~/jquery.min.js"></script>
 
-<script
-    src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"
-    integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"></script>
-<script defer src="~/script.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"
+        integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+        asp-fallback-test="window.jQuery.validator"
+        asp-fallback-src="~/jquery.validate.min.js"></script>
+
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"
+        integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+        asp-fallback-test="window.jQuery.validator.unobtrusive"
+        asp-fallback-src="~/jquery.validate.unobtrusive.min.js"></script>
+    <script defer src="~/script.js"></script>
+
+}
