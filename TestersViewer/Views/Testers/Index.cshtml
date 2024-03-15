@@ -8,17 +8,20 @@
 
 <div class="container">
     <h2 class="heading heading--dark">QA Engineers</h2>
-    <form action="~/testers/index" method="get" class="form">
+    <form asp-controller="Testers" asp-action="Index" method="get" class="form">
         <div class="form-container">
             <div class="form-container__inner">
                 <select name="searchBy" id="" class="form-container__select">
                     @foreach (var field in ViewBag.SearchFields)
                     {
-                        <option
-                            value="@field.Key" @(field.Key == ViewBag.CurrentSearchBy ? "selected=\"selected\"" : "")>
-                            @field.Value
-                        </option>
-                    }
+                        if (field.Key == ViewBag.CurrentSearchBy)
+                        {
+                            <option value="@field.Key" selected="selected">@field.Value</option>
+                        }
+                        else
+                        {
+                            <option value="@field.Key">@field.Value</option>
+                        }
                     }
                 </select>
                 <input

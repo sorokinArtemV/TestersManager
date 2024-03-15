@@ -6,9 +6,9 @@
     <div class="container-form-create">
         <div class="title-box">
             <h2 class="container-form-create__heading">Create Tester</h2>
-            <a href="~/testers/index" class="button button--secondary">Back to all Testers</a>
+            <a asp-controller="Testers" asp-action="Index" class="button button--secondary">Back to all Testers</a>
         </div>
-        <form action="~/testers/create" class="form-create" method="post">
+        <form asp-controller="Testers" asp-action="Create" class="form-create" method="post">
 
             <!-- Name -->
             <label for="TesterName">Name</label>
