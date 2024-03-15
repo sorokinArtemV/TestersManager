@@ -17,13 +17,17 @@ public class TesterAddRequest
     [DataType(DataType.EmailAddress)]
     public string? Email { get; set; }
 
+    [Required(ErrorMessage = "Gender cannot be empty")]
     public GenderOptions? Gender { get; set; }
 
     [DataType(DataType.Date)]
+    [Required(ErrorMessage = "BirthDate cannot be empty")]
     public DateTime? BirthDate { get; set; }
 
+    [Required(ErrorMessage = "DevStreamId cannot be empty")]
     public Guid? DevStreamId { get; set; }
 
+    [Required(ErrorMessage = "Position cannot be empty")]
     public string? Position { get; set; }
 
     [Required(ErrorMessage = "Months of work experience is required")]
