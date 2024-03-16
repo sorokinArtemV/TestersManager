@@ -5,30 +5,45 @@ using ServiceContracts.Enums;
 namespace ServiceContracts.DTO;
 
 /// <summary>
-/// DTO object to update a Tester
+///     DTO object to update a Tester
 /// </summary>
 public class TesterUpdateRequest
 {
     public Guid TesterId { get; set; }
 
-    [Required(ErrorMessage = "Tester name cannot be null or empty")]
+    [Required(ErrorMessage = "Tester name cannot be empty")]
     public string? TesterName { get; set; }
 
-    [Required(ErrorMessage = "Email cannot be null or empty")]
+    [Required(ErrorMessage = "Email cannot empty")]
     [EmailAddress(ErrorMessage = "Invalid email address")]
+    [DataType(DataType.EmailAddress)]
     public string? Email { get; set; }
 
+    [Required(ErrorMessage = "Gender cannot be empty")]
     public GenderOptions? Gender { get; set; }
+
+    [DataType(DataType.Date)]
+    [Required(ErrorMessage = "Date of birth cannot be empty")]
     public DateTime? BirthDate { get; set; }
+
+    [Required(ErrorMessage = "Stream cannot be empty")]
     public Guid? DevStreamId { get; set; }
+
+    [Required(ErrorMessage = "Position cannot be empty")]
     public string? Position { get; set; }
+
+    [Required(ErrorMessage = "Months of work experience is required")]
+    [Range(0, int.MaxValue, ErrorMessage = "Months of work experience cannot be negative")]
     public int? MonthsOfWorkExperience { get; set; }
+
+    [Required(ErrorMessage = "Mobile device experience is required")]
     public bool HasMobileDeviceExperience { get; set; }
+
     public string? Skills { get; set; }
 
 
     /// <summary>
-    /// Converts TesterUpdateRequest to Tester
+    ///     Converts TesterUpdateRequest to Tester
     /// </summary>
     /// <returns>Tester object</returns>
     public Tester ToTester()

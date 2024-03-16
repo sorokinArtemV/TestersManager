@@ -96,11 +96,46 @@ public class TestersController : Controller
     public IActionResult Edit(Guid testerId)
     {
         var testerResponse = _testersService.GetTesterById(testerId);
-        
-        if (testerResponse == null) return RedirectToAction("Index", "Testers");
-        
-        
-        
+
+        if (testerResponse is null) return RedirectToAction("Index", "Testers");
+
+        var testerUpdateRequest = testerResponse.ToTesterUpdateRequest();
+
+        var devStreams = _devStreamsService.GetAllDevStreams();
+        ViewBag.DevStreams = devStreams;
+
+        ViewBag.devStreams = devStreams.Select(x => new SelectListItem
+        {
+            Text = x.DevStreamName,
+            Value = x.DevStreamId.ToString()
+        });
+
+        return View(testerUpdateRequest);
+    }
+
+    [HttpPost]
+    [Route("[action]/{testerId:guid}")] // testers/1
+    public IActionResult Edit(TesterUpdateRequest testerUpdateRequest)
+    {
+        var testerResponse = _testersService.GetTesterById(testerUpdateRequest.TesterId);
+
+        if (testerResponse is null) return RedirectToAction("Index", "Testers");
+
+        if (!ModelState.IsValid)
+        {
+            var updatedTester = _testersService.UpdateTester(testerUpdateRequest);
+            return RedirectToAction("Index", "Testers");
+        }
+
+        var devStreams = _devStreamsService.GetAllDevStreams();
+        ViewBag.DevStreams = devStreams;
+
+        ViewBag.devStreams = devStreams.Select(x => new SelectListItem
+        {
+            Text = x.DevStreamName,
+            Value = x.DevStreamId.ToString()
+        });
+
         return View();
     }
 }

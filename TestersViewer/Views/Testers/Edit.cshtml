@@ -10,7 +10,8 @@
             <h2 class="container-form-create__heading">Edit Tester profile</h2>
             <a asp-controller="Testers" asp-action="Index" class="button button--secondary">Back to all Testers</a>
         </div>
-        <form asp-controller="Testers" asp-action="Create" class="form-create" method="post">
+        <form asp-controller="Testers" asp-action="Edit" class="form-create" method="post">
+            <input type="hidden" asp-for="TesterId">
 
             <!-- Name -->
             <label asp-for="TesterName">Name</label>
