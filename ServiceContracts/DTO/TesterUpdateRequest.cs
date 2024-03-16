@@ -36,7 +36,6 @@ public class TesterUpdateRequest
     [Range(0, int.MaxValue, ErrorMessage = "Months of work experience cannot be negative")]
     public int? MonthsOfWorkExperience { get; set; }
 
-    [Required(ErrorMessage = "Mobile device experience is required")]
     public bool HasMobileDeviceExperience { get; set; }
 
     public string? Skills { get; set; }

@@ -92,7 +92,7 @@ public class TestersController : Controller
     }
 
     [HttpGet]
-    [Route("[action]/{testerId:guid}")] // testers/1
+    [Route("[action]/{testerId}")] // testers/1
     public IActionResult Edit(Guid testerId)
     {
         var testerResponse = _testersService.GetTesterById(testerId);
@@ -114,14 +114,14 @@ public class TestersController : Controller
     }
 
     [HttpPost]
-    [Route("[action]/{testerId:guid}")] // testers/1
+    [Route("[action]/{testerId}")] // testers/1
     public IActionResult Edit(TesterUpdateRequest testerUpdateRequest)
     {
         var testerResponse = _testersService.GetTesterById(testerUpdateRequest.TesterId);
 
         if (testerResponse is null) return RedirectToAction("Index", "Testers");
 
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid)
         {
             var updatedTester = _testersService.UpdateTester(testerUpdateRequest);
             return RedirectToAction("Index", "Testers");
