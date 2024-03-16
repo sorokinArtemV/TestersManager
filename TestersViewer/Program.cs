@@ -11,8 +11,8 @@ builder.Services.AddDbContext<TestersDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-builder.Services.AddSingleton<IDevStreamsService, DevStreamsService>();
-builder.Services.AddSingleton<ITestersService, TestersService>();
+builder.Services.AddScoped<IDevStreamsService, DevStreamsService>();
+builder.Services.AddScoped<ITestersService, TestersService>();
 
 var app = builder.Build();
 
