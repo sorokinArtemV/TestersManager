@@ -18,7 +18,7 @@ public class TestersService : ITestersService
         _devStreamsService = devStreamsService;
     }
 
-    public TesterResponse AddTester(TesterAddRequest? testerAddRequest)
+    public async Task<TesterResponse> AddTester(TesterAddRequest? testerAddRequest)
     {
         ArgumentNullException.ThrowIfNull(testerAddRequest);
         ModelValidationHelper.IsValid(testerAddRequest);
@@ -26,35 +26,35 @@ public class TestersService : ITestersService
         var tester = testerAddRequest.ToTester();
         tester.TesterId = Guid.NewGuid();
 
-        _db.Testers.Add(tester);
-        _db.SaveChanges();
+        await _db.Testers.AddAsync(tester);
+        await _db.SaveChangesAsync();
 
         return tester.ToTesterResponse();
     }
 
-    public List<TesterResponse> GetAllTesters()
+    public async Task<List<TesterResponse>> GetAllTesters()
     {
-        var testers = _db.Testers.Include("DevStream").ToList(); 
+        var testers = await _db.Testers.Include("DevStream").ToListAsync(); 
         
         return testers
             .Select(x => x.ToTesterResponse())
             .ToList();
     }
 
-    public TesterResponse? GetTesterById(Guid? id)
+    public async Task<TesterResponse?> GetTesterById(Guid? id)
     {
         return id is null
             ? null
-            : _db.Testers
+            : await _db.Testers
                 .Include("DevStream")
                 .Where(tester => tester.TesterId == id)
                 .Select(x => x.ToTesterResponse())
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
     }
 
-    public List<TesterResponse> GetFilteredTesters(string searchBy, string searchString)
+    public async Task<List<TesterResponse>> GetFilteredTesters(string searchBy, string searchString)
     {
-        var allTesters = GetAllTesters();
+        var allTesters = await GetAllTesters();
         var matchingTesters = allTesters;
 
         if (string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchString)) return matchingTesters;
@@ -98,7 +98,7 @@ public class TestersService : ITestersService
     }
 
 
-    public List<TesterResponse> GetSortedTesters(List<TesterResponse> allTesters, string sortBy,
+    public async Task<List<TesterResponse>> GetSortedTesters(List<TesterResponse> allTesters, string sortBy,
         SortOrderOptions sortOrder)
     {
         return string.IsNullOrEmpty(sortBy) ? allTesters : SorterHelper.SortByProperty(allTesters, sortBy, sortOrder);
