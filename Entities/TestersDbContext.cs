@@ -33,5 +33,13 @@ public class TestersDbContext : DbContext
             .HasColumnName("WorksFor")
             .HasColumnType("INTEGER")
             .HasDefaultValue(1);
+        
+        // table relations
+        // modelBuilder.Entity<Tester>(entity =>
+        // {
+        //     entity.HasOne<DevStream>(s => s.DevStream)
+        //         .WithMany(t => t.Testers)
+        //         .HasForeignKey(t => t.DevStreamId);
+        // });
     }
 }

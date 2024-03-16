@@ -1,4 +1,5 @@
 using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
@@ -33,6 +34,8 @@ public class TestersService : ITestersService
 
     public List<TesterResponse> GetAllTesters()
     {
+        var testers = _db.Testers.Include("DevStream").ToList(); 
+        
         return _db.Testers
             .Select(ConvertTesterToTesterResponse)
             .ToList();

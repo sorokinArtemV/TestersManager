@@ -11,4 +11,6 @@ public class DevStream
     public Guid DevStreamId { get; set; }
 
     public string? DevStreamName { get; set; }
+    
+    // public virtual ICollection<Tester>? Testers { get; set; }
 }
