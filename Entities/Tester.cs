@@ -27,8 +27,7 @@ public class Tester
     public string? Position { get; set; }
 
     public int? MonthsOfWorkExperience { get; set; }
-
-
+    
     [StringLength(500)]
     public string? Skills { get; set; }
 

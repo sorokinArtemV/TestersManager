@@ -27,5 +27,11 @@ public class TestersDbContext : DbContext
         var testers = JsonSerializer.Deserialize<List<Tester>>(testersJson);
 
         foreach (var tester in testers!) modelBuilder.Entity<Tester>().HasData(tester);
+        
+        // fluent api
+        modelBuilder.Entity<Tester>().Property(x => x.MonthsOfWorkExperience)
+            .HasColumnName("WorksFor")
+            .HasColumnType("INTEGER")
+            .HasDefaultValue(1);
     }
 }
