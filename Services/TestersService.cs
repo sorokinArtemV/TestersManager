@@ -8,8 +8,8 @@ namespace Services;
 
 public class TestersService : ITestersService
 {
-    private readonly IDevStreamsService _devStreamsService;
     private readonly TestersDbContext _db;
+    private readonly IDevStreamsService _devStreamsService;
 
     public TestersService(TestersDbContext db, IDevStreamsService devStreamsService)
     {
@@ -25,14 +25,15 @@ public class TestersService : ITestersService
         var tester = testerAddRequest.ToTester();
         tester.TesterId = Guid.NewGuid();
 
-        _testers.Add(tester);
+        _db.Testers.Add(tester);
+        _db.SaveChanges();
 
         return ConvertTesterToTesterResponse(tester);
     }
 
     public List<TesterResponse> GetAllTesters()
     {
-        return _testers
+        return _db.Testers
             .Select(ConvertTesterToTesterResponse)
             .ToList();
     }
@@ -41,7 +42,7 @@ public class TestersService : ITestersService
     {
         return id is null
             ? null
-            : _testers
+            : _db.Testers
                 .Where(tester => tester.TesterId == id)
                 .Select(ConvertTesterToTesterResponse)
                 .FirstOrDefault();
@@ -104,7 +105,7 @@ public class TestersService : ITestersService
         ArgumentNullException.ThrowIfNull(testerUpdateRequest);
         ModelValidationHelper.IsValid(testerUpdateRequest);
 
-        var tester = _testers.FirstOrDefault(tester => tester.TesterId == testerUpdateRequest.TesterId);
+        var tester = _db.Testers.FirstOrDefault(tester => tester.TesterId == testerUpdateRequest.TesterId);
 
         ArgumentNullException.ThrowIfNull(tester);
 
@@ -118,6 +119,8 @@ public class TestersService : ITestersService
         tester.HasMobileDeviceExperience = testerUpdateRequest.HasMobileDeviceExperience;
         tester.Skills = string.Join(", ", testerUpdateRequest.Skills);
 
+        _db.SaveChanges();
+
         return ConvertTesterToTesterResponse(tester);
     }
 
@@ -125,11 +128,12 @@ public class TestersService : ITestersService
     {
         ArgumentNullException.ThrowIfNull(testerId);
 
-        var tester = _testers.FirstOrDefault(x => x.TesterId == testerId);
+        var tester = _db.Testers.FirstOrDefault(x => x.TesterId == testerId);
 
         if (tester is null) return false;
 
-        _testers.RemoveAll(x => x.TesterId == testerId);
+        _db.Testers.Remove(_db.Testers.First(x => x.TesterId == testerId));
+        _db.SaveChanges();
 
         return true;
     }
