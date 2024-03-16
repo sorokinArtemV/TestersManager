@@ -61,13 +61,13 @@ public class TestersController : Controller
     {
         var devStreams = _devStreamsService.GetAllDevStreams();
         ViewBag.DevStreams = devStreams;
-        
-        ViewBag.devStreams = devStreams.Select(x => new SelectListItem()
+
+        ViewBag.devStreams = devStreams.Select(x => new SelectListItem
         {
-            Text = x.DevStreamName, 
+            Text = x.DevStreamName,
             Value = x.DevStreamId.ToString()
-        }); 
-    
+        });
+
         return View();
     }
 
@@ -89,5 +89,18 @@ public class TestersController : Controller
         var testerResponse = _testersService.AddTester(tester);
 
         return RedirectToAction("Index", "Testers");
+    }
+
+    [HttpGet]
+    [Route("[action]/{testerId:guid}")] // testers/1
+    public IActionResult Edit(Guid testerId)
+    {
+        var testerResponse = _testersService.GetTesterById(testerId);
+        
+        if (testerResponse == null) return RedirectToAction("Index", "Testers");
+        
+        
+        
+        return View();
     }
 }

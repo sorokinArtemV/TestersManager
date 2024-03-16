@@ -382,6 +382,15 @@ tbody tr:nth-child(even) {
     color: white;
 }
 
+.form-create__btn--violet {
+    background-color: #b927fc;
+    color: white;
+}
+
+.form-create__btn--violet:hover {
+    background-color: #2c64fc;
+}
+
 .form-create__btn--blue:hover {
     background-color: #b927fc;
 }

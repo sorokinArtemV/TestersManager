@@ -98,6 +98,9 @@
                     <td>@tester.Position</td>
                     <td>@tester.Skills</td>
                     <td>@ConversionHelper.ConvertMonthsToYears(tester.MonthsOfWorkExperience!.Value)</td>
+                    <td>
+                        <a asp-controller="Testers" asp-action="Edit" asp-route-testerId="@tester.TesterId">Edit</a>
+                    </td>
                 </tr>
             }
             </tbody>
