@@ -1,3 +1,5 @@
+using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
@@ -15,8 +17,11 @@ public class TestersServiceTests
     public TestersServiceTests(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
-        _testersService = new TestersService();
-        _devStreamsService = new DevStreamsService(false);
+        _devStreamsService = new DevStreamsService(new TestersDbContext(
+            new DbContextOptionsBuilder<TestersDbContext>().Options));
+        _testersService = new TestersService(new TestersDbContext(
+            new DbContextOptionsBuilder<TestersDbContext>().Options), _devStreamsService);
+        
     }
 
     #region GetSortedTesters

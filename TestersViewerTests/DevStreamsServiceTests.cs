@@ -1,3 +1,5 @@
+using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using Services;
@@ -10,7 +12,9 @@ public class DevStreamsServiceTests
 
     public DevStreamsServiceTests()
     {
-        _devStreamsService = new DevStreamsService(false);
+        _devStreamsService = new DevStreamsService(
+            new TestersDbContext( 
+                new DbContextOptionsBuilder<TestersDbContext>().Options));
     }
 
 
