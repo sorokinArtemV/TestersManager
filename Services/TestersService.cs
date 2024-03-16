@@ -34,8 +34,8 @@ public class TestersService : ITestersService
 
     public async Task<List<TesterResponse>> GetAllTesters()
     {
-        var testers = await _db.Testers.Include("DevStream").ToListAsync(); 
-        
+        var testers = await _db.Testers.Include("DevStream").ToListAsync();
+
         return testers
             .Select(x => x.ToTesterResponse())
             .ToList();
@@ -101,7 +101,23 @@ public class TestersService : ITestersService
     public async Task<List<TesterResponse>> GetSortedTesters(List<TesterResponse> allTesters, string sortBy,
         SortOrderOptions sortOrder)
     {
-        return string.IsNullOrEmpty(sortBy) ? allTesters : SorterHelper.SortByProperty(allTesters, sortBy, sortOrder);
+        return string.IsNullOrEmpty(sortBy)
+            ? allTesters
+            : await SorterHelper.SortByPropertyAsync(allTesters, sortBy, sortOrder);
+    }
+
+    public bool DeleteTester(Guid? testerId)
+    {
+        ArgumentNullException.ThrowIfNull(testerId);
+
+        var tester = _db.Testers.FirstOrDefault(x => x.TesterId == testerId);
+
+        if (tester is null) return false;
+
+        _db.Testers.Remove(_db.Testers.First(x => x.TesterId == testerId));
+        _db.SaveChanges();
+
+        return true;
     }
 
     public TesterResponse UpdateTester(TesterUpdateRequest? testerUpdateRequest)
@@ -126,19 +142,5 @@ public class TestersService : ITestersService
         _db.SaveChanges();
 
         return tester.ToTesterResponse();
-    }
-
-    public bool DeleteTester(Guid? testerId)
-    {
-        ArgumentNullException.ThrowIfNull(testerId);
-
-        var tester = _db.Testers.FirstOrDefault(x => x.TesterId == testerId);
-
-        if (tester is null) return false;
-
-        _db.Testers.Remove(_db.Testers.First(x => x.TesterId == testerId));
-        _db.SaveChanges();
-
-        return true;
     }
 }
