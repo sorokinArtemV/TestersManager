@@ -395,6 +395,35 @@ tbody tr:nth-child(even) {
     background-color: #b927fc;
 }
 
+.form-create__btn--red {
+    background-color: #c90000;
+    color: white;
+    transition: all 0.2s ease;
+}
+
+.form-create__btn--red:hover {
+    background-color: red;
+}
+
+/*.btn--edit {*/
+/*    transition: all linear 0.4s;*/
+/*    color: #333333;*/
+/*    text-decoration: none;*/
+/*}*/
+
+.btn--action:link,
+.btn--action:visited {
+    color: #333333;
+    text-decoration: none;
+
+}
+
+.btn--action:hover,
+.btn--action:active {
+    border-bottom: 2px solid #333333;
+}
+
+
 .radio-group__inner {
     margin-top: 0.5rem;
     border: solid 1px #ccc;

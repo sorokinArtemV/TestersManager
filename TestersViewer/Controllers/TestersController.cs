@@ -96,7 +96,6 @@ public class TestersController : Controller
     public IActionResult Edit(Guid testerId)
     {
         var testerResponse = _testersService.GetTesterById(testerId);
-
         if (testerResponse is null) return RedirectToAction("Index", "Testers");
 
         var testerUpdateRequest = testerResponse.ToTesterUpdateRequest();
@@ -118,7 +117,6 @@ public class TestersController : Controller
     public IActionResult Edit(TesterUpdateRequest testerUpdateRequest)
     {
         var testerResponse = _testersService.GetTesterById(testerUpdateRequest.TesterId);
-
         if (testerResponse is null) return RedirectToAction("Index", "Testers");
 
         if (ModelState.IsValid)
@@ -136,6 +134,27 @@ public class TestersController : Controller
             Value = x.DevStreamId.ToString()
         });
 
-        return View();
+        return View(testerResponse.ToTesterUpdateRequest());
+    }
+
+    [HttpGet]
+    [Route("[action]/{testerId}")]
+    public IActionResult Delete(Guid? testerId)
+    {
+        var testerResponse = _testersService.GetTesterById(testerId);
+        if (testerResponse is null) return RedirectToAction("Index", "Testers");
+
+        return View(testerResponse);
+    }
+
+    [HttpPost]
+    [Route("[action]/{testerId}")]
+    public IActionResult Delete(TesterUpdateRequest testerUpdateRequest)
+    {
+        var testerResponse = _testersService.GetTesterById(testerUpdateRequest.TesterId);
+        if (testerResponse is null) return RedirectToAction("Index", "Testers");
+
+        _testersService.DeleteTester(testerUpdateRequest.TesterId);
+        return RedirectToAction("Index", "Testers");
     }
 }
