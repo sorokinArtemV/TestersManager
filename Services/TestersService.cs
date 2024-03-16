@@ -29,7 +29,7 @@ public class TestersService : ITestersService
         _db.Testers.Add(tester);
         _db.SaveChanges();
 
-        return ConvertTesterToTesterResponse(tester);
+        return tester.ToTesterResponse();
     }
 
     public List<TesterResponse> GetAllTesters()
@@ -37,7 +37,7 @@ public class TestersService : ITestersService
         var testers = _db.Testers.Include("DevStream").ToList(); 
         
         return testers
-            .Select(ConvertTesterToTesterResponse)
+            .Select(x => x.ToTesterResponse())
             .ToList();
     }
 
@@ -48,7 +48,7 @@ public class TestersService : ITestersService
             : _db.Testers
                 .Include("DevStream")
                 .Where(tester => tester.TesterId == id)
-                .Select(ConvertTesterToTesterResponse)
+                .Select(x => x.ToTesterResponse())
                 .FirstOrDefault();
     }
 
@@ -125,7 +125,7 @@ public class TestersService : ITestersService
 
         _db.SaveChanges();
 
-        return ConvertTesterToTesterResponse(tester);
+        return tester.ToTesterResponse();
     }
 
     public bool DeleteTester(Guid? testerId)
@@ -140,12 +140,5 @@ public class TestersService : ITestersService
         _db.SaveChanges();
 
         return true;
-    }
-
-    private TesterResponse ConvertTesterToTesterResponse(Tester tester)
-    {
-        var testerResponse = tester.ToTesterResponse();
-        testerResponse.DevStream = _devStreamsService.GetDevStreamById(testerResponse.DevStreamId)?.DevStreamName;
-        return testerResponse;
     }
 }

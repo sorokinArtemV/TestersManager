@@ -18,7 +18,6 @@ public class TesterResponse : IEquatable<TesterResponse>
     public string? Skills { get; set; }
     public Guid? DevStreamId { get; set; }
     public int? MonthsOfWorkExperience { get; set; }
-    public bool HasMobileDeviceExperience { get; set; }
     public int? Age { get; set; }
 
 
@@ -40,8 +39,7 @@ public class TesterResponse : IEquatable<TesterResponse>
                    && DevStreamId == testerResponse.DevStreamId
                    && DevStream == testerResponse.DevStream
                    && Position == testerResponse.Position
-                   && MonthsOfWorkExperience == testerResponse.MonthsOfWorkExperience
-                   && HasMobileDeviceExperience == testerResponse.HasMobileDeviceExperience;
+                   && MonthsOfWorkExperience == testerResponse.MonthsOfWorkExperience;
         }
 
         return false;
@@ -54,8 +52,7 @@ public class TesterResponse : IEquatable<TesterResponse>
         return TesterId.Equals(other.TesterId) && TesterName == other.TesterName && Email == other.Email &&
                Gender == other.Gender && BirthDate.Equals(other.BirthDate) &&
                Nullable.Equals(DevStreamId, other.DevStreamId) && DevStream == other.DevStream &&
-               Position == other.Position && MonthsOfWorkExperience == other.MonthsOfWorkExperience &&
-               HasMobileDeviceExperience == other.HasMobileDeviceExperience && Equals(Skills, other.Skills);
+               Position == other.Position && MonthsOfWorkExperience == other.MonthsOfWorkExperience;
     }
 
     public override int GetHashCode()
@@ -70,7 +67,6 @@ public class TesterResponse : IEquatable<TesterResponse>
         hashCode.Add(DevStream);
         hashCode.Add(Position);
         hashCode.Add(MonthsOfWorkExperience);
-        hashCode.Add(HasMobileDeviceExperience);
         hashCode.Add(Skills);
         return hashCode.ToHashCode();
     }
@@ -89,8 +85,7 @@ public class TesterResponse : IEquatable<TesterResponse>
     {
         return
             $"{TesterId} {TesterName} {Email} {Gender} {BirthDate?.ToString()} " +
-            $"{DevStreamId} {DevStream} {Position} " +
-            $"{MonthsOfWorkExperience} {HasMobileDeviceExperience}";
+            $"{DevStreamId} {DevStream} {Position} ";
     }
 
     public TesterUpdateRequest ToTesterUpdateRequest()
@@ -126,10 +121,10 @@ public static class TesterExtensions
         Gender = tester.Gender,
         BirthDate = tester.BirthDate,
         Age = tester.BirthDate != null ? DateTime.Now.Year - tester.BirthDate.Value.Year : null,
-        DevStream = tester.DevStream?.DevStreamName,
         DevStreamId = tester.DevStreamId,
         Position = tester.Position,
         MonthsOfWorkExperience = tester.MonthsOfWorkExperience,
         Skills = tester.Skills,
+        DevStream = tester.DevStream?.DevStreamName,
     };
 }
