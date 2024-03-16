@@ -16,23 +16,16 @@ public class TestersDbContext : DbContext
     {
         modelBuilder.Entity<DevStream>().ToTable("DevStreams");
         modelBuilder.Entity<Tester>().ToTable("Testers");
-        
+
         // Seed data
-       var streamsJson = File.ReadAllText("streams.json");
-       var devStreams = JsonSerializer.Deserialize<List<DevStream>>(streamsJson);
+        var streamsJson = File.ReadAllText("wwwroot/streams.json");
+        var devStreams = JsonSerializer.Deserialize<List<DevStream>>(streamsJson);
 
-       foreach (var stream in devStreams!)
-       {
-           modelBuilder.Entity<DevStream>().HasData(stream);
-       }
-       
-       var testersJson = File.ReadAllText("testers.json");
-       var testers = JsonSerializer.Deserialize<List<DevStream>>(testersJson);
+        foreach (var stream in devStreams!) modelBuilder.Entity<DevStream>().HasData(stream);
 
-       foreach (var tester in testers!)
-       {
-           modelBuilder.Entity<DevStream>().HasData(tester);
-       }
+        var testersJson = File.ReadAllText("wwwroot/testers.json");
+        var testers = JsonSerializer.Deserialize<List<Tester>>(testersJson);
 
+        foreach (var tester in testers!) modelBuilder.Entity<Tester>().HasData(tester);
     }
 }
