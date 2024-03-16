@@ -106,26 +106,26 @@ public class TestersService : ITestersService
             : await SorterHelper.SortByPropertyAsync(allTesters, sortBy, sortOrder);
     }
 
-    public bool DeleteTester(Guid? testerId)
+    public async Task<bool> DeleteTester(Guid? testerId)
     {
         ArgumentNullException.ThrowIfNull(testerId);
 
-        var tester = _db.Testers.FirstOrDefault(x => x.TesterId == testerId);
+        var tester = await _db.Testers.FirstOrDefaultAsync(x => x.TesterId == testerId);
 
         if (tester is null) return false;
 
-        _db.Testers.Remove(_db.Testers.First(x => x.TesterId == testerId));
-        _db.SaveChanges();
+        _db.Testers.Remove(await _db.Testers.FirstAsync(x => x.TesterId == testerId));
+        await _db.SaveChangesAsync();
 
         return true;
     }
 
-    public TesterResponse UpdateTester(TesterUpdateRequest? testerUpdateRequest)
+    public async Task<TesterResponse> UpdateTester(TesterUpdateRequest? testerUpdateRequest)
     {
         ArgumentNullException.ThrowIfNull(testerUpdateRequest);
         ModelValidationHelper.IsValid(testerUpdateRequest);
 
-        var tester = _db.Testers.FirstOrDefault(tester => tester.TesterId == testerUpdateRequest.TesterId);
+        var tester = await _db.Testers.FirstOrDefaultAsync(tester => tester.TesterId == testerUpdateRequest.TesterId);
 
         ArgumentNullException.ThrowIfNull(tester);
 
@@ -139,7 +139,7 @@ public class TestersService : ITestersService
         // tester.HasMobileDeviceExperience = testerUpdateRequest.HasMobileDeviceExperience;
         tester.Skills = string.Join(", ", testerUpdateRequest.Skills);
 
-        _db.SaveChanges();
+        await _db.SaveChangesAsync();
 
         return tester.ToTesterResponse();
     }

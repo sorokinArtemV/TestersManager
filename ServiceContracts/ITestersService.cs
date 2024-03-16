@@ -13,20 +13,20 @@ public interface ITestersService
     /// </summary>
     /// <param name="testerAddRequest">TesterAddRequest</param>
     /// <returns>Returns TesterResponse with generated TesterId</returns>
-    Task<TesterResponse> AddTester(TesterAddRequest? testerAddRequest);
+    public Task<TesterResponse> AddTester(TesterAddRequest? testerAddRequest);
 
     /// <summary>
     /// Gets all Testers
     /// </summary>
     /// <returns>Returns a List of TestersResponse objects</returns>
-    Task<List<TesterResponse>> GetAllTesters();
+    public Task<List<TesterResponse>> GetAllTesters();
 
     /// <summary>
     /// Gets Tester by id
     /// </summary>
     /// <param name="id">Tester Guid</param>
     /// <returns>Returns TesterResponse object</returns>
-    Task<TesterResponse?> GetTesterById(Guid? id);
+    public Task<TesterResponse?> GetTesterById(Guid? id);
 
     /// <summary>
     /// Returns filtered list of Testers filtered by searchBy and searchString
@@ -34,7 +34,7 @@ public interface ITestersService
     /// <param name="searchBy">Search field to filter</param>
     /// <param name="searchString">Search string to search</param>
     /// <returns>Return filtered list based on searchBy and searchString</returns>
-    Task<List<TesterResponse>> GetFilteredTesters(string searchBy, string searchString);
+    public Task<List<TesterResponse>> GetFilteredTesters(string searchBy, string searchString);
 
 
     /// <summary>
@@ -44,7 +44,7 @@ public interface ITestersService
     /// <param name="sortBy">Sort field to sort</param>
     /// <param name="sortOrder">Sort order</param>
     /// <returns>Returns sorted list Asc or Desc</returns>
-    Task<List<TesterResponse>> GetSortedTesters(List<TesterResponse> allTesters, string sortBy, SortOrderOptions sortOrder);
+    public Task<List<TesterResponse>> GetSortedTesters(List<TesterResponse> allTesters, string sortBy, SortOrderOptions sortOrder);
 
 
     /// <summary>
@@ -52,12 +52,12 @@ public interface ITestersService
     /// </summary>
     /// <param name="testerUpdateRequest">Tester details to update</param>
     /// <returns>Returns TesterResponse after update</returns>
-    Task<TesterResponse> UpdateTester(TesterUpdateRequest? testerUpdateRequest);
+    public Task<TesterResponse> UpdateTester(TesterUpdateRequest? testerUpdateRequest);
 
     /// <summary>
     /// Deletes Tester by id
     /// </summary>
     /// <param name="id">Tester Guid</param>
     /// <returns>Returns true if deleted</returns>
-    bool DeleteTester(Guid? id);
+    public Task<bool> DeleteTester(Guid? id);
 }
