@@ -36,7 +36,7 @@ public class TestersService : ITestersService
     {
         var testers = _db.Testers.Include("DevStream").ToList(); 
         
-        return _db.Testers
+        return testers
             .Select(ConvertTesterToTesterResponse)
             .ToList();
     }
@@ -46,6 +46,7 @@ public class TestersService : ITestersService
         return id is null
             ? null
             : _db.Testers
+                .Include("DevStream")
                 .Where(tester => tester.TesterId == id)
                 .Select(ConvertTesterToTesterResponse)
                 .FirstOrDefault();
