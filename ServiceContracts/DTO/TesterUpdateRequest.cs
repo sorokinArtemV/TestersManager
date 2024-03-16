@@ -36,7 +36,7 @@ public class TesterUpdateRequest
     [Range(0, int.MaxValue, ErrorMessage = "Months of work experience cannot be negative")]
     public int? MonthsOfWorkExperience { get; set; }
 
-    public bool HasMobileDeviceExperience { get; set; }
+    // public bool HasMobileDeviceExperience { get; set; }
 
     public string? Skills { get; set; }
 
@@ -57,7 +57,7 @@ public class TesterUpdateRequest
             DevStreamId = DevStreamId,
             Position = Position,
             MonthsOfWorkExperience = MonthsOfWorkExperience,
-            HasMobileDeviceExperience = HasMobileDeviceExperience,
+            // HasMobileDeviceExperience = HasMobileDeviceExperience,
             Skills = string.Join(", ", Skills != null ? Skills.Select(x => x.ToString()) : "")
         };
     }

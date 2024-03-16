@@ -28,7 +28,6 @@ public class Tester
 
     public int? MonthsOfWorkExperience { get; set; }
 
-    public bool HasMobileDeviceExperience { get; set; }
 
     [StringLength(500)]
     public string? Skills { get; set; }

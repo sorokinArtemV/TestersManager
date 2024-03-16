@@ -105,7 +105,6 @@ public class TesterResponse : IEquatable<TesterResponse>
             DevStreamId = DevStreamId,
             Position = Position,
             MonthsOfWorkExperience = MonthsOfWorkExperience,
-            HasMobileDeviceExperience = HasMobileDeviceExperience,
             Skills = Skills
         };
     }
@@ -131,7 +130,6 @@ public static class TesterExtensions
         DevStreamId = tester.DevStreamId,
         Position = tester.Position,
         MonthsOfWorkExperience = tester.MonthsOfWorkExperience,
-        HasMobileDeviceExperience = tester.HasMobileDeviceExperience,
         Skills = tester.Skills,
     };
 }

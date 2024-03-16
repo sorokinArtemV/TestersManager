@@ -55,7 +55,6 @@ public class TesterAddRequest
             DevStreamId = DevStreamId,
             Position = Position,
             MonthsOfWorkExperience = MonthsOfWorkExperience,
-            HasMobileDeviceExperience = HasMobileDeviceExperience,
             Skills = Skills
         };
     }

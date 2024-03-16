@@ -116,7 +116,7 @@ public class TestersService : ITestersService
         tester.DevStreamId = testerUpdateRequest.DevStreamId;
         tester.Position = testerUpdateRequest.Position;
         tester.MonthsOfWorkExperience = testerUpdateRequest.MonthsOfWorkExperience;
-        tester.HasMobileDeviceExperience = testerUpdateRequest.HasMobileDeviceExperience;
+        // tester.HasMobileDeviceExperience = testerUpdateRequest.HasMobileDeviceExperience;
         tester.Skills = string.Join(", ", testerUpdateRequest.Skills);
 
         _db.SaveChanges();
