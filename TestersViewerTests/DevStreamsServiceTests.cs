@@ -1,3 +1,4 @@
+using AutoFixture;
 using Entities;
 using EntityFrameworkCoreMock;
 using Microsoft.EntityFrameworkCore;
@@ -10,9 +11,12 @@ namespace TestersViewerTests;
 public class DevStreamsServiceTests
 {
     private readonly IDevStreamsService _devStreamsService;
+    private readonly IFixture _fixture;
 
     public DevStreamsServiceTests()
     {
+        _fixture = new Fixture();
+        
         List<DevStream> devStreamsInitialData = [];
 
         var dbContextMock = new DbContextMock<ApplicatonDbContext>(
@@ -37,7 +41,9 @@ public class DevStreamsServiceTests
     [Fact]
     public async Task AddDevStream_ShallThrowArgumentException_WhenDevStreamAddRequestNameIsNull()
     {
-        var request = new DevStreamAddRequest { DevStreamName = null };
+        var request = _fixture.Build<DevStreamAddRequest>()
+            .With(x => x.DevStreamName, null as string)
+            .Create();
 
         await Assert.ThrowsAsync<ArgumentNullException>(async () => await _devStreamsService.AddDevStream(request));
     }
@@ -45,8 +51,12 @@ public class DevStreamsServiceTests
     [Fact]
     public async Task AddDevStream_ShallThrowArgumentException_WhenDevStreamAddRequestNameIsDuplicated()
     {
-        var requestOne = new DevStreamAddRequest { DevStreamName = "Crew" };
-        var requestTwo = new DevStreamAddRequest { DevStreamName = "Crew" };
+        var requestOne = _fixture.Build<DevStreamAddRequest>()
+            .With(x => x.DevStreamName, "Crew")
+            .Create();
+        var requestTwo = _fixture.Build<DevStreamAddRequest>()
+            .With(x => x.DevStreamName, "Crew")
+            .Create();
 
         await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
@@ -58,7 +68,7 @@ public class DevStreamsServiceTests
     [Fact]
     public async Task AddDevStream_ShallTAddDevStreamToListOfDevStreams_WhenDevStreamAddRequestIsValid()
     {
-        var request = new DevStreamAddRequest { DevStreamName = "Crew" };
+        var request = _fixture.Create<DevStreamAddRequest>();
 
         var response = await _devStreamsService.AddDevStream(request);
 
@@ -115,7 +125,7 @@ public class DevStreamsServiceTests
     [Fact]
     public async Task GetDevStreamById_ShallReturnDevStream_IfDevStreamExists()
     {
-        var devStreamAddRequest = new DevStreamAddRequest { DevStreamName = "Crew" };
+        var devStreamAddRequest = _fixture.Create<DevStreamAddRequest>();
         var devStreamResponse = await _devStreamsService.AddDevStream(devStreamAddRequest);
         var devStreamIdExpected = devStreamResponse.DevStreamId;
 
