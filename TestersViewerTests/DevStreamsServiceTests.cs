@@ -13,7 +13,7 @@ public class DevStreamsServiceTests
     public DevStreamsServiceTests()
     {
         _devStreamsService = new DevStreamsService(
-            new TestersDbContext( 
+            new TestersDbContext(
                 new DbContextOptionsBuilder<TestersDbContext>().Options));
     }
 
@@ -21,40 +21,40 @@ public class DevStreamsServiceTests
     #region AddDevStream
 
     [Fact]
-    public void AddDevStream_ShallThrowArgumentNullException_WhenDevStreamAddRequestIsNull()
+    public async Task AddDevStream_ShallThrowArgumentNullException_WhenDevStreamAddRequestIsNull()
     {
         DevStreamAddRequest? request = null;
 
-        Assert.Throws<ArgumentNullException>(() => _devStreamsService.AddDevStream(request));
+        await Assert.ThrowsAsync<ArgumentNullException>(async () => await _devStreamsService.AddDevStream(request));
     }
 
     [Fact]
-    public void AddDevStream_ShallThrowArgumentException_WhenDevStreamAddRequestNameIsNull()
+    public async Task AddDevStream_ShallThrowArgumentException_WhenDevStreamAddRequestNameIsNull()
     {
         var request = new DevStreamAddRequest { DevStreamName = null };
 
-        Assert.Throws<ArgumentNullException>(() => _devStreamsService.AddDevStream(request));
+        await Assert.ThrowsAsync<ArgumentNullException>(async () => await _devStreamsService.AddDevStream(request));
     }
 
     [Fact]
-    public void AddDevStream_ShallThrowArgumentException_WhenDevStreamAddRequestNameIsDuplicated()
+    public async Task AddDevStream_ShallThrowArgumentException_WhenDevStreamAddRequestNameIsDuplicated()
     {
         var requestOne = new DevStreamAddRequest { DevStreamName = "Crew" };
         var requestTwo = new DevStreamAddRequest { DevStreamName = "Crew" };
 
-        Assert.Throws<ArgumentException>(() =>
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
-            _devStreamsService.AddDevStream(requestOne);
-            _devStreamsService.AddDevStream(requestTwo);
+            await _devStreamsService.AddDevStream(requestOne);
+            await _devStreamsService.AddDevStream(requestTwo);
         });
     }
 
     [Fact]
-    public void AddDevStream_ShallTAddDevStreamToListOfDevStreams_WhenDevStreamAddRequestIsValid()
+    public async Task AddDevStream_ShallTAddDevStreamToListOfDevStreams_WhenDevStreamAddRequestIsValid()
     {
         var request = new DevStreamAddRequest { DevStreamName = "Crew" };
 
-        var response = _devStreamsService.AddDevStream(request);
+        var response = await _devStreamsService.AddDevStream(request);
 
         Assert.True(response.DevStreamId != Guid.Empty);
     }
@@ -64,15 +64,15 @@ public class DevStreamsServiceTests
     #region GetAllDevStreams
 
     [Fact]
-    public void GetAllDevStreams_ShallBeEmpty_BeforeAddingDevStreams()
+    public async Task GetAllDevStreams_ShallBeEmpty_BeforeAddingDevStreams()
     {
-        var devStreamsList = _devStreamsService.GetAllDevStreams();
+        var devStreamsList = await _devStreamsService.GetAllDevStreams();
 
         Assert.Empty(devStreamsList);
     }
 
     [Fact]
-    public void GetAllDevStreams_ShallShowAllDevStreams_WheDevStreamsAreAdded()
+    public async Task GetAllDevStreams_ShallShowAllDevStreams_WheDevStreamsAreAdded()
     {
         List<DevStreamResponse> devStreamsExpectedResponses = [];
 
@@ -84,9 +84,9 @@ public class DevStreamsServiceTests
         ];
 
         foreach (var devStreamAddRequest in devStreamAddRequests)
-            devStreamsExpectedResponses.Add(_devStreamsService.AddDevStream(devStreamAddRequest));
+            devStreamsExpectedResponses.Add(await _devStreamsService.AddDevStream(devStreamAddRequest));
 
-        var devStreamsList = _devStreamsService.GetAllDevStreams();
+        var devStreamsList = await _devStreamsService.GetAllDevStreams();
 
         foreach (var expectedResponse in
                  devStreamsExpectedResponses)
@@ -98,21 +98,22 @@ public class DevStreamsServiceTests
     #region GetDevStreamById
 
     [Fact]
-    public void GetDevStreamById_ShallThrowArgumentNullException_IfDevStreamIdIsNull()
+    public async Task GetDevStreamById_ShallThrowArgumentNullException_IfDevStreamIdIsNull()
     {
         Guid? devStreamId = null;
 
-        Assert.Throws<ArgumentNullException>(() => _devStreamsService.GetDevStreamById(devStreamId));
+        await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await _devStreamsService.GetDevStreamById(devStreamId));
     }
 
     [Fact]
-    public void GetDevStreamById_ShallReturnDevStream_IfDevStreamExists()
+    public async Task GetDevStreamById_ShallReturnDevStream_IfDevStreamExists()
     {
         var devStreamAddRequest = new DevStreamAddRequest { DevStreamName = "Crew" };
-        var devStreamResponse = _devStreamsService.AddDevStream(devStreamAddRequest);
+        var devStreamResponse = await _devStreamsService.AddDevStream(devStreamAddRequest);
         var devStreamIdExpected = devStreamResponse.DevStreamId;
 
-        var devStreamId = _devStreamsService.GetDevStreamById(devStreamIdExpected);
+        var devStreamId = await _devStreamsService.GetDevStreamById(devStreamIdExpected);
 
         Assert.Equal(devStreamIdExpected, devStreamId?.DevStreamId);
     }
