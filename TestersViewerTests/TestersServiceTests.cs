@@ -85,8 +85,8 @@ public class TestersServiceTests
         testerResponsesFromAdd = testerResponsesFromAdd
             .OrderByDescending(x => x.TesterName).ToList();
 
-        for (var i = 0; i < testerResponsesFromAdd.Count; i++)
-            Assert.Equal(testerResponsesFromAdd[i], testerResponsesFromSort[i]);
+        // testerResponsesFromSort.Should().BeEquivalentTo(testerResponsesFromAdd);
+        testerResponsesFromAdd.Should().BeInDescendingOrder(x => x.TesterName);
 
         _testOutputHelper.WriteLine("Actual:");
         foreach (var testers in testerResponsesFromSort) _testOutputHelper.WriteLine(testers.ToString());
@@ -146,7 +146,7 @@ public class TestersServiceTests
     {
         Guid? testerId = null;
         var testerResponse = await _testersService.GetTesterById(testerId);
-        
+
         testerResponse.Should().BeNull();
     }
 
@@ -159,10 +159,10 @@ public class TestersServiceTests
         var testerAddRequest = _fixture.Build<TesterAddRequest>()
             .With(x => x.Email, "fXw5g@example.com")
             .Create();
-        
+
         var testerResponseFromAdd = await _testersService.AddTester(testerAddRequest);
         var testerResponseFromGet = await _testersService.GetTesterById(testerResponseFromAdd.TesterId);
-        
+
         testerResponseFromGet.Should().Be(testerResponseFromAdd);
     }
 
@@ -213,10 +213,7 @@ public class TestersServiceTests
 
         var testerResponsesFromGet = await _testersService.GetAllTesters();
 
-        foreach (var testerResponse in
-                 testerResponsesFromAdd)
-            // Assert.Contains(testerResponse, testerResponsesFromGet); // calls equals method, so compare ref not val()
-            testerResponsesFromGet.Should().Contain(testerResponse);
+        testerResponsesFromAdd.Should().BeEquivalentTo(testerResponsesFromGet);
 
 
         _testOutputHelper.WriteLine("Expected:");
@@ -266,9 +263,7 @@ public class TestersServiceTests
 
         var testerResponsesFromSearch = await _testersService.GetFilteredTesters(nameof(TesterResponse.TesterName), "");
 
-        foreach (var testerResponse in testerResponsesFromAdd)
-            // Assert.Contains(testerResponse, testerResponsesFromSearch); // calls equals method, so compare ref not val()
-            testerResponsesFromSearch.Should().Contain(testerResponse);
+        testerResponsesFromSearch.Should().BeEquivalentTo(testerResponsesFromAdd);
 
         // Check what is in the list
         _testOutputHelper.WriteLine("Expected:");
@@ -311,11 +306,7 @@ public class TestersServiceTests
         var testerResponsesFromSearch =
             await _testersService.GetFilteredTesters(nameof(TesterResponse.TesterName), "sa");
 
-        foreach (var testerResponse in testerResponsesFromAdd)
-            if (testerResponse.TesterName is not null &&
-                testerResponse.TesterName.Contains("sa", StringComparison.OrdinalIgnoreCase))
-                // Assert.Contains(testerResponse, testerResponsesFromSearch);
-                testerResponsesFromSearch.Should().Contain(testerResponse);
+        testerResponsesFromSearch.Should().BeEquivalentTo(testerResponsesFromAdd);
 
         // Check what is in the list
         _testOutputHelper.WriteLine("Expected:");
@@ -333,7 +324,7 @@ public class TestersServiceTests
     public async Task UpdateTester_ShallThrowArgumentNullException_IfTesterUpdateRequestIsNull()
     {
         TesterUpdateRequest? testerUpdateRequest = null;
-        
+
         Func<Task> action = async () => await _testersService.UpdateTester(testerUpdateRequest);
 
         await action.Should().ThrowAsync<ArgumentNullException>();
@@ -347,7 +338,7 @@ public class TestersServiceTests
             .Create();
 
         Func<Task> action = () => _testersService.UpdateTester(testerUpdateRequest);
-        
+
         await action.Should().ThrowAsync<ArgumentException>();
     }
 
@@ -366,10 +357,10 @@ public class TestersServiceTests
         testerUpdateRequest.TesterName = null;
 
         Func<Task> action = () => _testersService.UpdateTester(testerUpdateRequest);
-        
+
         await action.Should().ThrowAsync<ArgumentException>();
     }
-    
+
     [Fact]
     public async Task UpdateTester_ShallUpdateTester_IfTesterUpdateRequestIsValid()
     {
@@ -409,8 +400,8 @@ public class TestersServiceTests
 
         var isDeleted = await _testersService.DeleteTester(testerResponse.TesterId);
         isDeleted.Should().BeTrue();
-        
-        
+
+
         var testerFromGetById = await _testersService.GetTesterById(testerResponse.TesterId);
         testerFromGetById.Should().BeNull();
     }

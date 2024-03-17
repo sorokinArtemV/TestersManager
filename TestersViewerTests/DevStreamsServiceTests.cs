@@ -1,6 +1,7 @@
 using AutoFixture;
 using Entities;
 using EntityFrameworkCoreMock;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
@@ -16,7 +17,7 @@ public class DevStreamsServiceTests
     public DevStreamsServiceTests()
     {
         _fixture = new Fixture();
-        
+
         List<DevStream> devStreamsInitialData = [];
 
         var dbContextMock = new DbContextMock<ApplicatonDbContext>(
@@ -35,8 +36,11 @@ public class DevStreamsServiceTests
     {
         DevStreamAddRequest? request = null;
 
-        await Assert.ThrowsAsync<ArgumentNullException>(async () => await _devStreamsService.AddDevStream(request));
+        Func<Task> action = async () => await _devStreamsService.AddDevStream(request);
+
+        await action.Should().ThrowAsync<ArgumentNullException>();
     }
+
 
     [Fact]
     public async Task AddDevStream_ShallThrowArgumentException_WhenDevStreamAddRequestNameIsNull()
@@ -45,7 +49,9 @@ public class DevStreamsServiceTests
             .With(x => x.DevStreamName, null as string)
             .Create();
 
-        await Assert.ThrowsAsync<ArgumentNullException>(async () => await _devStreamsService.AddDevStream(request));
+        Func<Task> action = async () => await _devStreamsService.AddDevStream(request);
+
+        await action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -58,11 +64,13 @@ public class DevStreamsServiceTests
             .With(x => x.DevStreamName, "Crew")
             .Create();
 
-        await Assert.ThrowsAsync<ArgumentException>(async () =>
+        Func<Task> action = async () =>
         {
             await _devStreamsService.AddDevStream(requestOne);
             await _devStreamsService.AddDevStream(requestTwo);
-        });
+        };
+
+        await action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -72,7 +80,7 @@ public class DevStreamsServiceTests
 
         var response = await _devStreamsService.AddDevStream(request);
 
-        Assert.True(response.DevStreamId != Guid.Empty);
+        response.DevStreamId.Should().NotBeEmpty();
     }
 
     #endregion
@@ -84,7 +92,8 @@ public class DevStreamsServiceTests
     {
         var devStreamsList = await _devStreamsService.GetAllDevStreams();
 
-        Assert.Empty(devStreamsList);
+        devStreamsList.Should().BeEmpty();
+        
     }
 
     [Fact]
@@ -103,10 +112,8 @@ public class DevStreamsServiceTests
             devStreamsExpectedResponses.Add(await _devStreamsService.AddDevStream(devStreamAddRequest));
 
         var devStreamsList = await _devStreamsService.GetAllDevStreams();
-
-        foreach (var expectedResponse in
-                 devStreamsExpectedResponses)
-            Assert.Contains(expectedResponse, devStreamsList); // calls equals method, so compare ref not val!
+        
+        devStreamsList.Should().BeEquivalentTo(devStreamsExpectedResponses);
     }
 
     #endregion
@@ -117,9 +124,10 @@ public class DevStreamsServiceTests
     public async Task GetDevStreamById_ShallThrowArgumentNullException_IfDevStreamIdIsNull()
     {
         Guid? devStreamId = null;
-
-        await Assert.ThrowsAsync<ArgumentNullException>(async () =>
-            await _devStreamsService.GetDevStreamById(devStreamId));
+        
+        Func<Task> action = async () => await _devStreamsService.GetDevStreamById(devStreamId);
+        
+        await action.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [Fact]
@@ -131,7 +139,7 @@ public class DevStreamsServiceTests
 
         var devStreamId = await _devStreamsService.GetDevStreamById(devStreamIdExpected);
 
-        Assert.Equal(devStreamIdExpected, devStreamId?.DevStreamId);
+        devStreamId?.DevStreamId.Should().Be(devStreamIdExpected);
     }
 
     #endregion
