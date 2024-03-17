@@ -21,18 +21,17 @@ public class TestersServiceTests
             new DbContextOptionsBuilder<TestersDbContext>().Options));
         _testersService = new TestersService(new TestersDbContext(
             new DbContextOptionsBuilder<TestersDbContext>().Options), _devStreamsService);
-        
     }
 
     #region GetSortedTesters
 
     [Fact]
-    public void GetSortedTesters_ShallReturnListWithSortedTestersByNameDesc_IfSortParamIsName()
+    public async Task GetSortedTesters_ShallReturnListWithSortedTestersByNameDesc_IfSortParamIsName()
     {
         var devStreamAddRequestOne = new DevStreamAddRequest { DevStreamName = "Crew" };
         var devStreamAddRequestTwo = new DevStreamAddRequest { DevStreamName = "New Year" };
-        var devStreamResponseOne = _devStreamsService.AddDevStream(devStreamAddRequestOne);
-        var devStreamResponseTwo = _devStreamsService.AddDevStream(devStreamAddRequestTwo);
+        var devStreamResponseOne = await _devStreamsService.AddDevStream(devStreamAddRequestOne);
+        var devStreamResponseTwo = await _devStreamsService.AddDevStream(devStreamAddRequestTwo);
         var testerAddRequestOne = new TesterAddRequest
         {
             TesterName = "Sakura",
@@ -68,11 +67,11 @@ public class TestersServiceTests
         List<TesterResponse> testerResponsesFromAdd = [];
 
         foreach (var testerAddRequest in testerAddRequests)
-            testerResponsesFromAdd.Add(_testersService.AddTester(testerAddRequest));
+            testerResponsesFromAdd.Add(await _testersService.AddTester(testerAddRequest));
 
-        var allTesters = _testersService.GetAllTesters();
+        var allTesters = await _testersService.GetAllTesters();
 
-        var testerResponsesFromSort = _testersService.GetSortedTesters(
+        var testerResponsesFromSort = await _testersService.GetSortedTesters(
             allTesters, nameof(TesterResponse.TesterName), SortOrderOptions.Desc);
 
         testerResponsesFromAdd = testerResponsesFromAdd
@@ -93,23 +92,24 @@ public class TestersServiceTests
     #region AddTester
 
     [Fact]
-    public void AddTester_ShallThrowArgumentNullException_IfTesterAddRequestIsNull()
+    public async Task AddTester_ShallThrowArgumentNullException_IfTesterAddRequestIsNull()
     {
         TesterAddRequest? testerAddRequest = null;
 
-        Assert.Throws<ArgumentNullException>(() => _testersService.AddTester(testerAddRequest));
+        await Assert.ThrowsAsync<ArgumentNullException>(async () => await _testersService.AddTester(testerAddRequest));
     }
 
     [Fact]
-    public void AddTester_ShallThrowArgumentException_IfTesterAddRequestNameIsNull()
+    public async Task AddTester_ShallThrowArgumentException_IfTesterAddRequestNameIsNull()
     {
         var testerAddRequest = new TesterAddRequest { TesterName = null };
 
-        Assert.Throws<ArgumentException>(() => _testersService.AddTester(testerAddRequest));
+        await Assert.ThrowsAsync<ArgumentException>(async () => await _testersService.AddTester(testerAddRequest));
     }
 
     [Fact]
-    public void AddTester_ShallInsertNewTesterToTheList_AndReturnAddedTesterResponseObj_IfTesterAddRequestIsValid()
+    public async Task
+        AddTester_ShallInsertNewTesterToTheList_AndReturnAddedTesterResponseObj_IfTesterAddRequestIsValid()
     {
         var testerAddRequest = new TesterAddRequest
         {
@@ -124,10 +124,10 @@ public class TestersServiceTests
             Skills = "C#"
         };
 
-        var testerResponse = _testersService.AddTester(testerAddRequest);
+        var testerResponse = await _testersService.AddTester(testerAddRequest);
 
         Assert.True(testerResponse.DevStreamId != Guid.Empty);
-        Assert.Contains(testerResponse, _testersService.GetAllTesters());
+        Assert.Contains(testerResponse, await _testersService.GetAllTesters());
     }
 
     #endregion
@@ -135,17 +135,17 @@ public class TestersServiceTests
     #region GetTesterById
 
     [Fact]
-    public void GetTesterById_ShallReturnNull_IfIdIsNull()
+    public async Task GetTesterById_ShallReturnNull_IfIdIsNull()
     {
         Guid? testerId = null;
-        Assert.Null(_testersService.GetTesterById(testerId));
+        Assert.Null(await _testersService.GetTesterById(testerId));
     }
 
     [Fact]
-    public void GetTesterById_ShallReturnTesterResponse_IfIdIsValid()
+    public async Task GetTesterById_ShallReturnTesterResponse_IfIdIsValid()
     {
         var devStreamAddRequest = new DevStreamAddRequest { DevStreamName = "Crew" };
-        var devStreamResponse = _devStreamsService.AddDevStream(devStreamAddRequest);
+        var devStreamResponse = await _devStreamsService.AddDevStream(devStreamAddRequest);
         var testerAddRequest = new TesterAddRequest
         {
             TesterName = "Tester",
@@ -159,9 +159,9 @@ public class TestersServiceTests
             Skills = "C#"
         };
 
-        var testerResponseFromAdd = _testersService.AddTester(testerAddRequest);
+        var testerResponseFromAdd = await _testersService.AddTester(testerAddRequest);
 
-        var testerResponseFromGet = _testersService.GetTesterById(testerResponseFromAdd.TesterId);
+        var testerResponseFromGet = await _testersService.GetTesterById(testerResponseFromAdd.TesterId);
 
         Assert.Equal(testerResponseFromAdd, testerResponseFromGet);
         // Assert.Contains(testerResponseFromGet, _testersService.GetAllTesters());
@@ -172,18 +172,18 @@ public class TestersServiceTests
     #region GetAllTesters
 
     [Fact]
-    public void GetAllTesters_ShallReturnEmptyList_BeforeTestersAreAdded()
+    public async Task GetAllTesters_ShallReturnEmptyList_BeforeTestersAreAdded()
     {
-        Assert.Empty(_testersService.GetAllTesters());
+        Assert.Empty(await _testersService.GetAllTesters());
     }
 
     [Fact]
-    public void GetAllTesters_ShallReturnListWithAllTesters_IfTestersAreAdded()
+    public async Task GetAllTesters_ShallReturnListWithAllTesters_IfTestersAreAdded()
     {
         var devStreamAddRequestOne = new DevStreamAddRequest { DevStreamName = "Crew" };
         var devStreamAddRequestTwo = new DevStreamAddRequest { DevStreamName = "New Year" };
-        var devStreamResponseOne = _devStreamsService.AddDevStream(devStreamAddRequestOne);
-        var devStreamResponseTwo = _devStreamsService.AddDevStream(devStreamAddRequestTwo);
+        var devStreamResponseOne = await _devStreamsService.AddDevStream(devStreamAddRequestOne);
+        var devStreamResponseTwo = await _devStreamsService.AddDevStream(devStreamAddRequestTwo);
         var testerAddRequestOne = new TesterAddRequest
         {
             TesterName = "Tester",
@@ -219,9 +219,9 @@ public class TestersServiceTests
         List<TesterResponse> testerResponsesFromAdd = [];
 
         foreach (var testerAddRequest in testerAddRequests)
-            testerResponsesFromAdd.Add(_testersService.AddTester(testerAddRequest));
+            testerResponsesFromAdd.Add(await _testersService.AddTester(testerAddRequest));
 
-        var testerResponsesFromGet = _testersService.GetAllTesters();
+        var testerResponsesFromGet = await _testersService.GetAllTesters();
 
         foreach (var testerResponse in
                  testerResponsesFromAdd)
@@ -240,12 +240,12 @@ public class TestersServiceTests
     #region GetFilteredTesters
 
     [Fact]
-    public void GetFilteredTesters_ShallReturnListWithAllTesters_IfSearchStringIsEmpty_AndSearchByIsTesterName()
+    public async Task GetFilteredTesters_ShallReturnListWithAllTesters_IfSearchStringIsEmpty_AndSearchByIsTesterName()
     {
         var devStreamAddRequestOne = new DevStreamAddRequest { DevStreamName = "Crew" };
         var devStreamAddRequestTwo = new DevStreamAddRequest { DevStreamName = "New Year" };
-        var devStreamResponseOne = _devStreamsService.AddDevStream(devStreamAddRequestOne);
-        var devStreamResponseTwo = _devStreamsService.AddDevStream(devStreamAddRequestTwo);
+        var devStreamResponseOne = await _devStreamsService.AddDevStream(devStreamAddRequestOne);
+        var devStreamResponseTwo = await _devStreamsService.AddDevStream(devStreamAddRequestTwo);
         var testerAddRequestOne = new TesterAddRequest
         {
             TesterName = "Sakura",
@@ -281,9 +281,9 @@ public class TestersServiceTests
         List<TesterResponse> testerResponsesFromAdd = [];
 
         foreach (var testerAddRequest in testerAddRequests)
-            testerResponsesFromAdd.Add(_testersService.AddTester(testerAddRequest));
+            testerResponsesFromAdd.Add(await _testersService.AddTester(testerAddRequest));
 
-        var testerResponsesFromSearch = _testersService.GetFilteredTesters(nameof(TesterResponse.TesterName), "");
+        var testerResponsesFromSearch = await _testersService.GetFilteredTesters(nameof(TesterResponse.TesterName), "");
 
         foreach (var testerResponse in testerResponsesFromAdd)
             Assert.Contains(testerResponse, testerResponsesFromSearch); // calls equals method, so compare ref not val()
@@ -298,12 +298,12 @@ public class TestersServiceTests
     }
 
     [Fact]
-    public void GetFilteredTesters_ShallReturnListWithFilteredTesters_IfSearchStringParamIsSet()
+    public async Task GetFilteredTesters_ShallReturnListWithFilteredTesters_IfSearchStringParamIsSet()
     {
         var devStreamAddRequestOne = new DevStreamAddRequest { DevStreamName = "Crew" };
         var devStreamAddRequestTwo = new DevStreamAddRequest { DevStreamName = "New Year" };
-        var devStreamResponseOne = _devStreamsService.AddDevStream(devStreamAddRequestOne);
-        var devStreamResponseTwo = _devStreamsService.AddDevStream(devStreamAddRequestTwo);
+        var devStreamResponseOne = await _devStreamsService.AddDevStream(devStreamAddRequestOne);
+        var devStreamResponseTwo = await _devStreamsService.AddDevStream(devStreamAddRequestTwo);
         var testerAddRequestOne = new TesterAddRequest
         {
             TesterName = "Sakura",
@@ -339,9 +339,10 @@ public class TestersServiceTests
         List<TesterResponse> testerResponsesFromAdd = [];
 
         foreach (var testerAddRequest in testerAddRequests)
-            testerResponsesFromAdd.Add(_testersService.AddTester(testerAddRequest));
+            testerResponsesFromAdd.Add(await _testersService.AddTester(testerAddRequest));
 
-        var testerResponsesFromSearch = _testersService.GetFilteredTesters(nameof(TesterResponse.TesterName), "sa");
+        var testerResponsesFromSearch =
+            await _testersService.GetFilteredTesters(nameof(TesterResponse.TesterName), "sa");
 
         foreach (var testerResponse in testerResponsesFromAdd)
             if (testerResponse.TesterName is not null &&
@@ -361,25 +362,27 @@ public class TestersServiceTests
     #region UpdateTester
 
     [Fact]
-    public void UpdateTester_ShallThrowArgumentNullException_IfTesterUpdateRequestIsNull()
+    public async Task UpdateTester_ShallThrowArgumentNullException_IfTesterUpdateRequestIsNull()
     {
         TesterUpdateRequest? testerUpdateRequest = null;
-        Assert.Throws<ArgumentNullException>(() => _testersService.UpdateTester(testerUpdateRequest));
+        await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await _testersService.UpdateTester(testerUpdateRequest));
     }
 
     [Fact]
-    public void UpdateTester_ShallThrowArgumentException_IfTesterUpdateRequestIdIsInvalid()
+    public async Task UpdateTester_ShallThrowArgumentException_IfTesterUpdateRequestIdIsInvalid()
     {
         var testerUpdateRequest = new TesterUpdateRequest { TesterId = Guid.NewGuid() };
 
-        Assert.Throws<ArgumentException>(() => _testersService.UpdateTester(testerUpdateRequest));
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
+            await _testersService.UpdateTester(testerUpdateRequest));
     }
 
     [Fact]
-    public void UpdateTester_ShallThrowArgumentNullException_IfTesterUpdateRequestTesterNameIsNull()
+    public async Task UpdateTester_ShallThrowArgumentNullException_IfTesterUpdateRequestTesterNameIsNull()
     {
         var devStreamAddRequest = new DevStreamAddRequest { DevStreamName = "Crew" };
-        var devStreamResponse = _devStreamsService.AddDevStream(devStreamAddRequest);
+        var devStreamResponse = await _devStreamsService.AddDevStream(devStreamAddRequest);
         var testerAddRequest = new TesterAddRequest
         {
             TesterName = "Sakura",
@@ -393,18 +396,19 @@ public class TestersServiceTests
             Skills = "C#"
         };
 
-        var testerResponse = _testersService.AddTester(testerAddRequest);
+        var testerResponse = await _testersService.AddTester(testerAddRequest);
         var testerUpdateRequest = testerResponse.ToTesterUpdateRequest();
         testerUpdateRequest.TesterName = null;
 
-        Assert.Throws<ArgumentException>(() => _testersService.UpdateTester(testerUpdateRequest));
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
+            await _testersService.UpdateTester(testerUpdateRequest));
     }
 
     [Fact]
-    public void UpdateTester_ShallUpdateTester_IfTesterUpdateRequestIsValid()
+    public async Task UpdateTester_ShallUpdateTester_IfTesterUpdateRequestIsValid()
     {
         var devStreamAddRequest = new DevStreamAddRequest { DevStreamName = "Crew" };
-        var devStreamResponse = _devStreamsService.AddDevStream(devStreamAddRequest);
+        var devStreamResponse = await _devStreamsService.AddDevStream(devStreamAddRequest);
         var testerAddRequest = new TesterAddRequest
         {
             TesterName = "Sakura",
@@ -418,13 +422,13 @@ public class TestersServiceTests
             Skills = "C#"
         };
 
-        var testerResponse = _testersService.AddTester(testerAddRequest);
+        var testerResponse = await _testersService.AddTester(testerAddRequest);
         testerResponse.TesterName = "Villanelle";
         testerResponse.Position = "Senior QA";
         var testerUpdateRequest = testerResponse.ToTesterUpdateRequest();
 
-        var updatedTesterResponse = _testersService.UpdateTester(testerUpdateRequest);
-        var testerFromGetById = _testersService.GetTesterById(testerResponse.TesterId);
+        var updatedTesterResponse = await _testersService.UpdateTester(testerUpdateRequest);
+        var testerFromGetById = await _testersService.GetTesterById(testerResponse.TesterId);
 
         Assert.Equal(updatedTesterResponse, testerFromGetById);
     }
@@ -434,10 +438,10 @@ public class TestersServiceTests
     #region DeleteTester
 
     [Fact]
-    public void DeleteTester_ShallReturnTrue_IfTesterIdIsFound()
+    public async Task DeleteTester_ShallReturnTrue_IfTesterIdIsFound()
     {
         var devStreamAddRequest = new DevStreamAddRequest { DevStreamName = "Crew" };
-        var devStreamResponse = _devStreamsService.AddDevStream(devStreamAddRequest);
+        var devStreamResponse = await _devStreamsService.AddDevStream(devStreamAddRequest);
         var testerAddRequest = new TesterAddRequest
         {
             TesterName = "Sayaka",
@@ -451,19 +455,19 @@ public class TestersServiceTests
             Skills = "C#"
         };
 
-        var testerResponse = _testersService.AddTester(testerAddRequest);
+        var testerResponse = await _testersService.AddTester(testerAddRequest);
 
-        var isDeleted = _testersService.DeleteTester(testerResponse.TesterId);
+        var isDeleted = await _testersService.DeleteTester(testerResponse.TesterId);
         Assert.True(isDeleted);
 
-        var testerFromGetById = _testersService.GetTesterById(testerResponse.TesterId);
+        var testerFromGetById = await _testersService.GetTesterById(testerResponse.TesterId);
         Assert.Null(testerFromGetById);
     }
 
     [Fact]
-    public void DeleteTester_ShallReturnFalse_IfTesterIdIsNotFound()
+    public async Task DeleteTester_ShallReturnFalse_IfTesterIdIsNotFound()
     {
-        var isDeleted = _testersService.DeleteTester(Guid.NewGuid());
+        var isDeleted = await _testersService.DeleteTester(Guid.NewGuid());
         Assert.False(isDeleted);
     }
 
