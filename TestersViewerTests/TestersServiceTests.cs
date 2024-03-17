@@ -1,6 +1,7 @@
 using AutoFixture;
 using Entities;
 using EntityFrameworkCoreMock;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
@@ -13,17 +14,17 @@ namespace TestersViewerTests;
 public class TestersServiceTests
 {
     private readonly IDevStreamsService _devStreamsService;
+    private readonly IFixture _fixture;
     private readonly ITestersService _testersService;
     private readonly ITestOutputHelper _testOutputHelper;
-    private readonly IFixture _fixture;
 
     public TestersServiceTests(ITestOutputHelper testOutputHelper)
     {
         _fixture = new Fixture();
-        
+
         List<DevStream> devStreamsInitialData = [];
         List<Tester> testersInitialData = [];
-        
+
         var dbContextMock = new DbContextMock<ApplicatonDbContext>(
             new DbContextOptionsBuilder<ApplicatonDbContext>().Options);
 
@@ -33,7 +34,7 @@ public class TestersServiceTests
 
         _devStreamsService = new DevStreamsService(dbContext);
         _testersService = new TestersService(dbContext, _devStreamsService);
-        
+
         _testOutputHelper = testOutputHelper;
     }
 
@@ -57,7 +58,7 @@ public class TestersServiceTests
             .With(x => x.Email, "fXw5g@example.com")
             .With(x => x.DevStreamId, devStreamResponseTwo.DevStreamId)
             .Create();
-        
+
         var testerAddRequestThree = _fixture.Build<TesterAddRequest>()
             .With(x => x.TesterName, "Ryu")
             .With(x => x.Email, "fXw5g@example.com")
@@ -103,7 +104,10 @@ public class TestersServiceTests
     {
         TesterAddRequest? testerAddRequest = null;
 
-        await Assert.ThrowsAsync<ArgumentNullException>(async () => await _testersService.AddTester(testerAddRequest));
+        Func<Task> action = async () => await _testersService.AddTester(testerAddRequest);
+
+        await action.Should().ThrowAsync<ArgumentNullException>();
+        // await Assert.ThrowsAsync<ArgumentNullException>(async () => await _testersService.AddTester(testerAddRequest));
     }
 
     [Fact]
@@ -113,7 +117,9 @@ public class TestersServiceTests
             .With(x => x.TesterName, null as string) // must be null as string, otherwise - error
             .Create();
 
-        await Assert.ThrowsAsync<ArgumentException>(async () => await _testersService.AddTester(testerAddRequest));
+        Func<Task> action = async () => await _testersService.AddTester(testerAddRequest);
+
+        await action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -125,9 +131,10 @@ public class TestersServiceTests
             .Create();
 
         var testerResponse = await _testersService.AddTester(testerAddRequest);
+        testerResponse.TesterId.Should().NotBe(Guid.Empty);
 
-        Assert.True(testerResponse.DevStreamId != Guid.Empty);
-        Assert.Contains(testerResponse, await _testersService.GetAllTesters());
+        var testersResponseList = await _testersService.GetAllTesters();
+        testersResponseList.Should().Contain(testerResponse);
     }
 
     #endregion
@@ -138,7 +145,9 @@ public class TestersServiceTests
     public async Task GetTesterById_ShallReturnNull_IfIdIsNull()
     {
         Guid? testerId = null;
-        Assert.Null(await _testersService.GetTesterById(testerId));
+        var testerResponse = await _testersService.GetTesterById(testerId);
+        
+        testerResponse.Should().BeNull();
     }
 
     [Fact]
@@ -146,17 +155,15 @@ public class TestersServiceTests
     {
         // var devStreamAddRequest = _fixture.Create<DevStreamAddRequest>();
         // var devStreamResponse = await _devStreamsService.AddDevStream(devStreamAddRequest);
-        
+
         var testerAddRequest = _fixture.Build<TesterAddRequest>()
             .With(x => x.Email, "fXw5g@example.com")
             .Create();
-
-
+        
         var testerResponseFromAdd = await _testersService.AddTester(testerAddRequest);
-
         var testerResponseFromGet = await _testersService.GetTesterById(testerResponseFromAdd.TesterId);
-
-        Assert.Equal(testerResponseFromAdd, testerResponseFromGet);
+        
+        testerResponseFromGet.Should().Be(testerResponseFromAdd);
     }
 
     #endregion
@@ -166,7 +173,8 @@ public class TestersServiceTests
     [Fact]
     public async Task GetAllTesters_ShallReturnEmptyList_BeforeTestersAreAdded()
     {
-        Assert.Empty(await _testersService.GetAllTesters());
+        var allTesters = await _testersService.GetAllTesters();
+        allTesters.Should().BeEmpty();
     }
 
     [Fact]
@@ -185,7 +193,7 @@ public class TestersServiceTests
             .With(x => x.Email, "fXw5g@example.com")
             .With(x => x.DevStreamId, devStreamResponseTwo.DevStreamId)
             .Create();
-        
+
         var testerAddRequestThree = _fixture.Build<TesterAddRequest>()
             .With(x => x.Email, "fXw5g@example.com")
             .With(x => x.DevStreamId, devStreamResponseOne.DevStreamId)
@@ -207,7 +215,8 @@ public class TestersServiceTests
 
         foreach (var testerResponse in
                  testerResponsesFromAdd)
-            Assert.Contains(testerResponse, testerResponsesFromGet); // calls equals method, so compare ref not val()
+            // Assert.Contains(testerResponse, testerResponsesFromGet); // calls equals method, so compare ref not val()
+            testerResponsesFromGet.Should().Contain(testerResponse);
 
 
         _testOutputHelper.WriteLine("Expected:");
@@ -237,7 +246,7 @@ public class TestersServiceTests
             .With(x => x.Email, "fXw5g@example.com")
             .With(x => x.DevStreamId, devStreamResponseTwo.DevStreamId)
             .Create();
-        
+
         var testerAddRequestThree = _fixture.Build<TesterAddRequest>()
             .With(x => x.Email, "fXw5g@example.com")
             .With(x => x.DevStreamId, devStreamResponseOne.DevStreamId)
@@ -258,8 +267,8 @@ public class TestersServiceTests
         var testerResponsesFromSearch = await _testersService.GetFilteredTesters(nameof(TesterResponse.TesterName), "");
 
         foreach (var testerResponse in testerResponsesFromAdd)
-            Assert.Contains(testerResponse, testerResponsesFromSearch); // calls equals method, so compare ref not val()
-
+            // Assert.Contains(testerResponse, testerResponsesFromSearch); // calls equals method, so compare ref not val()
+            testerResponsesFromSearch.Should().Contain(testerResponse);
 
         // Check what is in the list
         _testOutputHelper.WriteLine("Expected:");
@@ -305,7 +314,8 @@ public class TestersServiceTests
         foreach (var testerResponse in testerResponsesFromAdd)
             if (testerResponse.TesterName is not null &&
                 testerResponse.TesterName.Contains("sa", StringComparison.OrdinalIgnoreCase))
-                Assert.Contains(testerResponse, testerResponsesFromSearch);
+                // Assert.Contains(testerResponse, testerResponsesFromSearch);
+                testerResponsesFromSearch.Should().Contain(testerResponse);
 
         // Check what is in the list
         _testOutputHelper.WriteLine("Expected:");
@@ -323,8 +333,10 @@ public class TestersServiceTests
     public async Task UpdateTester_ShallThrowArgumentNullException_IfTesterUpdateRequestIsNull()
     {
         TesterUpdateRequest? testerUpdateRequest = null;
-        await Assert.ThrowsAsync<ArgumentNullException>(async () =>
-            await _testersService.UpdateTester(testerUpdateRequest));
+        
+        Func<Task> action = async () => await _testersService.UpdateTester(testerUpdateRequest);
+
+        await action.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [Fact]
@@ -334,8 +346,9 @@ public class TestersServiceTests
             .With(x => x.TesterId, Guid.NewGuid())
             .Create();
 
-        await Assert.ThrowsAsync<ArgumentException>(async () =>
-            await _testersService.UpdateTester(testerUpdateRequest));
+        Func<Task> action = () => _testersService.UpdateTester(testerUpdateRequest);
+        
+        await action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -352,10 +365,11 @@ public class TestersServiceTests
         var testerUpdateRequest = testerResponse.ToTesterUpdateRequest();
         testerUpdateRequest.TesterName = null;
 
-        await Assert.ThrowsAsync<ArgumentException>(async () =>
-            await _testersService.UpdateTester(testerUpdateRequest));
+        Func<Task> action = () => _testersService.UpdateTester(testerUpdateRequest);
+        
+        await action.Should().ThrowAsync<ArgumentException>();
     }
-
+    
     [Fact]
     public async Task UpdateTester_ShallUpdateTester_IfTesterUpdateRequestIsValid()
     {
@@ -374,7 +388,7 @@ public class TestersServiceTests
         var updatedTesterResponse = await _testersService.UpdateTester(testerUpdateRequest);
         var testerFromGetById = await _testersService.GetTesterById(testerResponse.TesterId);
 
-        Assert.Equal(updatedTesterResponse, testerFromGetById);
+        testerFromGetById.Should().Be(updatedTesterResponse);
     }
 
     #endregion
@@ -394,17 +408,18 @@ public class TestersServiceTests
         var testerResponse = await _testersService.AddTester(testerAddRequest);
 
         var isDeleted = await _testersService.DeleteTester(testerResponse.TesterId);
-        Assert.True(isDeleted);
-
+        isDeleted.Should().BeTrue();
+        
+        
         var testerFromGetById = await _testersService.GetTesterById(testerResponse.TesterId);
-        Assert.Null(testerFromGetById);
+        testerFromGetById.Should().BeNull();
     }
 
     [Fact]
     public async Task DeleteTester_ShallReturnFalse_IfTesterIdIsNotFound()
     {
         var isDeleted = await _testersService.DeleteTester(Guid.NewGuid());
-        Assert.False(isDeleted);
+        isDeleted.Should().BeFalse();
     }
 
     #endregion
