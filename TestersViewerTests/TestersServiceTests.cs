@@ -1,4 +1,5 @@
 using Entities;
+using EntityFrameworkCoreMock;
 using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
@@ -16,11 +17,20 @@ public class TestersServiceTests
 
     public TestersServiceTests(ITestOutputHelper testOutputHelper)
     {
+        List<DevStream> devStreamsInitialData = [];
+        List<Tester> testersInitialData = [];
+
+        var dbContextMock = new DbContextMock<ApplicatonDbContext>(
+            new DbContextOptionsBuilder<ApplicatonDbContext>().Options);
+
+        var dbContext = dbContextMock.Object;
+        dbContextMock.CreateDbSetMock(x => x.DevStreams, devStreamsInitialData);
+        dbContextMock.CreateDbSetMock(x => x.Testers, testersInitialData);
+
+        _devStreamsService = new DevStreamsService(dbContext);
+        _testersService = new TestersService(dbContext, _devStreamsService);
+        
         _testOutputHelper = testOutputHelper;
-        _devStreamsService = new DevStreamsService(new ApplicatonDbContext(
-            new DbContextOptionsBuilder<ApplicatonDbContext>().Options));
-        _testersService = new TestersService(new ApplicatonDbContext(
-            new DbContextOptionsBuilder<ApplicatonDbContext>().Options), _devStreamsService);
     }
 
     #region GetSortedTesters
