@@ -9,8 +9,8 @@ public class ApplicatonDbContext : DbContext
     {
     }
 
-    public DbSet<DevStream> DevStreams { get; set; }
-    public DbSet<Tester> Testers { get; set; }
+    public virtual DbSet<DevStream> DevStreams { get; set; }
+    public virtual DbSet<Tester> Testers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,13 +27,13 @@ public class ApplicatonDbContext : DbContext
         var testers = JsonSerializer.Deserialize<List<Tester>>(testersJson);
 
         foreach (var tester in testers!) modelBuilder.Entity<Tester>().HasData(tester);
-        
+
         // fluent api
         modelBuilder.Entity<Tester>().Property(x => x.MonthsOfWorkExperience)
             .HasColumnName("WorksFor")
             .HasColumnType("INTEGER")
             .HasDefaultValue(1);
-        
+
         // table relations
         // modelBuilder.Entity<Tester>(entity =>
         // {
