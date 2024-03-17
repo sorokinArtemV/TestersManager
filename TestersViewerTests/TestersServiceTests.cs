@@ -1,3 +1,4 @@
+using AutoFixture;
 using Entities;
 using EntityFrameworkCoreMock;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +15,15 @@ public class TestersServiceTests
     private readonly IDevStreamsService _devStreamsService;
     private readonly ITestersService _testersService;
     private readonly ITestOutputHelper _testOutputHelper;
+    private readonly IFixture _fixture;
 
     public TestersServiceTests(ITestOutputHelper testOutputHelper)
     {
+        _fixture = new Fixture();
+        
         List<DevStream> devStreamsInitialData = [];
         List<Tester> testersInitialData = [];
-
+        
         var dbContextMock = new DbContextMock<ApplicatonDbContext>(
             new DbContextOptionsBuilder<ApplicatonDbContext>().Options);
 
@@ -121,18 +125,9 @@ public class TestersServiceTests
     public async Task
         AddTester_ShallInsertNewTesterToTheList_AndReturnAddedTesterResponseObj_IfTesterAddRequestIsValid()
     {
-        var testerAddRequest = new TesterAddRequest
-        {
-            TesterName = "Tester",
-            Email = "fXw5g@example.com",
-            Gender = GenderOptions.Male,
-            BirthDate = DateTime.Now,
-            DevStreamId = Guid.NewGuid(),
-            Position = "Tester",
-            MonthsOfWorkExperience = 1,
-            HasMobileDeviceExperience = true,
-            Skills = "C#"
-        };
+        var testerAddRequest = _fixture.Build<TesterAddRequest>()
+            .With(x => x.Email, "fXw5g@example.com")
+            .Create();
 
         var testerResponse = await _testersService.AddTester(testerAddRequest);
 
