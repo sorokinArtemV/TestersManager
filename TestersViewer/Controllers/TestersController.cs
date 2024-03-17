@@ -157,4 +157,12 @@ public class TestersController : Controller
         await _testersService.DeleteTester(testerUpdateRequest.TesterId);
         return RedirectToAction("Index", "Testers");
     }
+    
+    [Route("testers-csv")]
+    public async Task<IActionResult> TestersCsv()
+    {
+        var testers = await _testersService.GetTestersCsv();
+        
+        return File(testers, "application/octet-stream", "testers.csv");
+    }
 }

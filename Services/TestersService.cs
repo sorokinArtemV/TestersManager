@@ -1,3 +1,5 @@
+using System.Globalization;
+using CsvHelper;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
@@ -118,6 +120,25 @@ public class TestersService : ITestersService
         await _db.SaveChangesAsync();
 
         return true;
+    }
+
+    public async Task<MemoryStream> GetTestersCsv()
+    {
+        var memoryStream = new MemoryStream();
+        var streamWriter = new StreamWriter(memoryStream);
+        var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture, true);
+
+        csvWriter.WriteHeader<TesterResponse>();
+        await csvWriter.NextRecordAsync();
+
+        var testers = _db.Testers
+            .Include("DevStream")
+            .Select(x => x.ToTesterResponse()).ToList();
+        await csvWriter.WriteRecordsAsync(testers);
+
+        memoryStream.Position = 0;
+        
+        return memoryStream;
     }
 
     public async Task<TesterResponse> UpdateTester(TesterUpdateRequest? testerUpdateRequest)
