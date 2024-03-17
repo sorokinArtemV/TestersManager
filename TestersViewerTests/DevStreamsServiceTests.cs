@@ -1,4 +1,5 @@
 using Entities;
+using EntityFrameworkCoreMock;
 using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
@@ -14,10 +15,12 @@ public class DevStreamsServiceTests
     {
         List<DevStream> devStreamsInitialData = [];
 
-        var dbContext = new ApplicatonDbContext(new DbContextOptionsBuilder<ApplicatonDbContext>().Options);
-        _devStreamsService = new DevStreamsService(dbContext);
-    }
+        var dbContextMock = new DbContextMock<ApplicatonDbContext>(
+            new DbContextOptionsBuilder<ApplicatonDbContext>().Options);
 
+        var dbContext = dbContextMock.Object;
+        dbContextMock.CreateDbSetMock(x => x.DevStreams, devStreamsInitialData);
+    }
 
     #region AddDevStream
 
