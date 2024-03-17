@@ -134,8 +134,8 @@ public class TestersService : ITestersService
         var testers = _db.Testers
             .Include("DevStream")
             .Select(x => x.ToTesterResponse()).ToList();
+        
         await csvWriter.WriteRecordsAsync(testers);
-
         memoryStream.Position = 0;
         
         return memoryStream;
