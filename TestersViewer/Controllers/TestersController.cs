@@ -20,7 +20,7 @@ public class TestersController : Controller
 
     [Route("[action]")]
     [Route("/")]
-    public IActionResult Index(
+    public async Task<IActionResult> Index(
         string searchBy,
         string? searchString,
         string sortBy = nameof(TesterResponse.TesterName),
@@ -39,13 +39,13 @@ public class TestersController : Controller
             [nameof(TesterResponse.MonthsOfWorkExperience)] = "Works for"
         };
 
-        var testers = _testersService.GetFilteredTesters(searchBy, searchString);
+        var testers = await _testersService.GetFilteredTesters(searchBy, searchString);
 
         ViewBag.CurrentSearchBy = searchBy;
         ViewBag.CurrentSearchString = searchString;
 
         // Sort
-        var sortedTesters = _testersService.GetSortedTesters(testers, sortBy, sortOrder);
+        var sortedTesters = await _testersService.GetSortedTesters(testers, sortBy, sortOrder);
 
         ViewBag.CurrentSortBy = sortBy;
         ViewBag.CurrentSortOrder = sortOrder.ToString();
@@ -57,9 +57,9 @@ public class TestersController : Controller
     // triggers on click create
     [HttpGet]
     [Route("[action]")]
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-        var devStreams = _devStreamsService.GetAllDevStreams();
+        var devStreams = await _devStreamsService.GetAllDevStreams();
         ViewBag.DevStreams = devStreams;
 
         ViewBag.devStreams = devStreams.Select(x => new SelectListItem
@@ -74,11 +74,11 @@ public class TestersController : Controller
     // accepts submitted form
     [HttpPost]
     [Route("[action]")]
-    public IActionResult Create(TesterAddRequest tester)
+    public async Task<IActionResult> Create(TesterAddRequest tester)
     {
         if (!ModelState.IsValid)
         {
-            var devStreams = _devStreamsService.GetAllDevStreams();
+            var devStreams = await _devStreamsService.GetAllDevStreams();
             ViewBag.DevStreams = devStreams;
 
             ViewBag.Errors = ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage).ToList();
@@ -86,21 +86,21 @@ public class TestersController : Controller
             return View();
         }
 
-        var testerResponse = _testersService.AddTester(tester);
+        var testerResponse = await _testersService.AddTester(tester);
 
         return RedirectToAction("Index", "Testers");
     }
 
     [HttpGet]
     [Route("[action]/{testerId}")] // testers/1
-    public IActionResult Edit(Guid testerId)
+    public async Task<IActionResult> Edit(Guid testerId)
     {
-        var testerResponse = _testersService.GetTesterById(testerId);
+        var testerResponse = await _testersService.GetTesterById(testerId);
         if (testerResponse is null) return RedirectToAction("Index", "Testers");
 
         var testerUpdateRequest = testerResponse.ToTesterUpdateRequest();
 
-        var devStreams = _devStreamsService.GetAllDevStreams();
+        var devStreams = await _devStreamsService.GetAllDevStreams();
         ViewBag.DevStreams = devStreams;
 
         ViewBag.devStreams = devStreams.Select(x => new SelectListItem
@@ -114,18 +114,18 @@ public class TestersController : Controller
 
     [HttpPost]
     [Route("[action]/{testerId}")] // testers/1
-    public IActionResult Edit(TesterUpdateRequest testerUpdateRequest)
+    public async Task<IActionResult> Edit(TesterUpdateRequest testerUpdateRequest)
     {
-        var testerResponse = _testersService.GetTesterById(testerUpdateRequest.TesterId);
+        var testerResponse = await _testersService.GetTesterById(testerUpdateRequest.TesterId);
         if (testerResponse is null) return RedirectToAction("Index", "Testers");
 
         if (ModelState.IsValid)
         {
-            var updatedTester = _testersService.UpdateTester(testerUpdateRequest);
+            var updatedTester = await _testersService.UpdateTester(testerUpdateRequest);
             return RedirectToAction("Index", "Testers");
         }
 
-        var devStreams = _devStreamsService.GetAllDevStreams();
+        var devStreams = await _devStreamsService.GetAllDevStreams();
         ViewBag.DevStreams = devStreams;
 
         ViewBag.devStreams = devStreams.Select(x => new SelectListItem
@@ -139,9 +139,9 @@ public class TestersController : Controller
 
     [HttpGet]
     [Route("[action]/{testerId}")]
-    public IActionResult Delete(Guid? testerId)
+    public async Task<IActionResult> Delete(Guid? testerId)
     {
-        var testerResponse = _testersService.GetTesterById(testerId);
+        var testerResponse = await _testersService.GetTesterById(testerId);
         if (testerResponse is null) return RedirectToAction("Index", "Testers");
 
         return View(testerResponse);
@@ -149,12 +149,12 @@ public class TestersController : Controller
 
     [HttpPost]
     [Route("[action]/{testerId}")]
-    public IActionResult Delete(TesterUpdateRequest testerUpdateRequest)
+    public async Task<IActionResult> Delete(TesterUpdateRequest testerUpdateRequest)
     {
-        var testerResponse = _testersService.GetTesterById(testerUpdateRequest.TesterId);
+        var testerResponse = await _testersService.GetTesterById(testerUpdateRequest.TesterId);
         if (testerResponse is null) return RedirectToAction("Index", "Testers");
 
-        _testersService.DeleteTester(testerUpdateRequest.TesterId);
+        await _testersService.DeleteTester(testerUpdateRequest.TesterId);
         return RedirectToAction("Index", "Testers");
     }
 }
