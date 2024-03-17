@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Entities;
 
-public class TestersDbContext : DbContext
+public class ApplicatonDbContext : DbContext
 {
-    public TestersDbContext(DbContextOptions options) : base(options)
+    public ApplicatonDbContext(DbContextOptions options) : base(options)
     {
     }
 

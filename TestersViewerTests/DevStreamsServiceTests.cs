@@ -12,9 +12,10 @@ public class DevStreamsServiceTests
 
     public DevStreamsServiceTests()
     {
-        _devStreamsService = new DevStreamsService(
-            new TestersDbContext(
-                new DbContextOptionsBuilder<TestersDbContext>().Options));
+        List<DevStream> devStreamsInitialData = [];
+
+        var dbContext = new ApplicatonDbContext(new DbContextOptionsBuilder<ApplicatonDbContext>().Options);
+        _devStreamsService = new DevStreamsService(dbContext);
     }
 
 

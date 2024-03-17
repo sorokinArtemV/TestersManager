@@ -7,9 +7,9 @@ namespace Services;
 
 public class DevStreamsService : IDevStreamsService
 {
-    private readonly TestersDbContext _db;
+    private readonly ApplicatonDbContext _db;
 
-    public DevStreamsService(TestersDbContext dbContext)
+    public DevStreamsService(ApplicatonDbContext dbContext)
     {
         _db = dbContext;
     }

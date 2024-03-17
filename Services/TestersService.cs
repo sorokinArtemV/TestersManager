@@ -11,10 +11,10 @@ namespace Services;
 
 public class TestersService : ITestersService
 {
-    private readonly TestersDbContext _db;
+    private readonly ApplicatonDbContext _db;
     private readonly IDevStreamsService _devStreamsService;
 
-    public TestersService(TestersDbContext db, IDevStreamsService devStreamsService)
+    public TestersService(ApplicatonDbContext db, IDevStreamsService devStreamsService)
     {
         _db = db;
         _devStreamsService = devStreamsService;

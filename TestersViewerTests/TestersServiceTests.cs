@@ -17,10 +17,10 @@ public class TestersServiceTests
     public TestersServiceTests(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
-        _devStreamsService = new DevStreamsService(new TestersDbContext(
-            new DbContextOptionsBuilder<TestersDbContext>().Options));
-        _testersService = new TestersService(new TestersDbContext(
-            new DbContextOptionsBuilder<TestersDbContext>().Options), _devStreamsService);
+        _devStreamsService = new DevStreamsService(new ApplicatonDbContext(
+            new DbContextOptionsBuilder<ApplicatonDbContext>().Options));
+        _testersService = new TestersService(new ApplicatonDbContext(
+            new DbContextOptionsBuilder<ApplicatonDbContext>().Options), _devStreamsService);
     }
 
     #region GetSortedTesters
