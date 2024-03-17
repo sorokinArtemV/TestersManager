@@ -42,40 +42,33 @@ public class TestersServiceTests
     [Fact]
     public async Task GetSortedTesters_ShallReturnListWithSortedTestersByNameDesc_IfSortParamIsName()
     {
-        var devStreamAddRequestOne = new DevStreamAddRequest { DevStreamName = "Crew" };
-        var devStreamAddRequestTwo = new DevStreamAddRequest { DevStreamName = "New Year" };
+        var devStreamAddRequestOne = _fixture.Create<DevStreamAddRequest>();
+        var devStreamAddRequestTwo = _fixture.Create<DevStreamAddRequest>();
         var devStreamResponseOne = await _devStreamsService.AddDevStream(devStreamAddRequestOne);
         var devStreamResponseTwo = await _devStreamsService.AddDevStream(devStreamAddRequestTwo);
-        var testerAddRequestOne = new TesterAddRequest
-        {
-            TesterName = "Sakura",
-            Email = "fXw5g@example.com",
-            Gender = GenderOptions.Female,
-            BirthDate = DateTime.Now,
-            DevStreamId = devStreamResponseOne.DevStreamId,
-            Position = "Tester",
-            MonthsOfWorkExperience = 1,
-            HasMobileDeviceExperience = true,
-            Skills = "C#"
-        };
+        var testerAddRequestOne = _fixture.Build<TesterAddRequest>()
+            .With(x => x.TesterName, "Sayaka")
+            .With(x => x.Email, "fXw5g@example.com")
+            .With(x => x.DevStreamId, devStreamResponseOne.DevStreamId)
+            .Create();
 
-        var testerAddRequestTwo = new TesterAddRequest
-        {
-            TesterName = "Sayaka",
-            Email = "fXw5g@example.com",
-            Gender = GenderOptions.Female,
-            BirthDate = DateTime.Now,
-            DevStreamId = devStreamResponseTwo.DevStreamId,
-            Position = "Junior QA",
-            MonthsOfWorkExperience = 1,
-            HasMobileDeviceExperience = true,
-            Skills = "C#"
-        };
+        var testerAddRequestTwo = _fixture.Build<TesterAddRequest>()
+            .With(x => x.TesterName, "Yuki")
+            .With(x => x.Email, "fXw5g@example.com")
+            .With(x => x.DevStreamId, devStreamResponseTwo.DevStreamId)
+            .Create();
+        
+        var testerAddRequestThree = _fixture.Build<TesterAddRequest>()
+            .With(x => x.TesterName, "Ryu")
+            .With(x => x.Email, "fXw5g@example.com")
+            .With(x => x.DevStreamId, devStreamResponseOne.DevStreamId)
+            .Create();
 
         List<TesterAddRequest> testerAddRequests =
         [
             testerAddRequestOne,
-            testerAddRequestTwo
+            testerAddRequestTwo,
+            testerAddRequestThree
         ];
 
         List<TesterResponse> testerResponsesFromAdd = [];
@@ -192,11 +185,17 @@ public class TestersServiceTests
             .With(x => x.Email, "fXw5g@example.com")
             .With(x => x.DevStreamId, devStreamResponseTwo.DevStreamId)
             .Create();
+        
+        var testerAddRequestThree = _fixture.Build<TesterAddRequest>()
+            .With(x => x.Email, "fXw5g@example.com")
+            .With(x => x.DevStreamId, devStreamResponseOne.DevStreamId)
+            .Create();
 
         List<TesterAddRequest> testerAddRequests =
         [
             testerAddRequestOne,
-            testerAddRequestTwo
+            testerAddRequestTwo,
+            testerAddRequestThree
         ];
 
         List<TesterResponse> testerResponsesFromAdd = [];
@@ -238,11 +237,17 @@ public class TestersServiceTests
             .With(x => x.Email, "fXw5g@example.com")
             .With(x => x.DevStreamId, devStreamResponseTwo.DevStreamId)
             .Create();
+        
+        var testerAddRequestThree = _fixture.Build<TesterAddRequest>()
+            .With(x => x.Email, "fXw5g@example.com")
+            .With(x => x.DevStreamId, devStreamResponseOne.DevStreamId)
+            .Create();
 
         List<TesterAddRequest> testerAddRequests =
         [
             testerAddRequestOne,
-            testerAddRequestTwo
+            testerAddRequestTwo,
+            testerAddRequestThree
         ];
 
         List<TesterResponse> testerResponsesFromAdd = [];
@@ -272,11 +277,13 @@ public class TestersServiceTests
         var devStreamResponseOne = await _devStreamsService.AddDevStream(devStreamAddRequestOne);
         var devStreamResponseTwo = await _devStreamsService.AddDevStream(devStreamAddRequestTwo);
         var testerAddRequestOne = _fixture.Build<TesterAddRequest>()
+            .With(x => x.TesterName, "sayaka")
             .With(x => x.Email, "fXw5g@example.com")
             .With(x => x.DevStreamId, devStreamResponseOne.DevStreamId)
             .Create();
 
         var testerAddRequestTwo = _fixture.Build<TesterAddRequest>()
+            .With(x => x.TesterName, "sakura")
             .With(x => x.Email, "fXw5g@example.com")
             .With(x => x.DevStreamId, devStreamResponseTwo.DevStreamId)
             .Create();
@@ -323,7 +330,9 @@ public class TestersServiceTests
     [Fact]
     public async Task UpdateTester_ShallThrowArgumentException_IfTesterUpdateRequestIdIsInvalid()
     {
-        var testerUpdateRequest = new TesterUpdateRequest { TesterId = Guid.NewGuid() };
+        var testerUpdateRequest = _fixture.Build<TesterUpdateRequest>()
+            .With(x => x.TesterId, Guid.NewGuid())
+            .Create();
 
         await Assert.ThrowsAsync<ArgumentException>(async () =>
             await _testersService.UpdateTester(testerUpdateRequest));
@@ -358,7 +367,7 @@ public class TestersServiceTests
             .Create();
 
         var testerResponse = await _testersService.AddTester(testerAddRequest);
-        testerResponse.TesterName = "Villanelle";
+        testerResponse.TesterName = "Yukino";
         testerResponse.Position = "Senior QA";
         var testerUpdateRequest = testerResponse.ToTesterUpdateRequest();
 
