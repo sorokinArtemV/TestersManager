@@ -26,7 +26,7 @@ public class DevStreamsServiceTests
         var dbContext = dbContextMock.Object;
         dbContextMock.CreateDbSetMock(x => x.DevStreams, devStreamsInitialData);
 
-        _devStreamsService = new DevStreamsService(dbContext);
+        _devStreamsService = new DevStreamsService(null);
     }
 
     #region AddDevStream

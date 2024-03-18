@@ -1,5 +1,4 @@
-﻿using Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using RepositoryContracts;
 using ServiceContracts;
 using ServiceContracts.DTO;
 
@@ -7,43 +6,38 @@ namespace Services;
 
 public class DevStreamsService : IDevStreamsService
 {
-    private readonly ApplicatonDbContext _db;
+    private readonly IDevStreamsRepository _devStreamRepository;
 
-    public DevStreamsService(ApplicatonDbContext dbContext)
+    public DevStreamsService(IDevStreamsRepository devStreamsRepository)
     {
-        _db = dbContext;
+        _devStreamRepository = devStreamsRepository;
     }
 
     public async Task<DevStreamResponse> AddDevStream(DevStreamAddRequest? devStreamAddRequest)
     {
         ArgumentNullException.ThrowIfNull(devStreamAddRequest);
         ArgumentException.ThrowIfNullOrEmpty(devStreamAddRequest.DevStreamName);
-        if (await _db.DevStreams.AnyAsync(x => x.DevStreamName == devStreamAddRequest.DevStreamName))
+        if (await _devStreamRepository.GetDevStreamByName(devStreamAddRequest.DevStreamName) is not null)
             throw new ArgumentException("DevStream name already exists");
-        // if (_db.DevStreams.Where(stream => stream.DevStreamName == devStreamAddRequest.DevStreamName).Count() > 0)
-        // {
-        //     throw new ArgumentException("DevStream name already exists");
-        // }
 
         var devStream = devStreamAddRequest.ToDevStream();
         devStream.DevStreamId = Guid.NewGuid();
-        await _db.DevStreams.AddAsync(devStream);
-        await _db.SaveChangesAsync();
+        await _devStreamRepository.AddDevStream(devStream);
 
         return devStream.ToDevStreamResponse();
     }
 
     public async Task<List<DevStreamResponse>> GetAllDevStreams()
     {
-        return await _db.DevStreams.Select(x => x.ToDevStreamResponse()).ToListAsync();
+        return (await _devStreamRepository.GetAllDevStreams())
+            .Select(x => x.ToDevStreamResponse()).ToList();
     }
 
     public async Task<DevStreamResponse?> GetDevStreamById(Guid? devStreamId)
     {
         ArgumentNullException.ThrowIfNull(devStreamId);
 
-        var devStreamResponse =
-            await _db.DevStreams.FirstOrDefaultAsync(x => x.DevStreamId == devStreamId);
+        var devStreamResponse = await _devStreamRepository.GetDevStreamById(devStreamId.Value);
 
         return devStreamResponse?.ToDevStreamResponse() ?? null;
     }

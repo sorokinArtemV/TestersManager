@@ -32,7 +32,7 @@ public class TestersServiceTests
         dbContextMock.CreateDbSetMock(x => x.DevStreams, devStreamsInitialData);
         dbContextMock.CreateDbSetMock(x => x.Testers, testersInitialData);
 
-        _devStreamsService = new DevStreamsService(dbContext);
+        _devStreamsService = new DevStreamsService(null);
         _testersService = new TestersService(dbContext, _devStreamsService);
 
         _testOutputHelper = testOutputHelper;
