@@ -54,45 +54,46 @@ public class TestersService : ITestersService
         {
             nameof(TesterResponse.TesterName) =>
                 await _testersRepository.GetFilteredTesters(x =>
-                    x.TesterName!.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
+                    x.TesterName!.Contains(searchString)),
 
             nameof(TesterResponse.Email) =>
                 await _testersRepository.GetFilteredTesters(x =>
-                    x.Email!.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
+                    x.Email!.Contains(searchString)),
 
             nameof(TesterResponse.Gender) =>
                 await _testersRepository.GetFilteredTesters(x =>
-                    x.Gender!.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
+                    x.Gender!.Contains(searchString)),
 
-            // nameof(TesterResponse.DevStream) =>
-            //     FilterHelper.FilterBy(allTesters, x => x.DevStream, searchString),
+            nameof(TesterResponse.DevStream) =>
+                await _testersRepository.GetFilteredTesters(x =>
+                    x.DevStream.DevStreamName.Contains(searchString)),
 
             nameof(TesterResponse.Position) =>
                 await _testersRepository.GetFilteredTesters(x =>
-                    x.Position!.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
+                    x.Position!.Contains(searchString)),
 
             nameof(TesterResponse.DevStreamId) =>
                 await _testersRepository.GetFilteredTesters(x =>
-                    x.DevStream.DevStreamName.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
+                    x.DevStream.DevStreamName.Contains(searchString)),
 
             nameof(TesterResponse.Age) =>
                 await _testersRepository.GetFilteredTesters(x =>
                     (DateTime.Now.Year - x.BirthDate.Value.Year).ToString()
-                    .Contains(searchString, StringComparison.OrdinalIgnoreCase)),
+                    .Contains(searchString)),
 
 
             nameof(TesterResponse.BirthDate) =>
                 await _testersRepository.GetFilteredTesters(x =>
                     x.BirthDate!.Value.ToString("dd-MM-yyyy")
-                        .Contains(searchString, StringComparison.OrdinalIgnoreCase)),
+                        .Contains(searchString)),
 
             nameof(TesterResponse.MonthsOfWorkExperience) =>
                 await _testersRepository.GetFilteredTesters(x =>
-                    x.MonthsOfWorkExperience.ToString()!.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
+                    x.MonthsOfWorkExperience.ToString()!.Contains(searchString)),
 
             nameof(TesterResponse.Skills) =>
                 await _testersRepository.GetFilteredTesters(x =>
-                    x.Skills!.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
+                    x.Skills!.Contains(searchString)),
 
             _ => await _testersRepository.GetAllTesters()
         };
@@ -100,64 +101,64 @@ public class TestersService : ITestersService
         return allTesters.Select(x => x.ToTesterResponse()).ToList();
     }
 
-public async Task<List<TesterResponse>> GetSortedTesters(List<TesterResponse> allTesters, string sortBy,
-    SortOrderOptions sortOrder)
-{
-    return string.IsNullOrEmpty(sortBy)
-        ? allTesters
-        : await SorterHelper.SortByPropertyAsync(allTesters, sortBy, sortOrder);
-}
+    public async Task<List<TesterResponse>> GetSortedTesters(List<TesterResponse> allTesters, string sortBy,
+        SortOrderOptions sortOrder)
+    {
+        return string.IsNullOrEmpty(sortBy)
+            ? allTesters
+            : await SorterHelper.SortByPropertyAsync(allTesters, sortBy, sortOrder);
+    }
 
-public async Task<bool> DeleteTester(Guid? testerId)
-{
-    ArgumentNullException.ThrowIfNull(testerId);
+    public async Task<bool> DeleteTester(Guid? testerId)
+    {
+        ArgumentNullException.ThrowIfNull(testerId);
 
-    var tester = await _testersRepository.GetTesterById(testerId.Value);
-    
-    if (tester is null) return false;
+        var tester = await _testersRepository.GetTesterById(testerId.Value);
 
-    await _testersRepository.DeleteTesterById(testerId.Value);
-    
-    return true;
-}
+        if (tester is null) return false;
 
-public async Task<MemoryStream> GetTestersCsv()
-{
-    var memoryStream = new MemoryStream();
-    var streamWriter = new StreamWriter(memoryStream);
-    var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture, true);
+        await _testersRepository.DeleteTesterById(testerId.Value);
 
-    csvWriter.WriteHeader<TesterResponse>();
-    await csvWriter.NextRecordAsync();
+        return true;
+    }
 
-    var testers = await GetAllTesters();
+    public async Task<MemoryStream> GetTestersCsv()
+    {
+        var memoryStream = new MemoryStream();
+        var streamWriter = new StreamWriter(memoryStream);
+        var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture, true);
 
-    await csvWriter.WriteRecordsAsync(testers);
-    memoryStream.Position = 0;
+        csvWriter.WriteHeader<TesterResponse>();
+        await csvWriter.NextRecordAsync();
 
-    return memoryStream;
-}
+        var testers = await GetAllTesters();
 
-public async Task<TesterResponse> UpdateTester(TesterUpdateRequest? testerUpdateRequest)
-{
-    ArgumentNullException.ThrowIfNull(testerUpdateRequest);
-    ModelValidationHelper.IsValid(testerUpdateRequest);
+        await csvWriter.WriteRecordsAsync(testers);
+        memoryStream.Position = 0;
 
-    var tester = await _testersRepository.GetTesterById(testerUpdateRequest.TesterId);
+        return memoryStream;
+    }
 
-    ArgumentNullException.ThrowIfNull(tester);
+    public async Task<TesterResponse> UpdateTester(TesterUpdateRequest? testerUpdateRequest)
+    {
+        ArgumentNullException.ThrowIfNull(testerUpdateRequest);
+        ModelValidationHelper.IsValid(testerUpdateRequest);
 
-    tester.TesterName = testerUpdateRequest.TesterName;
-    tester.Email = testerUpdateRequest.Email;
-    tester.Gender = testerUpdateRequest.Gender.ToString();
-    tester.BirthDate = testerUpdateRequest.BirthDate;
-    tester.DevStreamId = testerUpdateRequest.DevStreamId;
-    tester.Position = testerUpdateRequest.Position;
-    tester.MonthsOfWorkExperience = testerUpdateRequest.MonthsOfWorkExperience;
-    tester.Skills = string.Join(", ", testerUpdateRequest.Skills);
+        var tester = await _testersRepository.GetTesterById(testerUpdateRequest.TesterId);
 
-    await _testersRepository.UpdateTester(tester);
+        ArgumentNullException.ThrowIfNull(tester);
 
-    return tester.ToTesterResponse();
-}
+        tester.TesterName = testerUpdateRequest.TesterName;
+        tester.Email = testerUpdateRequest.Email;
+        tester.Gender = testerUpdateRequest.Gender.ToString();
+        tester.BirthDate = testerUpdateRequest.BirthDate;
+        tester.DevStreamId = testerUpdateRequest.DevStreamId;
+        tester.Position = testerUpdateRequest.Position;
+        tester.MonthsOfWorkExperience = testerUpdateRequest.MonthsOfWorkExperience;
+        tester.Skills = string.Join(", ", testerUpdateRequest.Skills);
+
+        await _testersRepository.UpdateTester(tester);
+
+        return tester.ToTesterResponse();
+    }
 }
