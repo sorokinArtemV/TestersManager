@@ -66,7 +66,7 @@ public class TestersService : ITestersService
 
             nameof(TesterResponse.DevStream) =>
                 await _testersRepository.GetFilteredTesters(x =>
-                    x.DevStream.DevStreamName.Contains(searchString)),
+                    x.DevStream.DevStreamName.ToString().Contains(searchString)),
 
             nameof(TesterResponse.Position) =>
                 await _testersRepository.GetFilteredTesters(x =>

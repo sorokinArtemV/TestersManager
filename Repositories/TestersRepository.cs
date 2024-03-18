@@ -25,7 +25,7 @@ public class TestersRepository : ITestersRepository
 
     public async Task<List<Tester>> GetAllTesters()
     {
-        return await _db.Testers.ToListAsync();
+        return await _db.Testers.Include("DevStream").ToListAsync();
     }
 
     public async Task<Tester?> GetTesterById(Guid testerId)
