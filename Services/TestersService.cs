@@ -134,10 +134,10 @@ public class TestersService : ITestersService
         var testers = _db.Testers
             .Include("DevStream")
             .Select(x => x.ToTesterResponse()).ToList();
-        
+
         await csvWriter.WriteRecordsAsync(testers);
         memoryStream.Position = 0;
-        
+
         return memoryStream;
     }
 
@@ -157,7 +157,6 @@ public class TestersService : ITestersService
         tester.DevStreamId = testerUpdateRequest.DevStreamId;
         tester.Position = testerUpdateRequest.Position;
         tester.MonthsOfWorkExperience = testerUpdateRequest.MonthsOfWorkExperience;
-        // tester.HasMobileDeviceExperience = testerUpdateRequest.HasMobileDeviceExperience;
         tester.Skills = string.Join(", ", testerUpdateRequest.Skills);
 
         await _db.SaveChangesAsync();
