@@ -16,6 +16,7 @@ builder.Services.AddDbContext<ApplicatonDbContext>(options =>
 builder.Services.AddScoped<IDevStreamsService, DevStreamsService>();
 builder.Services.AddScoped<ITestersService, TestersService>();
 builder.Services.AddScoped<IDevStreamsRepository, DevStreamsRepository>();
+builder.Services.AddScoped<ITestersRepository, TestersRepository>();
 
 var app = builder.Build();
 

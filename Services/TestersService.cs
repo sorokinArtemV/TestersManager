@@ -1,7 +1,5 @@
 using System.Globalization;
 using CsvHelper;
-using Entities;
-using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 using ServiceContracts;
 using ServiceContracts.DTO;
@@ -44,119 +42,122 @@ public class TestersService : ITestersService
     public async Task<TesterResponse?> GetTesterById(Guid? testerId)
     {
         ArgumentNullException.ThrowIfNull(testerId);
-        
+
         var tester = await _testersRepository.GetTesterById(testerId.Value);
-        
+
         return tester?.ToTesterResponse();
     }
 
     public async Task<List<TesterResponse>> GetFilteredTesters(string searchBy, string searchString)
     {
-        var allTesters = await GetAllTesters();
-        var matchingTesters = allTesters;
-
-        if (string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchString)) return matchingTesters;
-
-        matchingTesters = searchBy switch
+        var allTesters = searchBy switch
         {
             nameof(TesterResponse.TesterName) =>
-                FilterHelper.FilterBy(allTesters, x => x.TesterName, searchString),
+                await _testersRepository.GetFilteredTesters(x =>
+                    x.TesterName!.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
 
             nameof(TesterResponse.Email) =>
-                FilterHelper.FilterBy(allTesters, x => x.Email, searchString),
+                await _testersRepository.GetFilteredTesters(x =>
+                    x.Email!.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
 
             nameof(TesterResponse.Gender) =>
-                FilterHelper.FilterBy(allTesters, x => x.Gender, searchString),
+                await _testersRepository.GetFilteredTesters(x =>
+                    x.Gender!.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
 
-            nameof(TesterResponse.DevStream) =>
-                FilterHelper.FilterBy(allTesters, x => x.DevStream, searchString),
+            // nameof(TesterResponse.DevStream) =>
+            //     FilterHelper.FilterBy(allTesters, x => x.DevStream, searchString),
 
             nameof(TesterResponse.Position) =>
-                FilterHelper.FilterBy(allTesters, x => x.Position, searchString),
+                await _testersRepository.GetFilteredTesters(x =>
+                    x.Position!.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
 
             nameof(TesterResponse.DevStreamId) =>
-                FilterHelper.FilterBy(allTesters, x => x.DevStreamId?.ToString(), searchString),
+                await _testersRepository.GetFilteredTesters(x =>
+                    x.DevStream.DevStreamName.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
 
             nameof(TesterResponse.Age) =>
-                FilterHelper.FilterBy(allTesters, x => x.Age.ToString(), searchString),
+                await _testersRepository.GetFilteredTesters(x =>
+                    (DateTime.Now.Year - x.BirthDate.Value.Year).ToString()
+                    .Contains(searchString, StringComparison.OrdinalIgnoreCase)),
+
 
             nameof(TesterResponse.BirthDate) =>
-                FilterHelper.FilterBy(allTesters, x => x.BirthDate?.ToString("dd MMMM yyyy"), searchString),
+                await _testersRepository.GetFilteredTesters(x =>
+                    x.BirthDate!.Value.ToString("dd-MM-yyyy")
+                        .Contains(searchString, StringComparison.OrdinalIgnoreCase)),
 
             nameof(TesterResponse.MonthsOfWorkExperience) =>
-                FilterHelper.FilterBy(allTesters, x => x.MonthsOfWorkExperience?.ToString(), searchString),
+                await _testersRepository.GetFilteredTesters(x =>
+                    x.MonthsOfWorkExperience.ToString()!.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
 
             nameof(TesterResponse.Skills) =>
-                FilterHelper.FilterBy(allTesters, x => x.Skills, searchString),
+                await _testersRepository.GetFilteredTesters(x =>
+                    x.Skills!.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
 
-            _ => matchingTesters
+            _ => await _testersRepository.GetAllTesters()
         };
 
-        return matchingTesters;
+        return allTesters.Select(x => x.ToTesterResponse()).ToList();
     }
 
+public async Task<List<TesterResponse>> GetSortedTesters(List<TesterResponse> allTesters, string sortBy,
+    SortOrderOptions sortOrder)
+{
+    return string.IsNullOrEmpty(sortBy)
+        ? allTesters
+        : await SorterHelper.SortByPropertyAsync(allTesters, sortBy, sortOrder);
+}
 
-    public async Task<List<TesterResponse>> GetSortedTesters(List<TesterResponse> allTesters, string sortBy,
-        SortOrderOptions sortOrder)
-    {
-        return string.IsNullOrEmpty(sortBy)
-            ? allTesters
-            : await SorterHelper.SortByPropertyAsync(allTesters, sortBy, sortOrder);
-    }
+public async Task<bool> DeleteTester(Guid? testerId)
+{
+    ArgumentNullException.ThrowIfNull(testerId);
 
-    public async Task<bool> DeleteTester(Guid? testerId)
-    {
-        ArgumentNullException.ThrowIfNull(testerId);
+    var tester = await _testersRepository.GetTesterById(testerId.Value);
+    
+    if (tester is null) return false;
 
-        var tester = await _testersRepository.Testers.FirstOrDefaultAsync(x => x.TesterId == testerId);
+    await _testersRepository.DeleteTesterById(testerId.Value);
+    
+    return true;
+}
 
-        if (tester is null) return false;
+public async Task<MemoryStream> GetTestersCsv()
+{
+    var memoryStream = new MemoryStream();
+    var streamWriter = new StreamWriter(memoryStream);
+    var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture, true);
 
-        _testersRepository.Testers.Remove(await _testersRepository.Testers.FirstAsync(x => x.TesterId == testerId));
-        await _testersRepository.SaveChangesAsync();
+    csvWriter.WriteHeader<TesterResponse>();
+    await csvWriter.NextRecordAsync();
 
-        return true;
-    }
+    var testers = await GetAllTesters();
 
-    public async Task<MemoryStream> GetTestersCsv()
-    {
-        var memoryStream = new MemoryStream();
-        var streamWriter = new StreamWriter(memoryStream);
-        var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture, true);
+    await csvWriter.WriteRecordsAsync(testers);
+    memoryStream.Position = 0;
 
-        csvWriter.WriteHeader<TesterResponse>();
-        await csvWriter.NextRecordAsync();
+    return memoryStream;
+}
 
-        var testers = _testersRepository.Testers
-            .Include("DevStream")
-            .Select(x => x.ToTesterResponse()).ToList();
+public async Task<TesterResponse> UpdateTester(TesterUpdateRequest? testerUpdateRequest)
+{
+    ArgumentNullException.ThrowIfNull(testerUpdateRequest);
+    ModelValidationHelper.IsValid(testerUpdateRequest);
 
-        await csvWriter.WriteRecordsAsync(testers);
-        memoryStream.Position = 0;
+    var tester = await _testersRepository.GetTesterById(testerUpdateRequest.TesterId);
 
-        return memoryStream;
-    }
+    ArgumentNullException.ThrowIfNull(tester);
 
-    public async Task<TesterResponse> UpdateTester(TesterUpdateRequest? testerUpdateRequest)
-    {
-        ArgumentNullException.ThrowIfNull(testerUpdateRequest);
-        ModelValidationHelper.IsValid(testerUpdateRequest);
+    tester.TesterName = testerUpdateRequest.TesterName;
+    tester.Email = testerUpdateRequest.Email;
+    tester.Gender = testerUpdateRequest.Gender.ToString();
+    tester.BirthDate = testerUpdateRequest.BirthDate;
+    tester.DevStreamId = testerUpdateRequest.DevStreamId;
+    tester.Position = testerUpdateRequest.Position;
+    tester.MonthsOfWorkExperience = testerUpdateRequest.MonthsOfWorkExperience;
+    tester.Skills = string.Join(", ", testerUpdateRequest.Skills);
 
-        var tester = await _testersRepository.Testers.FirstOrDefaultAsync(tester => tester.TesterId == testerUpdateRequest.TesterId);
+    await _testersRepository.UpdateTester(tester);
 
-        ArgumentNullException.ThrowIfNull(tester);
-
-        tester.TesterName = testerUpdateRequest.TesterName;
-        tester.Email = testerUpdateRequest.Email;
-        tester.Gender = testerUpdateRequest.Gender.ToString();
-        tester.BirthDate = testerUpdateRequest.BirthDate;
-        tester.DevStreamId = testerUpdateRequest.DevStreamId;
-        tester.Position = testerUpdateRequest.Position;
-        tester.MonthsOfWorkExperience = testerUpdateRequest.MonthsOfWorkExperience;
-        tester.Skills = string.Join(", ", testerUpdateRequest.Skills);
-
-        await _testersRepository.SaveChangesAsync();
-
-        return tester.ToTesterResponse();
-    }
+    return tester.ToTesterResponse();
+}
 }
