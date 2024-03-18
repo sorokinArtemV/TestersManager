@@ -2,6 +2,7 @@ using System.Globalization;
 using CsvHelper;
 using Entities;
 using Microsoft.EntityFrameworkCore;
+using RepositoryContracts;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
@@ -11,13 +12,11 @@ namespace Services;
 
 public class TestersService : ITestersService
 {
-    private readonly ApplicatonDbContext _db;
-    private readonly IDevStreamsService _devStreamsService;
+    private readonly ITestersRepository _testersRepository;
 
-    public TestersService(ApplicatonDbContext db, IDevStreamsService devStreamsService)
+    public TestersService(ITestersRepository testersRepository)
     {
-        _db = db;
-        _devStreamsService = devStreamsService;
+        _testersRepository = testersRepository;
     }
 
     public async Task<TesterResponse> AddTester(TesterAddRequest? testerAddRequest)
@@ -28,30 +27,27 @@ public class TestersService : ITestersService
         var tester = testerAddRequest.ToTester();
         tester.TesterId = Guid.NewGuid();
 
-        await _db.Testers.AddAsync(tester);
-        await _db.SaveChangesAsync();
+        await _testersRepository.AddTester(tester);
 
         return tester.ToTesterResponse();
     }
 
     public async Task<List<TesterResponse>> GetAllTesters()
     {
-        var testers = await _db.Testers.Include("DevStream").ToListAsync();
+        var testers = await _testersRepository.GetAllTesters();
 
         return testers
             .Select(x => x.ToTesterResponse())
             .ToList();
     }
 
-    public async Task<TesterResponse?> GetTesterById(Guid? id)
+    public async Task<TesterResponse?> GetTesterById(Guid? testerId)
     {
-        return id is null
-            ? null
-            : await _db.Testers
-                .Include("DevStream")
-                .Where(tester => tester.TesterId == id)
-                .Select(x => x.ToTesterResponse())
-                .FirstOrDefaultAsync();
+        ArgumentNullException.ThrowIfNull(testerId);
+        
+        var tester = await _testersRepository.GetTesterById(testerId.Value);
+        
+        return tester?.ToTesterResponse();
     }
 
     public async Task<List<TesterResponse>> GetFilteredTesters(string searchBy, string searchString)
@@ -112,12 +108,12 @@ public class TestersService : ITestersService
     {
         ArgumentNullException.ThrowIfNull(testerId);
 
-        var tester = await _db.Testers.FirstOrDefaultAsync(x => x.TesterId == testerId);
+        var tester = await _testersRepository.Testers.FirstOrDefaultAsync(x => x.TesterId == testerId);
 
         if (tester is null) return false;
 
-        _db.Testers.Remove(await _db.Testers.FirstAsync(x => x.TesterId == testerId));
-        await _db.SaveChangesAsync();
+        _testersRepository.Testers.Remove(await _testersRepository.Testers.FirstAsync(x => x.TesterId == testerId));
+        await _testersRepository.SaveChangesAsync();
 
         return true;
     }
@@ -131,7 +127,7 @@ public class TestersService : ITestersService
         csvWriter.WriteHeader<TesterResponse>();
         await csvWriter.NextRecordAsync();
 
-        var testers = _db.Testers
+        var testers = _testersRepository.Testers
             .Include("DevStream")
             .Select(x => x.ToTesterResponse()).ToList();
 
@@ -146,7 +142,7 @@ public class TestersService : ITestersService
         ArgumentNullException.ThrowIfNull(testerUpdateRequest);
         ModelValidationHelper.IsValid(testerUpdateRequest);
 
-        var tester = await _db.Testers.FirstOrDefaultAsync(tester => tester.TesterId == testerUpdateRequest.TesterId);
+        var tester = await _testersRepository.Testers.FirstOrDefaultAsync(tester => tester.TesterId == testerUpdateRequest.TesterId);
 
         ArgumentNullException.ThrowIfNull(tester);
 
@@ -159,7 +155,7 @@ public class TestersService : ITestersService
         tester.MonthsOfWorkExperience = testerUpdateRequest.MonthsOfWorkExperience;
         tester.Skills = string.Join(", ", testerUpdateRequest.Skills);
 
-        await _db.SaveChangesAsync();
+        await _testersRepository.SaveChangesAsync();
 
         return tester.ToTesterResponse();
     }

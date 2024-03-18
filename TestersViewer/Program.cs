@@ -1,5 +1,7 @@
 using Entities;
 using Microsoft.EntityFrameworkCore;
+using Repositories;
+using RepositoryContracts;
 using ServiceContracts;
 using Services;
 
@@ -13,6 +15,7 @@ builder.Services.AddDbContext<ApplicatonDbContext>(options =>
 });
 builder.Services.AddScoped<IDevStreamsService, DevStreamsService>();
 builder.Services.AddScoped<ITestersService, TestersService>();
+builder.Services.AddScoped<IDevStreamsRepository, DevStreamsRepository>();
 
 var app = builder.Build();
 
