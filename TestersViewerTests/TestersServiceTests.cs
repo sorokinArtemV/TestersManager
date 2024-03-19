@@ -1,8 +1,7 @@
+using System.Linq.Expressions;
 using AutoFixture;
 using Entities;
-using EntityFrameworkCoreMock;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using RepositoryContracts;
 using ServiceContracts;
@@ -112,7 +111,7 @@ public class TestersServiceTests
     public async Task AddTester_ShallThrowArgumentNullException_IfTesterAddRequestIsNull()
     {
         TesterAddRequest? testerAddRequest = null;
-        
+
         Func<Task> action = async () => await _testersService.AddTester(testerAddRequest);
 
         await action.Should().ThrowAsync<ArgumentNullException>();
@@ -125,9 +124,9 @@ public class TestersServiceTests
         var testerAddRequest = _fixture.Build<TesterAddRequest>()
             .With(x => x.TesterName, null as string) // must be null as string, otherwise - error
             .Create();
-        
+
         var tester = testerAddRequest.ToTester();
-        
+
         _testersRepositoryMock.Setup(x => x.AddTester(It.IsAny<Tester>())).ReturnsAsync(tester);
 
         Func<Task> action = async () => await _testersService.AddTester(testerAddRequest);
@@ -150,7 +149,7 @@ public class TestersServiceTests
 
         var testerResponse = await _testersService.AddTester(testerAddRequest);
         testerResponseExpected.TesterId = testerResponse.TesterId;
-        
+
         testerResponse.TesterId.Should().NotBe(Guid.Empty);
         testerResponse.Should().Be(testerResponseExpected);
     }
@@ -173,12 +172,13 @@ public class TestersServiceTests
     {
         var tester = _fixture.Build<Tester>()
             .With(x => x.Email, "fXw5g@example.com")
+            .With(x => x.DevStream, null as DevStream)
             .Create();
 
         var testerResponseExpected = tester.ToTesterResponse();
-        
+
         _testersRepositoryMock.Setup(x => x.GetTesterById(It.IsAny<Guid>())).ReturnsAsync(tester);
-            
+
         var testerResponseFromGet = await _testersService.GetTesterById(tester.TesterId);
 
         testerResponseFromGet.Should().Be(testerResponseExpected);
@@ -192,56 +192,39 @@ public class TestersServiceTests
     public async Task GetAllTesters_ShallReturnEmptyList_BeforeTestersAreAdded()
     {
         _testersRepositoryMock.Setup(x => x.GetAllTesters()).ReturnsAsync([]);
-        
+
         var allTesters = await _testersService.GetAllTesters();
-        
+
         allTesters.Should().BeEmpty();
     }
 
     [Fact]
     public async Task GetAllTesters_ShallReturnListWithAllTesters_IfTestersAreAdded()
     {
-        var devStreamAddRequestOne = _fixture.Create<DevStreamAddRequest>();
-        var devStreamAddRequestTwo = _fixture.Create<DevStreamAddRequest>();
-        var devStreamResponseOne = await _devStreamsService.AddDevStream(devStreamAddRequestOne);
-        var devStreamResponseTwo = await _devStreamsService.AddDevStream(devStreamAddRequestTwo);
-        var testerAddRequestOne = _fixture.Build<TesterAddRequest>()
-            .With(x => x.Email, "fXw5g@example.com")
-            .With(x => x.DevStreamId, devStreamResponseOne.DevStreamId)
-            .Create();
-
-        var testerAddRequestTwo = _fixture.Build<TesterAddRequest>()
-            .With(x => x.Email, "fXw5g@example.com")
-            .With(x => x.DevStreamId, devStreamResponseTwo.DevStreamId)
-            .Create();
-
-        var testerAddRequestThree = _fixture.Build<TesterAddRequest>()
-            .With(x => x.Email, "fXw5g@example.com")
-            .With(x => x.DevStreamId, devStreamResponseOne.DevStreamId)
-            .Create();
-
-        List<TesterAddRequest> testerAddRequests =
+        List<Tester> testers =
         [
-            testerAddRequestOne,
-            testerAddRequestTwo,
-            testerAddRequestThree
+            _fixture.Build<Tester>()
+                .With(x => x.Email, "fXw5g1@example.com")
+                .With(x => x.DevStream, null as DevStream)
+                .Create(),
+
+            _fixture.Build<Tester>()
+                .With(x => x.Email, "fXw5g2@example.com")
+                .With(x => x.DevStream, null as DevStream)
+                .Create(),
+            _fixture.Build<Tester>()
+                .With(x => x.Email, "fXw5g3@example.com")
+                .With(x => x.DevStream, null as DevStream)
+                .Create()
         ];
+        
+        var testerResponsesListExpected = testers.Select(x => x.ToTesterResponse()).ToList();
 
-        List<TesterResponse> testerResponsesFromAdd = [];
-
-        foreach (var testerAddRequest in testerAddRequests)
-            testerResponsesFromAdd.Add(await _testersService.AddTester(testerAddRequest));
-
-        var testerResponsesFromGet = await _testersService.GetAllTesters();
-
-        testerResponsesFromAdd.Should().BeEquivalentTo(testerResponsesFromGet);
-
-
-        _testOutputHelper.WriteLine("Expected:");
-        foreach (var testers in testerResponsesFromAdd) _testOutputHelper.WriteLine(testers.ToString());
-
-        _testOutputHelper.WriteLine("Actual:");
-        foreach (var testers in testerResponsesFromGet) _testOutputHelper.WriteLine(testers.ToString());
+        _testersRepositoryMock.Setup(x => x.GetAllTesters()).ReturnsAsync(testers);
+        
+        var testersFromGet = await _testersService.GetAllTesters();
+        
+        testersFromGet.Should().BeEquivalentTo(testerResponsesListExpected);
     }
 
     #endregion
@@ -251,90 +234,63 @@ public class TestersServiceTests
     [Fact]
     public async Task GetFilteredTesters_ShallReturnListWithAllTesters_IfSearchStringIsEmpty_AndSearchByIsTesterName()
     {
-        var devStreamAddRequestOne = _fixture.Create<DevStreamAddRequest>();
-        var devStreamAddRequestTwo = _fixture.Create<DevStreamAddRequest>();
-        var devStreamResponseOne = await _devStreamsService.AddDevStream(devStreamAddRequestOne);
-        var devStreamResponseTwo = await _devStreamsService.AddDevStream(devStreamAddRequestTwo);
-        var testerAddRequestOne = _fixture.Build<TesterAddRequest>()
-            .With(x => x.Email, "fXw5g@example.com")
-            .With(x => x.DevStreamId, devStreamResponseOne.DevStreamId)
-            .Create();
-
-        var testerAddRequestTwo = _fixture.Build<TesterAddRequest>()
-            .With(x => x.Email, "fXw5g@example.com")
-            .With(x => x.DevStreamId, devStreamResponseTwo.DevStreamId)
-            .Create();
-
-        var testerAddRequestThree = _fixture.Build<TesterAddRequest>()
-            .With(x => x.Email, "fXw5g@example.com")
-            .With(x => x.DevStreamId, devStreamResponseOne.DevStreamId)
-            .Create();
-
-        List<TesterAddRequest> testerAddRequests =
+        List<Tester> testers =
         [
-            testerAddRequestOne,
-            testerAddRequestTwo,
-            testerAddRequestThree
+            _fixture.Build<Tester>()
+                .With(x => x.Email, "fXw5g1@example.com")
+                .With(x => x.DevStream, null as DevStream)
+                .Create(),
+
+            _fixture.Build<Tester>()
+                .With(x => x.Email, "fXw5g2@example.com")
+                .With(x => x.DevStream, null as DevStream)
+                .Create(),
+            _fixture.Build<Tester>()
+                .With(x => x.Email, "fXw5g3@example.com")
+                .With(x => x.DevStream, null as DevStream)
+                .Create()
         ];
 
-        List<TesterResponse> testerResponsesFromAdd = [];
+        var testerResponsesListExpected = testers.Select(x => x.ToTesterResponse()).ToList();
 
-        foreach (var testerAddRequest in testerAddRequests)
-            testerResponsesFromAdd.Add(await _testersService.AddTester(testerAddRequest));
-
+        _testersRepositoryMock.Setup(x => x.GetFilteredTesters(It.IsAny<Expression<Func<Tester, bool>>>()))
+            .ReturnsAsync(testers);
+            
+            
         var testerResponsesFromSearch = await _testersService.GetFilteredTesters(nameof(TesterResponse.TesterName), "");
 
-        testerResponsesFromSearch.Should().BeEquivalentTo(testerResponsesFromAdd);
-
-        // Check what is in the list
-        _testOutputHelper.WriteLine("Expected:");
-        foreach (var testers in testerResponsesFromAdd) _testOutputHelper.WriteLine(testers.ToString());
-
-        _testOutputHelper.WriteLine("Actual:");
-        foreach (var testers in testerResponsesFromSearch) _testOutputHelper.WriteLine(testers.ToString());
+        testerResponsesFromSearch.Should().BeEquivalentTo(testerResponsesListExpected);
     }
 
     [Fact]
     public async Task GetFilteredTesters_ShallReturnListWithFilteredTesters_IfSearchStringParamIsSet()
     {
-        var devStreamAddRequestOne = _fixture.Create<DevStreamAddRequest>();
-        var devStreamAddRequestTwo = _fixture.Create<DevStreamAddRequest>();
-        var devStreamResponseOne = await _devStreamsService.AddDevStream(devStreamAddRequestOne);
-        var devStreamResponseTwo = await _devStreamsService.AddDevStream(devStreamAddRequestTwo);
-        var testerAddRequestOne = _fixture.Build<TesterAddRequest>()
-            .With(x => x.TesterName, "sayaka")
-            .With(x => x.Email, "fXw5g@example.com")
-            .With(x => x.DevStreamId, devStreamResponseOne.DevStreamId)
-            .Create();
-
-        var testerAddRequestTwo = _fixture.Build<TesterAddRequest>()
-            .With(x => x.TesterName, "sakura")
-            .With(x => x.Email, "fXw5g@example.com")
-            .With(x => x.DevStreamId, devStreamResponseTwo.DevStreamId)
-            .Create();
-
-        List<TesterAddRequest> testerAddRequests =
+        List<Tester> testers =
         [
-            testerAddRequestOne,
-            testerAddRequestTwo
+            _fixture.Build<Tester>()
+                .With(x => x.Email, "fXw5g1@example.com")
+                .With(x => x.DevStream, null as DevStream)
+                .Create(),
+
+            _fixture.Build<Tester>()
+                .With(x => x.Email, "fXw5g2@example.com")
+                .With(x => x.DevStream, null as DevStream)
+                .Create(),
+            _fixture.Build<Tester>()
+                .With(x => x.Email, "fXw5g3@example.com")
+                .With(x => x.DevStream, null as DevStream)
+                .Create()
         ];
 
-        List<TesterResponse> testerResponsesFromAdd = [];
+        var testerResponsesListExpected = testers.Select(x => x.ToTesterResponse()).ToList();
 
-        foreach (var testerAddRequest in testerAddRequests)
-            testerResponsesFromAdd.Add(await _testersService.AddTester(testerAddRequest));
+        _testersRepositoryMock.Setup(x => x.GetFilteredTesters(It.IsAny<Expression<Func<Tester, bool>>>()))
+            .ReturnsAsync(testers);
+            
+            
+        var testerResponsesFromSearch = await _testersService.GetFilteredTesters(nameof(TesterResponse.TesterName), "sa");
 
-        var testerResponsesFromSearch =
-            await _testersService.GetFilteredTesters(nameof(TesterResponse.TesterName), "sa");
-
-        testerResponsesFromSearch.Should().BeEquivalentTo(testerResponsesFromAdd);
-
-        // Check what is in the list
-        _testOutputHelper.WriteLine("Expected:");
-        foreach (var testers in testerResponsesFromAdd) _testOutputHelper.WriteLine(testers.ToString());
-
-        _testOutputHelper.WriteLine("Actual:");
-        foreach (var testers in testerResponsesFromSearch) _testOutputHelper.WriteLine(testers.ToString());
+        testerResponsesFromSearch.Should().BeEquivalentTo(testerResponsesListExpected);
     }
 
     #endregion
