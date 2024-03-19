@@ -31,18 +31,18 @@ public class TestersServiceTests
 
         _fixture = new Fixture();
 
-        List<DevStream> devStreamsInitialData = [];
-        List<Tester> testersInitialData = [];
-
-        var dbContextMock = new DbContextMock<ApplicatonDbContext>(
-            new DbContextOptionsBuilder<ApplicatonDbContext>().Options);
-
-        var dbContext = dbContextMock.Object;
-        dbContextMock.CreateDbSetMock(x => x.DevStreams, devStreamsInitialData);
-        dbContextMock.CreateDbSetMock(x => x.Testers, testersInitialData);
+        // List<DevStream> devStreamsInitialData = [];
+        // List<Tester> testersInitialData = [];
+        //
+        // var dbContextMock = new DbContextMock<ApplicatonDbContext>(
+        //     new DbContextOptionsBuilder<ApplicatonDbContext>().Options);
+        //
+        // var dbContext = dbContextMock.Object;
+        // dbContextMock.CreateDbSetMock(x => x.DevStreams, devStreamsInitialData);
+        // dbContextMock.CreateDbSetMock(x => x.Testers, testersInitialData);
 
         _devStreamsService = new DevStreamsService(null);
-        _testersService = new TestersService(null);
+        _testersService = new TestersService(_testersRepository);
 
         _testOutputHelper = testOutputHelper;
     }
@@ -112,7 +112,7 @@ public class TestersServiceTests
     public async Task AddTester_ShallThrowArgumentNullException_IfTesterAddRequestIsNull()
     {
         TesterAddRequest? testerAddRequest = null;
-
+        
         Func<Task> action = async () => await _testersService.AddTester(testerAddRequest);
 
         await action.Should().ThrowAsync<ArgumentNullException>();
@@ -125,6 +125,10 @@ public class TestersServiceTests
         var testerAddRequest = _fixture.Build<TesterAddRequest>()
             .With(x => x.TesterName, null as string) // must be null as string, otherwise - error
             .Create();
+        
+        var tester = testerAddRequest.ToTester();
+        
+        _testersRepositoryMock.Setup(x => x.AddTester(It.IsAny<Tester>())).ReturnsAsync(tester);
 
         Func<Task> action = async () => await _testersService.AddTester(testerAddRequest);
 
@@ -139,13 +143,16 @@ public class TestersServiceTests
             .With(x => x.Email, "fXw5g@example.com")
             .Create();
 
-        _testersRepositoryMock.Setup(x => x.AddTester(It.IsAny<Tester>())).ReturnsAsync(new Tester());
+        var tester = testerAddRequest.ToTester();
+        var testerResponseExpected = tester.ToTesterResponse();
+
+        _testersRepositoryMock.Setup(x => x.AddTester(It.IsAny<Tester>())).ReturnsAsync(tester);
 
         var testerResponse = await _testersService.AddTester(testerAddRequest);
+        testerResponseExpected.TesterId = testerResponse.TesterId;
+        
         testerResponse.TesterId.Should().NotBe(Guid.Empty);
-
-        var testersResponseList = await _testersService.GetAllTesters();
-        testersResponseList.Should().Contain(testerResponse);
+        testerResponse.Should().Be(testerResponseExpected);
     }
 
     #endregion
@@ -164,17 +171,17 @@ public class TestersServiceTests
     [Fact]
     public async Task GetTesterById_ShallReturnTesterResponse_IfIdIsValid()
     {
-        // var devStreamAddRequest = _fixture.Create<DevStreamAddRequest>();
-        // var devStreamResponse = await _devStreamsService.AddDevStream(devStreamAddRequest);
-
-        var testerAddRequest = _fixture.Build<TesterAddRequest>()
+        var tester = _fixture.Build<Tester>()
             .With(x => x.Email, "fXw5g@example.com")
             .Create();
 
-        var testerResponseFromAdd = await _testersService.AddTester(testerAddRequest);
-        var testerResponseFromGet = await _testersService.GetTesterById(testerResponseFromAdd.TesterId);
+        var testerResponseExpected = tester.ToTesterResponse();
+        
+        _testersRepositoryMock.Setup(x => x.GetTesterById(It.IsAny<Guid>())).ReturnsAsync(tester);
+            
+        var testerResponseFromGet = await _testersService.GetTesterById(tester.TesterId);
 
-        testerResponseFromGet.Should().Be(testerResponseFromAdd);
+        testerResponseFromGet.Should().Be(testerResponseExpected);
     }
 
     #endregion
@@ -184,7 +191,10 @@ public class TestersServiceTests
     [Fact]
     public async Task GetAllTesters_ShallReturnEmptyList_BeforeTestersAreAdded()
     {
+        _testersRepositoryMock.Setup(x => x.GetAllTesters()).ReturnsAsync([]);
+        
         var allTesters = await _testersService.GetAllTesters();
+        
         allTesters.Should().BeEmpty();
     }
 

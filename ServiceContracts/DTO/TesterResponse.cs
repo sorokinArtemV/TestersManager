@@ -8,7 +8,7 @@ namespace ServiceContracts.DTO;
 /// </summary>
 public class TesterResponse : IEquatable<TesterResponse>
 {
-    public Guid TesterId { get; init; }
+    public Guid TesterId { get; set; }
     public string? TesterName { get; set; }
     public string? Email { get; set; }
     public string? Gender { get; set; }
