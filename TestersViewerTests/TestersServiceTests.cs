@@ -3,6 +3,8 @@ using Entities;
 using EntityFrameworkCoreMock;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Moq;
+using RepositoryContracts;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
@@ -15,11 +17,18 @@ public class TestersServiceTests
 {
     private readonly IDevStreamsService _devStreamsService;
     private readonly IFixture _fixture;
+
+    private readonly ITestersRepository _testersRepository;
+    private readonly Mock<ITestersRepository> _testersRepositoryMock;
     private readonly ITestersService _testersService;
     private readonly ITestOutputHelper _testOutputHelper;
 
+
     public TestersServiceTests(ITestOutputHelper testOutputHelper)
     {
+        _testersRepositoryMock = new Mock<ITestersRepository>();
+        _testersRepository = _testersRepositoryMock.Object;
+
         _fixture = new Fixture();
 
         List<DevStream> devStreamsInitialData = [];
@@ -34,7 +43,6 @@ public class TestersServiceTests
 
         _devStreamsService = new DevStreamsService(null);
         _testersService = new TestersService(null);
-        // _testersService = new TestersService(dbContext, _devStreamsService);
 
         _testOutputHelper = testOutputHelper;
     }
@@ -130,6 +138,8 @@ public class TestersServiceTests
         var testerAddRequest = _fixture.Build<TesterAddRequest>()
             .With(x => x.Email, "fXw5g@example.com")
             .Create();
+
+        _testersRepositoryMock.Setup(x => x.AddTester(It.IsAny<Tester>())).ReturnsAsync(new Tester());
 
         var testerResponse = await _testersService.AddTester(testerAddRequest);
         testerResponse.TesterId.Should().NotBe(Guid.Empty);
