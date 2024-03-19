@@ -300,17 +300,16 @@ public class TestersServiceTests
     [Fact]
     public async Task UpdateTester_ShallThrowArgumentNullException_IfTesterUpdateRequestTesterNameIsNull()
     {
-        var devStreamAddRequest = _fixture.Create<DevStreamAddRequest>();
-        var devStreamResponse = await _devStreamsService.AddDevStream(devStreamAddRequest);
-        var testerAddRequest = _fixture.Build<TesterAddRequest>()
+        var tester = _fixture.Build<Tester>()
             .With(x => x.Email, "fXw5g@example.com")
-            .With(x => x.DevStreamId, devStreamResponse.DevStreamId)
+            .With(x => x.DevStream, null as DevStream)
+            .With(x => x.Gender, "Female")
             .Create();
 
-        var testerResponse = await _testersService.AddTester(testerAddRequest);
+        var testerResponse = tester.ToTesterResponse();
         var testerUpdateRequest = testerResponse.ToTesterUpdateRequest();
         testerUpdateRequest.TesterName = null;
-
+        
         Func<Task> action = () => _testersService.UpdateTester(testerUpdateRequest);
 
         await action.Should().ThrowAsync<ArgumentException>();
@@ -319,22 +318,23 @@ public class TestersServiceTests
     [Fact]
     public async Task UpdateTester_ShallUpdateTester_IfTesterUpdateRequestIsValid()
     {
-        var devStreamAddRequest = _fixture.Create<DevStreamAddRequest>();
-        var devStreamResponse = await _devStreamsService.AddDevStream(devStreamAddRequest);
-        var testerAddRequest = _fixture.Build<TesterAddRequest>()
+        var tester = _fixture.Build<Tester>()
             .With(x => x.Email, "fXw5g@example.com")
-            .With(x => x.DevStreamId, devStreamResponse.DevStreamId)
+            .With(x => x.DevStream, null as DevStream)
+            .With(x => x.Gender, "Female")
             .Create();
 
-        var testerResponse = await _testersService.AddTester(testerAddRequest);
-        testerResponse.TesterName = "Yukino";
-        testerResponse.Position = "Senior QA";
-        var testerUpdateRequest = testerResponse.ToTesterUpdateRequest();
+        var testerResponseExpected = tester.ToTesterResponse();
+        testerResponseExpected.TesterName = "Tester Updated";
+        
+        var testerUpdateRequest = testerResponseExpected.ToTesterUpdateRequest();
 
+        _testersRepositoryMock.Setup(x => x.GetTesterById(It.IsAny<Guid>())).ReturnsAsync(tester);
+        _testersRepositoryMock.Setup(x => x.UpdateTester(It.IsAny<Tester>())).ReturnsAsync(tester);
+        
         var updatedTesterResponse = await _testersService.UpdateTester(testerUpdateRequest);
-        var testerFromGetById = await _testersService.GetTesterById(testerResponse.TesterId);
 
-        testerFromGetById.Should().Be(updatedTesterResponse);
+        updatedTesterResponse.Should().Be(testerResponseExpected);
     }
 
     #endregion

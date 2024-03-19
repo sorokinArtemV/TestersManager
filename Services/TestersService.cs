@@ -41,11 +41,9 @@ public class TestersService : ITestersService
 
     public async Task<TesterResponse?> GetTesterById(Guid? testerId)
     {
-        if (testerId is null) return null;
-
-        var tester = await _testersRepository.GetTesterById(testerId.Value);
-
-        return tester?.ToTesterResponse();
+        return testerId == null
+            ? null
+            : (await _testersRepository.GetTesterById(testerId.Value))?.ToTesterResponse();
     }
 
     public async Task<List<TesterResponse>> GetFilteredTesters(string searchBy, string searchString)
