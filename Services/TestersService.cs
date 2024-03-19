@@ -41,7 +41,7 @@ public class TestersService : ITestersService
 
     public async Task<TesterResponse?> GetTesterById(Guid? testerId)
     {
-        ArgumentNullException.ThrowIfNull(testerId);
+        if (testerId is null) return null;
 
         var tester = await _testersRepository.GetTesterById(testerId.Value);
 

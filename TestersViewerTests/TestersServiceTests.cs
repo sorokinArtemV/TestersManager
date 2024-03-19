@@ -51,56 +51,33 @@ public class TestersServiceTests
     [Fact]
     public async Task GetSortedTesters_ShallReturnListWithSortedTestersByNameDesc_IfSortParamIsName()
     {
-        var devStreamAddRequestOne = _fixture.Create<DevStreamAddRequest>();
-        var devStreamAddRequestTwo = _fixture.Create<DevStreamAddRequest>();
-        var devStreamResponseOne = await _devStreamsService.AddDevStream(devStreamAddRequestOne);
-        var devStreamResponseTwo = await _devStreamsService.AddDevStream(devStreamAddRequestTwo);
-        var testerAddRequestOne = _fixture.Build<TesterAddRequest>()
-            .With(x => x.TesterName, "Sayaka")
-            .With(x => x.Email, "fXw5g@example.com")
-            .With(x => x.DevStreamId, devStreamResponseOne.DevStreamId)
-            .Create();
-
-        var testerAddRequestTwo = _fixture.Build<TesterAddRequest>()
-            .With(x => x.TesterName, "Yuki")
-            .With(x => x.Email, "fXw5g@example.com")
-            .With(x => x.DevStreamId, devStreamResponseTwo.DevStreamId)
-            .Create();
-
-        var testerAddRequestThree = _fixture.Build<TesterAddRequest>()
-            .With(x => x.TesterName, "Ryu")
-            .With(x => x.Email, "fXw5g@example.com")
-            .With(x => x.DevStreamId, devStreamResponseOne.DevStreamId)
-            .Create();
-
-        List<TesterAddRequest> testerAddRequests =
+        List<Tester> testers =
         [
-            testerAddRequestOne,
-            testerAddRequestTwo,
-            testerAddRequestThree
+            _fixture.Build<Tester>()
+                .With(x => x.Email, "fXw5g1@example.com")
+                .With(x => x.DevStream, null as DevStream)
+                .Create(),
+
+            _fixture.Build<Tester>()
+                .With(x => x.Email, "fXw5g2@example.com")
+                .With(x => x.DevStream, null as DevStream)
+                .Create(),
+            _fixture.Build<Tester>()
+                .With(x => x.Email, "fXw5g3@example.com")
+                .With(x => x.DevStream, null as DevStream)
+                .Create()
         ];
 
-        List<TesterResponse> testerResponsesFromAdd = [];
+        var testerResponsesListExpected = testers.Select(x => x.ToTesterResponse()).ToList();
 
-        foreach (var testerAddRequest in testerAddRequests)
-            testerResponsesFromAdd.Add(await _testersService.AddTester(testerAddRequest));
+        _testersRepositoryMock.Setup(x => x.GetAllTesters()).ReturnsAsync(testers);
 
         var allTesters = await _testersService.GetAllTesters();
 
         var testerResponsesFromSort = await _testersService.GetSortedTesters(
             allTesters, nameof(TesterResponse.TesterName), SortOrderOptions.Desc);
 
-        testerResponsesFromAdd = testerResponsesFromAdd
-            .OrderByDescending(x => x.TesterName).ToList();
-
-        // testerResponsesFromSort.Should().BeEquivalentTo(testerResponsesFromAdd);
-        testerResponsesFromAdd.Should().BeInDescendingOrder(x => x.TesterName);
-
-        _testOutputHelper.WriteLine("Actual:");
-        foreach (var testers in testerResponsesFromSort) _testOutputHelper.WriteLine(testers.ToString());
-
-        _testOutputHelper.WriteLine("Expected:");
-        foreach (var testers in testerResponsesFromAdd) _testOutputHelper.WriteLine(testers.ToString());
+        testerResponsesFromSort.Should().BeInDescendingOrder(x => x.TesterName);
     }
 
     #endregion
@@ -217,13 +194,13 @@ public class TestersServiceTests
                 .With(x => x.DevStream, null as DevStream)
                 .Create()
         ];
-        
+
         var testerResponsesListExpected = testers.Select(x => x.ToTesterResponse()).ToList();
 
         _testersRepositoryMock.Setup(x => x.GetAllTesters()).ReturnsAsync(testers);
-        
+
         var testersFromGet = await _testersService.GetAllTesters();
-        
+
         testersFromGet.Should().BeEquivalentTo(testerResponsesListExpected);
     }
 
@@ -255,8 +232,8 @@ public class TestersServiceTests
 
         _testersRepositoryMock.Setup(x => x.GetFilteredTesters(It.IsAny<Expression<Func<Tester, bool>>>()))
             .ReturnsAsync(testers);
-            
-            
+
+
         var testerResponsesFromSearch = await _testersService.GetFilteredTesters(nameof(TesterResponse.TesterName), "");
 
         testerResponsesFromSearch.Should().BeEquivalentTo(testerResponsesListExpected);
@@ -286,9 +263,10 @@ public class TestersServiceTests
 
         _testersRepositoryMock.Setup(x => x.GetFilteredTesters(It.IsAny<Expression<Func<Tester, bool>>>()))
             .ReturnsAsync(testers);
-            
-            
-        var testerResponsesFromSearch = await _testersService.GetFilteredTesters(nameof(TesterResponse.TesterName), "sa");
+
+
+        var testerResponsesFromSearch =
+            await _testersService.GetFilteredTesters(nameof(TesterResponse.TesterName), "sa");
 
         testerResponsesFromSearch.Should().BeEquivalentTo(testerResponsesListExpected);
     }
