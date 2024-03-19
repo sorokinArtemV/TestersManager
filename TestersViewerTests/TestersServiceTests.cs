@@ -14,9 +14,7 @@ namespace TestersViewerTests;
 
 public class TestersServiceTests
 {
-    private readonly IDevStreamsService _devStreamsService;
     private readonly IFixture _fixture;
-
     private readonly ITestersRepository _testersRepository;
     private readonly Mock<ITestersRepository> _testersRepositoryMock;
     private readonly ITestersService _testersService;
@@ -27,22 +25,8 @@ public class TestersServiceTests
     {
         _testersRepositoryMock = new Mock<ITestersRepository>();
         _testersRepository = _testersRepositoryMock.Object;
-
         _fixture = new Fixture();
-
-        // List<DevStream> devStreamsInitialData = [];
-        // List<Tester> testersInitialData = [];
-        //
-        // var dbContextMock = new DbContextMock<ApplicatonDbContext>(
-        //     new DbContextOptionsBuilder<ApplicatonDbContext>().Options);
-        //
-        // var dbContext = dbContextMock.Object;
-        // dbContextMock.CreateDbSetMock(x => x.DevStreams, devStreamsInitialData);
-        // dbContextMock.CreateDbSetMock(x => x.Testers, testersInitialData);
-
-        _devStreamsService = new DevStreamsService(null);
         _testersService = new TestersService(_testersRepository);
-
         _testOutputHelper = testOutputHelper;
     }
 
@@ -309,7 +293,7 @@ public class TestersServiceTests
         var testerResponse = tester.ToTesterResponse();
         var testerUpdateRequest = testerResponse.ToTesterUpdateRequest();
         testerUpdateRequest.TesterName = null;
-        
+
         Func<Task> action = () => _testersService.UpdateTester(testerUpdateRequest);
 
         await action.Should().ThrowAsync<ArgumentException>();
@@ -326,12 +310,12 @@ public class TestersServiceTests
 
         var testerResponseExpected = tester.ToTesterResponse();
         testerResponseExpected.TesterName = "Tester Updated";
-        
+
         var testerUpdateRequest = testerResponseExpected.ToTesterUpdateRequest();
 
         _testersRepositoryMock.Setup(x => x.GetTesterById(It.IsAny<Guid>())).ReturnsAsync(tester);
         _testersRepositoryMock.Setup(x => x.UpdateTester(It.IsAny<Tester>())).ReturnsAsync(tester);
-        
+
         var updatedTesterResponse = await _testersService.UpdateTester(testerUpdateRequest);
 
         updatedTesterResponse.Should().Be(testerResponseExpected);
@@ -344,21 +328,18 @@ public class TestersServiceTests
     [Fact]
     public async Task DeleteTester_ShallReturnTrue_IfTesterIdIsFound()
     {
-        var devStreamAddRequest = _fixture.Create<DevStreamAddRequest>();
-        var devStreamResponse = await _devStreamsService.AddDevStream(devStreamAddRequest);
-        var testerAddRequest = _fixture.Build<TesterAddRequest>()
+        var tester = _fixture.Build<Tester>()
             .With(x => x.Email, "fXw5g@example.com")
-            .With(x => x.DevStreamId, devStreamResponse.DevStreamId)
+            .With(x => x.DevStream, null as DevStream)
+            .With(x => x.Gender, "Female")
             .Create();
 
-        var testerResponse = await _testersService.AddTester(testerAddRequest);
 
-        var isDeleted = await _testersService.DeleteTester(testerResponse.TesterId);
+        _testersRepositoryMock.Setup(x => x.GetTesterById(It.IsAny<Guid>())).ReturnsAsync(tester);
+        _testersRepositoryMock.Setup(x => x.DeleteTesterById(It.IsAny<Guid>())).ReturnsAsync(true);
+
+        var isDeleted = await _testersService.DeleteTester(tester.TesterId);
         isDeleted.Should().BeTrue();
-
-
-        var testerFromGetById = await _testersService.GetTesterById(testerResponse.TesterId);
-        testerFromGetById.Should().BeNull();
     }
 
     [Fact]
