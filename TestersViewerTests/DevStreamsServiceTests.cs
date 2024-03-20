@@ -1,32 +1,30 @@
 using AutoFixture;
 using Entities;
-using EntityFrameworkCoreMock;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
+using Moq;
+using RepositoryContracts;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using Services;
+using Xunit.Abstractions;
 
 namespace TestersViewerTests;
 
 public class DevStreamsServiceTests
 {
+    private readonly IDevStreamsRepository _devStreamsRepository;
+    private readonly Mock<IDevStreamsRepository> _devStreamsRepositoryMock;
     private readonly IDevStreamsService _devStreamsService;
     private readonly IFixture _fixture;
+    private ITestOutputHelper _testOutputHelper;
 
-    public DevStreamsServiceTests()
+    public DevStreamsServiceTests(ITestOutputHelper testOutputHelper)
     {
+        _devStreamsRepositoryMock = new Mock<IDevStreamsRepository>();
+        _devStreamsRepository = _devStreamsRepositoryMock.Object;
         _fixture = new Fixture();
-
-        List<DevStream> devStreamsInitialData = [];
-
-        var dbContextMock = new DbContextMock<ApplicatonDbContext>(
-            new DbContextOptionsBuilder<ApplicatonDbContext>().Options);
-
-        var dbContext = dbContextMock.Object;
-        dbContextMock.CreateDbSetMock(x => x.DevStreams, devStreamsInitialData);
-
-        _devStreamsService = new DevStreamsService(null);
+        _devStreamsService = new DevStreamsService(_devStreamsRepository);
+        _testOutputHelper = testOutputHelper;
     }
 
     #region AddDevStream
@@ -49,6 +47,10 @@ public class DevStreamsServiceTests
             .With(x => x.DevStreamName, null as string)
             .Create();
 
+        var requestResponse = request.ToDevStream();
+
+        _devStreamsRepositoryMock.Setup(x => x.AddDevStream(It.IsAny<DevStream>())).ReturnsAsync(requestResponse);
+
         Func<Task> action = async () => await _devStreamsService.AddDevStream(request);
 
         await action.Should().ThrowAsync<ArgumentException>();
@@ -57,18 +59,17 @@ public class DevStreamsServiceTests
     [Fact]
     public async Task AddDevStream_ShallThrowArgumentException_WhenDevStreamAddRequestNameIsDuplicated()
     {
-        var requestOne = _fixture.Build<DevStreamAddRequest>()
-            .With(x => x.DevStreamName, "Crew")
-            .Create();
-        var requestTwo = _fixture.Build<DevStreamAddRequest>()
+        var request = _fixture.Build<DevStreamAddRequest>()
             .With(x => x.DevStreamName, "Crew")
             .Create();
 
-        Func<Task> action = async () =>
-        {
-            await _devStreamsService.AddDevStream(requestOne);
-            await _devStreamsService.AddDevStream(requestTwo);
-        };
+        var requestResponse = request.ToDevStream();
+
+        _devStreamsRepositoryMock.Setup(x => x.AddDevStream(It.Is<DevStream>(ds => ds.DevStreamName == "Crew")))
+            .ThrowsAsync(new ArgumentException("A DevStream with the same name already exists."));
+
+
+        var action = async () => { await _devStreamsService.AddDevStream(request); };
 
         await action.Should().ThrowAsync<ArgumentException>();
     }
@@ -90,29 +91,30 @@ public class DevStreamsServiceTests
     [Fact]
     public async Task GetAllDevStreams_ShallBeEmpty_BeforeAddingDevStreams()
     {
+        List<DevStream> emptyDevStreamsList = [];
+        _devStreamsRepositoryMock.Setup(x => x.GetAllDevStreams()).ReturnsAsync(emptyDevStreamsList);
+
         var devStreamsList = await _devStreamsService.GetAllDevStreams();
 
-        devStreamsList.Should().BeEmpty();
-        
+        devStreamsList.Should().BeEmpty(); 
     }
 
     [Fact]
     public async Task GetAllDevStreams_ShallShowAllDevStreams_WheDevStreamsAreAdded()
     {
-        List<DevStreamResponse> devStreamsExpectedResponses = [];
-
-        List<DevStreamAddRequest> devStreamAddRequests =
+        List<DevStream> devStreams = 
         [
-            new DevStreamAddRequest { DevStreamName = "Crew" },
-            new DevStreamAddRequest { DevStreamName = "New Year" },
-            new DevStreamAddRequest { DevStreamName = "Artillery" }
+            _fixture.Build<DevStream>().With(x => x.DevStreamName, "Crew").Create(),
+            _fixture.Build<DevStream>().With(x => x.DevStreamName, "New Year").Create(),
+            _fixture.Build<DevStream>().With(x => x.DevStreamName, "Artillery").Create()
         ];
 
-        foreach (var devStreamAddRequest in devStreamAddRequests)
-            devStreamsExpectedResponses.Add(await _devStreamsService.AddDevStream(devStreamAddRequest));
+        var devStreamsExpectedResponses = devStreams.Select(x => x.ToDevStreamResponse()).ToList();
 
-        var devStreamsList = await _devStreamsService.GetAllDevStreams();
+        _devStreamsRepositoryMock.Setup(x => x.GetAllDevStreams()).ReturnsAsync(devStreams);
         
+        var devStreamsList = await _devStreamsService.GetAllDevStreams();
+
         devStreamsList.Should().BeEquivalentTo(devStreamsExpectedResponses);
     }
 
@@ -124,9 +126,9 @@ public class DevStreamsServiceTests
     public async Task GetDevStreamById_ShallThrowArgumentNullException_IfDevStreamIdIsNull()
     {
         Guid? devStreamId = null;
-        
+
         Func<Task> action = async () => await _devStreamsService.GetDevStreamById(devStreamId);
-        
+
         await action.Should().ThrowAsync<ArgumentNullException>();
     }
 
