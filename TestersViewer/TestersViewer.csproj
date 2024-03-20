@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Repositories\Repositories.csproj" />
+        <ProjectReference Include="..\Repositories\Repositories.csproj"/>
         <ProjectReference Include="..\ServiceContracts\ServiceContracts.csproj"/>
         <ProjectReference Include="..\Services\Services.csproj"/>
     </ItemGroup>
@@ -19,6 +19,10 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.3"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="TestersViewerTests"/>
     </ItemGroup>
 
 </Project>
