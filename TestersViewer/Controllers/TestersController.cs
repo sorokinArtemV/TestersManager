@@ -83,7 +83,7 @@ public class TestersController : Controller
 
             ViewBag.Errors = ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage).ToList();
 
-            return View();
+            return View(tester);
         }
 
         var testerResponse = await _testersService.AddTester(tester);
