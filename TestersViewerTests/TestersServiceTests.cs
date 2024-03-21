@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using AutoFixture;
 using Entities;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using RepositoryContracts;
 using ServiceContracts;
@@ -23,11 +24,13 @@ public class TestersServiceTests
 
     public TestersServiceTests(ITestOutputHelper testOutputHelper)
     {
+        var loggerMock = new Mock<ILogger<TestersService>>();
         _testersRepositoryMock = new Mock<ITestersRepository>();
         _testersRepository = _testersRepositoryMock.Object;
         _fixture = new Fixture();
-        _testersService = new TestersService(_testersRepository);
+        _testersService = new TestersService(_testersRepository, loggerMock.Object);
         _testOutputHelper = testOutputHelper;
+        
     }
 
     #region GetSortedTesters

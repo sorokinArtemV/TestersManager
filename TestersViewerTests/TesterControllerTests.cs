@@ -35,7 +35,7 @@ public class TesterControllerTests
     public async Task Index_ShallReturnViewResult_WithTestersList()
     {
         var testersResponseList = _fixture.Create<List<TesterResponse>>();
-        var testersController = new TestersController(_testersService, _devStreamsService);
+        var testersController = new TestersController(_testersService, _devStreamsService, null);
 
         _testersServiceMock
             .Setup(x => x.GetFilteredTesters(It.IsAny<string>(), It.IsAny<string>()))
@@ -79,7 +79,7 @@ public class TesterControllerTests
             .Setup(x => x.AddTester(It.IsAny<TesterAddRequest>()))
             .ReturnsAsync(testerResponse);
 
-        var testersController = new TestersController(_testersService, _devStreamsService);
+        var testersController = new TestersController(_testersService, _devStreamsService, null);
 
         testersController.ModelState.AddModelError("TesterName", "Tester name is required");
 
@@ -106,8 +106,8 @@ public class TesterControllerTests
             .Setup(x => x.AddTester(It.IsAny<TesterAddRequest>()))
             .ReturnsAsync(testerResponse);
 
-        var testersController = new TestersController(_testersService, _devStreamsService);
-        
+        var testersController = new TestersController(_testersService, _devStreamsService, null);
+
         var actionResult = await testersController.Create(testerAddRequest);
 
         var redirectResult = Assert.IsType<RedirectToActionResult>(actionResult);
@@ -115,6 +115,5 @@ public class TesterControllerTests
         redirectResult.ActionName.Should().Be("Index");
     }
 
-    
     #endregion
 }
