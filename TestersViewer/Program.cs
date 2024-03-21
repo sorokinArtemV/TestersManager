@@ -3,12 +3,19 @@ using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
 using RepositoryContracts;
+using Serilog;
 using ServiceContracts;
 using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Logging.ClearProviders().AddConsole().AddDebug();
+
+builder.Host.UseSerilog((context, services, loggerConfiguration) =>
+{
+    loggerConfiguration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services);
+});
 
 
 builder.Services.AddControllersWithViews();
@@ -20,8 +27,9 @@ builder.Services.AddDbContext<ApplicatonDbContext>(options =>
 
 builder.Services.AddHttpLogging(logging =>
 {
-    logging.LoggingFields = HttpLoggingFields.RequestPropertiesAndHeaders;
-    logging.LoggingFields = HttpLoggingFields.RequestPropertiesAndHeaders;
+    logging.LoggingFields =
+        HttpLoggingFields.RequestPropertiesAndHeaders |
+        HttpLoggingFields.RequestPropertiesAndHeaders;
 });
 
 builder.Services.AddScoped<IDevStreamsService, DevStreamsService>();
