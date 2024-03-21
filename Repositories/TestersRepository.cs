@@ -29,6 +29,8 @@ public class TestersRepository : ITestersRepository
 
     public async Task<List<Tester>> GetAllTesters()
     {
+        _logger.LogInformation("GetAllTesters method of TestersRepository invoked");
+
         return await _db.Testers.Include("DevStream").ToListAsync();
     }
 

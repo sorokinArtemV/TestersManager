@@ -1,4 +1,5 @@
 using Entities;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
 using RepositoryContracts;
@@ -9,12 +10,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders().AddConsole().AddDebug();
 
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ApplicatonDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddHttpLogging(logging =>
+{
+    logging.LoggingFields = HttpLoggingFields.RequestPropertiesAndHeaders;
+    logging.LoggingFields = HttpLoggingFields.RequestPropertiesAndHeaders;
+});
+
 builder.Services.AddScoped<IDevStreamsService, DevStreamsService>();
 builder.Services.AddScoped<ITestersService, TestersService>();
 
@@ -25,6 +34,7 @@ var app = builder.Build();
 
 if (builder.Environment.IsDevelopment()) app.UseDeveloperExceptionPage();
 
+app.UseHttpLogging();
 
 app.UseStaticFiles();
 app.UseRouting();
