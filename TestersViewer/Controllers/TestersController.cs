@@ -10,12 +10,18 @@ namespace TestersViewer.Controllers;
 public class TestersController : Controller
 {
     private readonly IDevStreamsService _devStreamsService;
+    private readonly ILogger<TestersController> _logger;
     private readonly ITestersService _testersService;
 
-    public TestersController(ITestersService testersService, IDevStreamsService devStreamsService)
+
+    public TestersController(
+        ITestersService testersService,
+        IDevStreamsService devStreamsService,
+        ILogger<TestersController> logger)
     {
         _testersService = testersService;
         _devStreamsService = devStreamsService;
+        _logger = logger;
     }
 
     [Route("[action]")]
@@ -26,6 +32,12 @@ public class TestersController : Controller
         string sortBy = nameof(TesterResponse.TesterName),
         SortOrderOptions sortOrder = SortOrderOptions.Asc)
     {
+        _logger.LogInformation("Index action method of TestersController invoked");
+        _logger.LogDebug($"Search by: {searchBy}"
+                         + $"\nSearch string: {searchString}"
+                         + $"\nSort by: {sortBy}"
+                         + $"\nSort order: {sortOrder}");
+
         // Search
         ViewBag.SearchFields = new Dictionary<string, string>
         {
@@ -157,12 +169,12 @@ public class TestersController : Controller
         await _testersService.DeleteTester(testerUpdateRequest.TesterId);
         return RedirectToAction("Index", "Testers");
     }
-    
+
     [Route("testers-csv")]
     public async Task<IActionResult> TestersCsv()
     {
         var testers = await _testersService.GetTestersCsv();
-        
+
         return File(testers, "application/octet-stream", "testers.csv");
     }
 }
