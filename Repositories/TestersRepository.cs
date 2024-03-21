@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using RepositoryContracts;
 
 namespace Repositories;
@@ -8,10 +9,13 @@ namespace Repositories;
 public class TestersRepository : ITestersRepository
 {
     private readonly ApplicatonDbContext _db;
+    private readonly ILogger<TestersRepository> _logger;
 
-    public TestersRepository(ApplicatonDbContext db)
+
+    public TestersRepository(ApplicatonDbContext db, ILogger<TestersRepository> logger)
     {
         _db = db;
+        _logger = logger;
     }
 
 
@@ -35,6 +39,8 @@ public class TestersRepository : ITestersRepository
 
     public async Task<List<Tester>> GetFilteredTesters(Expression<Func<Tester, bool>> predicate)
     {
+        _logger.LogInformation("GetFilteredTesters method of TestersRepository invoked");
+
         return await _db.Testers.Include("DevStream").Where(predicate).ToListAsync();
     }
 

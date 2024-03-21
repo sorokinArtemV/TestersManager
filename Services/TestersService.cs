@@ -1,5 +1,6 @@
 using System.Globalization;
 using CsvHelper;
+using Microsoft.Extensions.Logging;
 using RepositoryContracts;
 using ServiceContracts;
 using ServiceContracts.DTO;
@@ -10,11 +11,14 @@ namespace Services;
 
 public class TestersService : ITestersService
 {
+    private readonly ILogger<TestersService> _logger;
     private readonly ITestersRepository _testersRepository;
 
-    public TestersService(ITestersRepository testersRepository)
+
+    public TestersService(ITestersRepository testersRepository, ILogger<TestersService> logger)
     {
         _testersRepository = testersRepository;
+        _logger = logger;
     }
 
     public async Task<TesterResponse> AddTester(TesterAddRequest? testerAddRequest)
@@ -32,6 +36,7 @@ public class TestersService : ITestersService
 
     public async Task<List<TesterResponse>> GetAllTesters()
     {
+        _logger.LogInformation("GetAllTesters method of TestersService invoked");
         var testers = await _testersRepository.GetAllTesters();
 
         return testers
@@ -48,6 +53,8 @@ public class TestersService : ITestersService
 
     public async Task<List<TesterResponse>> GetFilteredTesters(string searchBy, string searchString)
     {
+        _logger.LogInformation("GetFilteredTesters method of TestersService invoked");
+
         var allTesters = searchBy switch
         {
             nameof(TesterResponse.TesterName) =>
@@ -102,6 +109,8 @@ public class TestersService : ITestersService
     public async Task<List<TesterResponse>> GetSortedTesters(List<TesterResponse> allTesters, string sortBy,
         SortOrderOptions sortOrder)
     {
+        _logger.LogInformation("GetSortedTesters method of TestersService invoked");
+
         return string.IsNullOrEmpty(sortBy)
             ? allTesters
             : await SorterHelper.SortByPropertyAsync(allTesters, sortBy, sortOrder);
