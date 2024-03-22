@@ -52,10 +52,10 @@ public class TestersListActionFilter : IActionFilter
 
         var testersController = (TestersController)context.Controller;
 
-        if (context.HttpContext.Items["arguments"] is not Dictionary<string, object?> parameters ||
-            !parameters.TryGetValue("searchBy", out var value)) return;
+        if (context.HttpContext.Items["arguments"] is not Dictionary<string, object?> parameters) return;
 
-        testersController.ViewData["CurrentSearchBy"] = Convert.ToString(value);
+        if (parameters.TryGetValue("searchBy", out var value))
+            testersController.ViewData["CurrentSearchBy"] = Convert.ToString(value);
 
         if (parameters.TryGetValue("searchString", out var searchParam))
             testersController.ViewData["CurrentSearchString"] = Convert.ToString(searchParam);
@@ -65,7 +65,6 @@ public class TestersListActionFilter : IActionFilter
 
         if (parameters.TryGetValue("sortOrder", out var sortOrderParam))
             testersController.ViewData["CurrentSortOrder"] = Convert.ToString(sortOrderParam);
-
 
         testersController.ViewBag.SearchFields = new Dictionary<string, string>
         {
