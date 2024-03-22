@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
+using TestersViewer.Filters.ActionFilters;
 
 namespace TestersViewer.Controllers;
 
@@ -26,6 +27,7 @@ public class TestersController : Controller
 
     [Route("[action]")]
     [Route("/")]
+    [TypeFilter(typeof(TestersListActionFilter))]
     public async Task<IActionResult> Index(
         string searchBy,
         string? searchString,

@@ -54,9 +54,12 @@ public class TestersService : ITestersService
     public async Task<List<TesterResponse>> GetFilteredTesters(string searchBy, string searchString)
     {
         _logger.LogInformation("GetFilteredTesters method of TestersService invoked");
-
+        
         var allTesters = searchBy switch
         {
+            // prioritize default case
+            _ when searchString is null => await _testersRepository.GetAllTesters(),
+            
             nameof(TesterResponse.TesterName) =>
                 await _testersRepository.GetFilteredTesters(x =>
                     x.TesterName!.Contains(searchString)),
