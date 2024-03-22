@@ -18,7 +18,7 @@ public class TestersListActionFilter : IActionFilter
     {
         context.HttpContext.Items["arguments"] = context.ActionArguments;
 
-        _logger.LogInformation("OnActionExecuting method of TestersListActionFilter invoked");
+        _logger.LogInformation("{FilterName}.{MethodName}", nameof(TestersListActionFilter), nameof(OnActionExecuting));
 
         if (!context.ActionArguments.TryGetValue("searchBy", out var argument)) return;
 
@@ -48,7 +48,7 @@ public class TestersListActionFilter : IActionFilter
 
     public void OnActionExecuted(ActionExecutedContext context)
     {
-        _logger.LogInformation("OnActionExecuted method of TestersListActionFilter invoked");
+        _logger.LogInformation("{FilterName}.{MethodName}", nameof(TestersListActionFilter), nameof(OnActionExecuted));
 
         var testersController = (TestersController)context.Controller;
 

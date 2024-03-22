@@ -28,6 +28,7 @@ public class TestersController : Controller
     [Route("[action]")]
     [Route("/")]
     [TypeFilter(typeof(TestersListActionFilter))]
+    [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = ["X-Custom-Key", "X-Custom-Value"])]
     public async Task<IActionResult> Index(
         string searchBy,
         string? searchString,
@@ -40,21 +41,7 @@ public class TestersController : Controller
                          + $"\nSort by: {sortBy}"
                          + $"\nSort order: {sortOrder}");
 
-        // // Search
-        // ViewBag.SearchFields = new Dictionary<string, string>
-        // {
-        //     [nameof(TesterResponse.TesterName)] = "Name",
-        //     [nameof(TesterResponse.DevStream)] = "Stream",
-        //     [nameof(TesterResponse.Position)] = "Position",
-        //     [nameof(TesterResponse.Skills)] = "Skills",
-        //     [nameof(TesterResponse.Age)] = "Age",
-        //     [nameof(TesterResponse.Email)] = "Email",
-        //     [nameof(TesterResponse.Gender)] = "Gender",
-        //     [nameof(TesterResponse.MonthsOfWorkExperience)] = "Works for"
-        // };
-
         var testers = await _testersService.GetFilteredTesters(searchBy, searchString);
-        
         var sortedTesters = await _testersService.GetSortedTesters(testers, sortBy, sortOrder);
         
         return View(sortedTesters);
@@ -64,6 +51,7 @@ public class TestersController : Controller
     // triggers on click create
     [HttpGet]
     [Route("[action]")]
+    [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = ["X-Other-Key", "X-Other-Value"])]
     public async Task<IActionResult> Create()
     {
         var devStreams = await _devStreamsService.GetAllDevStreams();
