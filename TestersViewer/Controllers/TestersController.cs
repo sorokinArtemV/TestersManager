@@ -54,16 +54,9 @@ public class TestersController : Controller
         };
 
         var testers = await _testersService.GetFilteredTesters(searchBy, searchString);
-
-        ViewBag.CurrentSearchBy = searchBy;
-        ViewBag.CurrentSearchString = searchString;
-
-        // Sort
+        
         var sortedTesters = await _testersService.GetSortedTesters(testers, sortBy, sortOrder);
-
-        ViewBag.CurrentSortBy = sortBy;
-        ViewBag.CurrentSortOrder = sortOrder.ToString();
-
+        
         return View(sortedTesters);
     }
 
