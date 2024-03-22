@@ -65,5 +65,18 @@ public class TestersListActionFilter : IActionFilter
 
         if (parameters.TryGetValue("sortOrder", out var sortOrderParam))
             testersController.ViewData["CurrentSortOrder"] = Convert.ToString(sortOrderParam);
+
+
+        testersController.ViewBag.SearchFields = new Dictionary<string, string>
+        {
+            [nameof(TesterResponse.TesterName)] = "Name",
+            [nameof(TesterResponse.DevStream)] = "Stream",
+            [nameof(TesterResponse.Position)] = "Position",
+            [nameof(TesterResponse.Skills)] = "Skills",
+            [nameof(TesterResponse.Age)] = "Age",
+            [nameof(TesterResponse.Email)] = "Email",
+            [nameof(TesterResponse.Gender)] = "Gender",
+            [nameof(TesterResponse.MonthsOfWorkExperience)] = "Works for"
+        };
     }
 }

@@ -40,23 +40,11 @@ public class TestersController : Controller
                          + $"\nSort by: {sortBy}"
                          + $"\nSort order: {sortOrder}");
 
-        // Search
-        ViewBag.SearchFields = new Dictionary<string, string>
-        {
-            [nameof(TesterResponse.TesterName)] = "Name",
-            [nameof(TesterResponse.DevStream)] = "Stream",
-            [nameof(TesterResponse.Position)] = "Position",
-            [nameof(TesterResponse.Skills)] = "Skills",
-            [nameof(TesterResponse.Age)] = "Age",
-            [nameof(TesterResponse.Email)] = "Email",
-            [nameof(TesterResponse.Gender)] = "Gender",
-            [nameof(TesterResponse.MonthsOfWorkExperience)] = "Works for"
-        };
 
         var testers = await _testersService.GetFilteredTesters(searchBy, searchString);
-        
+
         var sortedTesters = await _testersService.GetSortedTesters(testers, sortBy, sortOrder);
-        
+
         return View(sortedTesters);
     }
 
