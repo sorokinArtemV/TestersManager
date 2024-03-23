@@ -6,6 +6,7 @@ using RepositoryContracts;
 using Serilog;
 using ServiceContracts;
 using Services;
+using TestersViewer.Filters.ActionFilters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +18,12 @@ builder.Host.UseSerilog((context, services, loggerConfiguration) =>
         .ReadFrom.Services(services);
 });
 
+var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add(new ResponseHeaderActionFilter(logger, "X-Custom-Key-Global", "X-Custom-Value-Global"));
+});
 
 builder.Services.AddDbContext<ApplicatonDbContext>(options =>
 {
