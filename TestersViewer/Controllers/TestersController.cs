@@ -77,16 +77,6 @@ public class TestersController : Controller
     [TypeFilter(typeof(TesterCreateAndEditActionFilter))]
     public async Task<IActionResult> Create(TesterAddRequest tester)
     {
-        if (!ModelState.IsValid)
-        {
-            var devStreams = await _devStreamsService.GetAllDevStreams();
-            ViewBag.DevStreams = devStreams;
-
-            ViewBag.Errors = ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage).ToList();
-
-            return View(tester);
-        }
-
         var testerResponse = await _testersService.AddTester(tester);
 
         return RedirectToAction("Index", "Testers");
@@ -115,27 +105,14 @@ public class TestersController : Controller
 
     [HttpPost]
     [Route("[action]/{testerId}")] // testers/1
+    [TypeFilter(typeof(TesterCreateAndEditActionFilter))]
     public async Task<IActionResult> Edit(TesterUpdateRequest tester)
     {
         var testerResponse = await _testersService.GetTesterById(tester.TesterId);
         if (testerResponse is null) return RedirectToAction("Index", "Testers");
-
-        if (ModelState.IsValid)
-        {
-            var updatedTester = await _testersService.UpdateTester(tester);
-            return RedirectToAction("Index", "Testers");
-        }
-
-        var devStreams = await _devStreamsService.GetAllDevStreams();
-        ViewBag.DevStreams = devStreams;
-
-        ViewBag.devStreams = devStreams.Select(x => new SelectListItem
-        {
-            Text = x.DevStreamName,
-            Value = x.DevStreamId.ToString()
-        });
-
-        return View(testerResponse.ToTesterUpdateRequest());
+        
+        var updatedTester = await _testersService.UpdateTester(tester);
+        return RedirectToAction("Index", "Testers");
     }
 
     [HttpGet]
