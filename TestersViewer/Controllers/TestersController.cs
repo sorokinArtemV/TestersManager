@@ -8,7 +8,8 @@ using TestersViewer.Filters.ActionFilters;
 namespace TestersViewer.Controllers;
 
 [Route("[controller]")]
-[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = ["X-Custom-Key-Controller", "X-Custom-Value-Controller"])]
+[TypeFilter(typeof(ResponseHeaderActionFilter),
+    Arguments = ["X-Custom-Key-Controller", "X-Custom-Value-Controller", 3], Order = 3)]
 public class TestersController : Controller
 {
     private readonly IDevStreamsService _devStreamsService;
@@ -28,7 +29,9 @@ public class TestersController : Controller
 
     [Route("[action]")]
     [Route("/")]
-    [TypeFilter(typeof(TestersListActionFilter))]
+    [TypeFilter(typeof(TestersListActionFilter), Order = 4)]
+    [TypeFilter(typeof(ResponseHeaderActionFilter),
+        Arguments = ["X-Other-Key-Action", "X-Other-Value-Action", 1], Order = 1)]
     public async Task<IActionResult> Index(
         string searchBy,
         string? searchString,
@@ -51,7 +54,6 @@ public class TestersController : Controller
     // triggers on click create
     [HttpGet]
     [Route("[action]")]
-    [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = ["X-Other-Key-Action", "X-Other-Value-Action"])]
     public async Task<IActionResult> Create()
     {
         var devStreams = await _devStreamsService.GetAllDevStreams();

@@ -22,7 +22,7 @@ var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<
 
 builder.Services.AddControllersWithViews(options =>
 {
-    options.Filters.Add(new ResponseHeaderActionFilter(logger, "X-Custom-Key-Global", "X-Custom-Value-Global"));
+    options.Filters.Add(new ResponseHeaderActionFilter(logger, "X-Custom-Key-Global", "X-Custom-Value-Global", 2));
 });
 
 builder.Services.AddDbContext<ApplicatonDbContext>(options =>
