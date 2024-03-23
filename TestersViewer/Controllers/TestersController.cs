@@ -4,6 +4,7 @@ using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using TestersViewer.Filters.ActionFilters;
+using TestersViewer.Filters.ResourceFilters;
 using TestersViewer.Filters.ResultFilters;
 
 namespace TestersViewer.Controllers;
@@ -77,6 +78,7 @@ public class TestersController : Controller
     [HttpPost]
     [Route("[action]")]
     [TypeFilter(typeof(TesterCreateAndEditActionFilter))]
+    [TypeFilter(typeof(FeatureDisableResourceFilter), Arguments = new object[] { false })]
     public async Task<IActionResult> Create(TesterAddRequest tester)
     {
         var testerResponse = await _testersService.AddTester(tester);
@@ -112,7 +114,7 @@ public class TestersController : Controller
     {
         var testerResponse = await _testersService.GetTesterById(tester.TesterId);
         if (testerResponse is null) return RedirectToAction("Index", "Testers");
-        
+
         var updatedTester = await _testersService.UpdateTester(tester);
         return RedirectToAction("Index", "Testers");
     }
