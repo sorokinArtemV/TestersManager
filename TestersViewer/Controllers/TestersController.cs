@@ -32,6 +32,7 @@ public class TestersController : Controller
     [TypeFilter(typeof(TestersListActionFilter), Order = 4)]
     [TypeFilter(typeof(ResponseHeaderActionFilter),
         Arguments = ["X-Other-Key-Action", "X-Other-Value-Action", 1], Order = 1)]
+    [TypeFilter(typeof(TestersListActionFilter))]
     public async Task<IActionResult> Index(
         string searchBy,
         string? searchString,
