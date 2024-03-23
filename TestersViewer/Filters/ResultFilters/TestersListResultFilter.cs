@@ -17,12 +17,13 @@ public class TestersListResultFilter : IAsyncResultFilter
             nameof(TestersListResultFilter),
             nameof(OnResultExecutionAsync));
 
+        context.HttpContext.Response.Headers["Last-Modified"] = DateTime.Now.ToString("dd-MMM-yyyy HH:mm");
+        
         await next();
         
         _logger.LogInformation("{FilterName}.{MethodName} - after",
             nameof(TestersListResultFilter),
             nameof(OnResultExecutionAsync));
         
-        context.HttpContext.Response.Headers.LastModified = DateTime.Now.ToString("dd-MMM-yyyy HH:mm");
     }
 }

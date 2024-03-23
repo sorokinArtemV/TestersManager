@@ -4,6 +4,7 @@ using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using TestersViewer.Filters.ActionFilters;
+using TestersViewer.Filters.ResultFilters;
 
 namespace TestersViewer.Controllers;
 
@@ -32,7 +33,7 @@ public class TestersController : Controller
     [TypeFilter(typeof(TestersListActionFilter), Order = 4)]
     [TypeFilter(typeof(ResponseHeaderActionFilter),
         Arguments = ["X-Other-Key-Action", "X-Other-Value-Action", 1], Order = 1)]
-    [TypeFilter(typeof(TestersListActionFilter))]
+    [TypeFilter(typeof(TestersListResultFilter))]
     public async Task<IActionResult> Index(
         string searchBy,
         string? searchString,
