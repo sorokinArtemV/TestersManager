@@ -54,6 +54,9 @@ public class TestersController : Controller
     // triggers on click create
     [HttpGet]
     [Route("[action]")]
+    [TypeFilter(typeof(ResponseHeaderActionFilter),
+        Arguments = ["X-Custom-Key-Action", "X-Custom-Value-Action", 4],
+        Order = 4)]
     public async Task<IActionResult> Create()
     {
         var devStreams = await _devStreamsService.GetAllDevStreams();
@@ -71,6 +74,7 @@ public class TestersController : Controller
     // accepts submitted form
     [HttpPost]
     [Route("[action]")]
+    [TypeFilter(typeof(TesterCreateAndEditActionFilter))]
     public async Task<IActionResult> Create(TesterAddRequest tester)
     {
         if (!ModelState.IsValid)
@@ -111,14 +115,14 @@ public class TestersController : Controller
 
     [HttpPost]
     [Route("[action]/{testerId}")] // testers/1
-    public async Task<IActionResult> Edit(TesterUpdateRequest testerUpdateRequest)
+    public async Task<IActionResult> Edit(TesterUpdateRequest tester)
     {
-        var testerResponse = await _testersService.GetTesterById(testerUpdateRequest.TesterId);
+        var testerResponse = await _testersService.GetTesterById(tester.TesterId);
         if (testerResponse is null) return RedirectToAction("Index", "Testers");
 
         if (ModelState.IsValid)
         {
-            var updatedTester = await _testersService.UpdateTester(testerUpdateRequest);
+            var updatedTester = await _testersService.UpdateTester(tester);
             return RedirectToAction("Index", "Testers");
         }
 
