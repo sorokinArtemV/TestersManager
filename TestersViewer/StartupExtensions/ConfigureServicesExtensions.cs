@@ -11,7 +11,7 @@ namespace TestersViewer.StartupExtensions;
 
 public static class ConfigureServicesExtensions
 {
-    public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<ResponseHeaderActionFilter>();
 
@@ -40,5 +40,7 @@ public static class ConfigureServicesExtensions
 
         services.AddScoped<IDevStreamsRepository, DevStreamsRepository>();
         services.AddScoped<ITestersRepository, TestersRepository>();
+
+        return services;
     }
 }
