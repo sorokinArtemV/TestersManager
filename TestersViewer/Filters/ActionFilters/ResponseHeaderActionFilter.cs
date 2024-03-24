@@ -18,7 +18,10 @@ public class ResponseHeaderFilterFactoryAttribute : Attribute, IFilterFactory
 
     public IFilterMetadata CreateInstance(IServiceProvider serviceProvider)
     {
-        var filter = new ResponseHeaderActionFilter(Key, Value, Order);
+        var filter = serviceProvider.GetRequiredService<ResponseHeaderActionFilter>();
+        filter.Key = Key;
+        filter.Value = Value;
+        filter.Order = Order;
 
         return filter;
     }
@@ -26,22 +29,26 @@ public class ResponseHeaderFilterFactoryAttribute : Attribute, IFilterFactory
 
 public class ResponseHeaderActionFilter : IAsyncActionFilter, IOrderedFilter
 {
-    private readonly string _key;
-    private readonly string _value;
+    private readonly ILogger<ResponseHeaderActionFilter> _logger;
 
-    public ResponseHeaderActionFilter(string key, string value, int order)
+    public ResponseHeaderActionFilter(ILogger<ResponseHeaderActionFilter> logger)
     {
-        _key = key;
-        _value = value;
-        Order = order;
+        _logger = logger;
     }
+
+    public string Key { get; set; }
+    public string Value { get; set; }
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
+        _logger.LogInformation("Before logic ResponseHeaderActionFilter");
+
         await next(); // calls next filter or action method
 
-        context.HttpContext.Response.Headers[_key] = _value;
+        _logger.LogInformation("After logic ResponseHeaderActionFilter");
+
+        context.HttpContext.Response.Headers.Append(Key, Value);
     }
 
-    public int Order { get; }
+    public int Order { get; set; }
 }
