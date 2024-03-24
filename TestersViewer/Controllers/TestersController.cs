@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
+using TestersViewer.Filters;
 using TestersViewer.Filters.ActionFilters;
 using TestersViewer.Filters.AuthorizationFilter;
 using TestersViewer.Filters.ExceptionFilters;
@@ -15,6 +16,7 @@ namespace TestersViewer.Controllers;
 [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = ["X-Custom-Key-Controller", "X-Custom-Value-Controller", 3],
     Order = 3)]
 [TypeFilter(typeof(HandleExceptionFilter))]
+[TypeFilter(typeof(TestersAlwaysRunResultFilter))]
 public class TestersController : Controller
 {
     private readonly IDevStreamsService _devStreamsService;
@@ -38,6 +40,7 @@ public class TestersController : Controller
     [TypeFilter(typeof(ResponseHeaderActionFilter),
         Arguments = ["X-Other-Key-Action", "X-Other-Value-Action", 1], Order = 1)]
     [TypeFilter(typeof(TestersListResultFilter))]
+    [SkipFilter]
     public async Task<IActionResult> Index(
         string searchBy,
         string? searchString,
@@ -115,7 +118,6 @@ public class TestersController : Controller
     [Route("[action]/{testerId}")] // testers/1
     [TypeFilter(typeof(TesterCreateAndEditActionFilter))]
     [TypeFilter(typeof(TokenAuthorizationFilter))]
-    [TypeFilter(typeof(TestersAlwaysRunResultFilter))]
     public async Task<IActionResult> Edit(TesterUpdateRequest tester)
     {
         var testerResponse = await _testersService.GetTesterById(tester.TesterId);

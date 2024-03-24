@@ -10,5 +10,6 @@ public class TestersAlwaysRunResultFilter : IAlwaysRunResultFilter
 
     public void OnResultExecuted(ResultExecutedContext context)
     {
+        if (context.Filters.OfType<SkipFilter>().Any()) return;
     }
 }
