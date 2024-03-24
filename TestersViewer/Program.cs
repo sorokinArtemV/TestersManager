@@ -18,11 +18,10 @@ builder.Host.UseSerilog((context, services, loggerConfiguration) =>
         .ReadFrom.Services(services);
 });
 
-var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
 
 builder.Services.AddControllersWithViews(options =>
 {
-    options.Filters.Add(new ResponseHeaderActionFilter(logger, "X-Custom-Key-Global", "X-Custom-Value-Global", 2));
+    options.Filters.Add(new ResponseHeaderActionFilter("X-Custom-Key-Global", "X-Custom-Value-Global", 2));
 });
 
 builder.Services.AddDbContext<ApplicatonDbContext>(options =>
