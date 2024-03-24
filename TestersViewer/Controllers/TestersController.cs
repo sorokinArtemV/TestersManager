@@ -36,8 +36,6 @@ public class TestersController : Controller
     [Route("[action]")]
     [Route("/")]
     [TypeFilter(typeof(TestersListActionFilter), Order = 4)]
-    // [TypeFilter(typeof(ResponseHeaderActionFilter),
-    //     Arguments = ["X-Other-Key-Action", "X-Other-Value-Action", 1], Order = 1)]
     [ResponseHeaderFilterFactory("My-Action-Header-Key", "My-Action-Header-Value", 2)]
     [TypeFilter(typeof(TestersListResultFilter))]
     [SkipFilter]
