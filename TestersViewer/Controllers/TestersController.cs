@@ -13,7 +13,7 @@ using TestersViewer.Filters.ResultFilters;
 namespace TestersViewer.Controllers;
 
 [Route("[controller]")]
-[ResponseHeaderActionFilter("X-Custom-Key-Controller", "X-Custom-Value-Controller", 3)]
+[ResponseHeaderFilterFactory("X-Custom-Key-Controller", "X-Custom-Value-Controller", 3)]
 [TypeFilter(typeof(HandleExceptionFilter))]
 [TypeFilter(typeof(TestersAlwaysRunResultFilter))]
 public class TestersController : Controller
@@ -36,7 +36,9 @@ public class TestersController : Controller
     [Route("[action]")]
     [Route("/")]
     [TypeFilter(typeof(TestersListActionFilter), Order = 4)]
-    [ResponseHeaderActionFilter("My-Action-Header-Key", "My-Action-Header-Value", 2)]
+    // [TypeFilter(typeof(ResponseHeaderActionFilter),
+    //     Arguments = ["X-Other-Key-Action", "X-Other-Value-Action", 1], Order = 1)]
+    [ResponseHeaderFilterFactory("My-Action-Header-Key", "My-Action-Header-Value", 2)]
     [TypeFilter(typeof(TestersListResultFilter))]
     [SkipFilter]
     public async Task<IActionResult> Index(
@@ -61,7 +63,7 @@ public class TestersController : Controller
     // triggers on click create
     [HttpGet]
     [Route("[action]")]
-    [ResponseHeaderActionFilter("X-Custom-Key-Action", "X-Custom-Value-Action", 4)]
+    [ResponseHeaderFilterFactory("X-Custom-Key-Action", "X-Custom-Value-Action", 4)]
     public async Task<IActionResult> Create()
     {
         var devStreams = await _devStreamsService.GetAllDevStreams();
