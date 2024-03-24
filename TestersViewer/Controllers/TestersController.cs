@@ -13,8 +13,7 @@ using TestersViewer.Filters.ResultFilters;
 namespace TestersViewer.Controllers;
 
 [Route("[controller]")]
-[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = ["X-Custom-Key-Controller", "X-Custom-Value-Controller", 3],
-    Order = 3)]
+[ResponseHeaderActionFilter("X-Custom-Key-Controller", "X-Custom-Value-Controller", 3)]
 [TypeFilter(typeof(HandleExceptionFilter))]
 [TypeFilter(typeof(TestersAlwaysRunResultFilter))]
 public class TestersController : Controller
@@ -62,9 +61,7 @@ public class TestersController : Controller
     // triggers on click create
     [HttpGet]
     [Route("[action]")]
-    [TypeFilter(typeof(ResponseHeaderActionFilter),
-        Arguments = ["X-Custom-Key-Action", "X-Custom-Value-Action", 4],
-        Order = 4)]
+    [ResponseHeaderActionFilter("X-Custom-Key-Action", "X-Custom-Value-Action", 4)]
     public async Task<IActionResult> Create()
     {
         var devStreams = await _devStreamsService.GetAllDevStreams();
