@@ -4,6 +4,7 @@ using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using TestersViewer.Filters.ActionFilters;
+using TestersViewer.Filters.AuthorizationFilter;
 using TestersViewer.Filters.ResourceFilters;
 using TestersViewer.Filters.ResultFilters;
 
@@ -110,6 +111,7 @@ public class TestersController : Controller
     [HttpPost]
     [Route("[action]/{testerId}")] // testers/1
     [TypeFilter(typeof(TesterCreateAndEditActionFilter))]
+    [TypeFilter(typeof(TokenAuthorizationFilter))]
     public async Task<IActionResult> Edit(TesterUpdateRequest tester)
     {
         var testerResponse = await _testersService.GetTesterById(tester.TesterId);
