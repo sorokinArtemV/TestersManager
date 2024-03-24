@@ -5,6 +5,7 @@ using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using TestersViewer.Filters.ActionFilters;
 using TestersViewer.Filters.AuthorizationFilter;
+using TestersViewer.Filters.ExceptionFilters;
 using TestersViewer.Filters.ResourceFilters;
 using TestersViewer.Filters.ResultFilters;
 
@@ -13,6 +14,7 @@ namespace TestersViewer.Controllers;
 [Route("[controller]")]
 [TypeFilter(typeof(ResponseHeaderActionFilter),
     Arguments = ["X-Custom-Key-Controller", "X-Custom-Value-Controller", 3], Order = 3)]
+[TypeFilter(typeof(HandleExceptionFilter))]
 public class TestersController : Controller
 {
     private readonly IDevStreamsService _devStreamsService;
