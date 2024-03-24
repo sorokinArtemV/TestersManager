@@ -1,12 +1,4 @@
-using Entities;
-using Microsoft.AspNetCore.HttpLogging;
-using Microsoft.EntityFrameworkCore;
-using Repositories;
-using RepositoryContracts;
 using Serilog;
-using ServiceContracts;
-using Services;
-using TestersViewer.Filters.ActionFilters;
 using TestersViewer.StartupExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +12,6 @@ builder.Host.UseSerilog((context, services, loggerConfiguration) =>
 });
 
 builder.Services.ConfigureServices(builder.Configuration);
-
 
 
 var app = builder.Build();
