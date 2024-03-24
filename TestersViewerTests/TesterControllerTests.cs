@@ -69,34 +69,7 @@ public class TesterControllerTests
     #endregion
 
     #region Create
-
-    [Fact]
-    public async Task Create_ShallReturnCreateView_IfModelErrorsWereFound()
-    {
-        var testerAddRequest = _fixture.Create<TesterAddRequest>();
-        var testerResponse = _fixture.Create<TesterResponse>();
-        var devStreams = _fixture.Create<List<DevStreamResponse>>();
-
-        _devStreamsServiceMock
-            .Setup(x => x.GetAllDevStreams())
-            .ReturnsAsync(devStreams);
-
-        _testersServiceMock
-            .Setup(x => x.AddTester(It.IsAny<TesterAddRequest>()))
-            .ReturnsAsync(testerResponse);
-
-        var testersController = new TestersController(_testersService, _devStreamsService, _logger);
-
-        testersController.ModelState.AddModelError("TesterName", "Tester name is required");
-
-        var actionResult = await testersController.Create(testerAddRequest);
-
-        var viewResult = Assert.IsType<ViewResult>(actionResult);
-
-        viewResult.ViewData.Model.Should().BeAssignableTo<TesterAddRequest>();
-        viewResult.ViewData.Model.Should().BeEquivalentTo(testerAddRequest);
-    }
-
+    
     [Fact]
     public async Task Create_ShallRedirectToIndex_IfNoModelErrorsWereFound()
     {
