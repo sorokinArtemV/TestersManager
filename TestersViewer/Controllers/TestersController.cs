@@ -89,6 +89,7 @@ public class TestersController : Controller
 
     [HttpGet]
     [Route("[action]/{testerId}")] // testers/1
+    [TypeFilter(typeof(TokenResultFilter))]
     public async Task<IActionResult> Edit(Guid testerId)
     {
         var testerResponse = await _testersService.GetTesterById(testerId);
