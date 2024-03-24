@@ -7,6 +7,7 @@ using Serilog;
 using ServiceContracts;
 using Services;
 using TestersViewer.Filters.ActionFilters;
+using TestersViewer.StartupExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,33 +19,9 @@ builder.Host.UseSerilog((context, services, loggerConfiguration) =>
         .ReadFrom.Services(services);
 });
 
-builder.Services.AddTransient<ResponseHeaderActionFilter>();
+builder.Services.ConfigureServices(builder.Configuration);
 
-var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
 
-builder.Services.AddControllersWithViews(options =>
-{
-    options.Filters.Add(new ResponseHeaderActionFilter(logger)
-        { Key = "X-Custom-Key-Global", Value = "X-Custom-Value-Global", Order = 2 });
-});
-
-builder.Services.AddDbContext<ApplicatonDbContext>(options =>
-{
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-builder.Services.AddHttpLogging(logging =>
-{
-    logging.LoggingFields =
-        HttpLoggingFields.RequestPropertiesAndHeaders |
-        HttpLoggingFields.RequestPropertiesAndHeaders;
-});
-
-builder.Services.AddScoped<IDevStreamsService, DevStreamsService>();
-builder.Services.AddScoped<ITestersService, TestersService>();
-
-builder.Services.AddScoped<IDevStreamsRepository, DevStreamsRepository>();
-builder.Services.AddScoped<ITestersRepository, TestersRepository>();
 
 var app = builder.Build();
 
