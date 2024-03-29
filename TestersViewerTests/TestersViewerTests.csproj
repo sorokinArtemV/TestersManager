@@ -33,7 +33,7 @@
     <ItemGroup>
         <ProjectReference Include="..\ServiceContracts\ServiceContracts.csproj"/>
         <ProjectReference Include="..\Services\Services.csproj"/>
-        <ProjectReference Include="..\TestersViewer\TestersViewer.csproj"/>
+        <ProjectReference Include="..\TestersManager\TestersManager.csproj" />
     </ItemGroup>
 
 </Project>

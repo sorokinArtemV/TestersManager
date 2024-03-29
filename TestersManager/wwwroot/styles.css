@@ -95,6 +95,12 @@ body {
     font-weight: 700;
 }
 
+.subheading {
+    font-size: 1.2rem;
+    text-align: center;
+    font-weight: 500;
+}
+
 .heading--violet {
     background: linear-gradient(to right, #b927fc 0%, #2c64fc 100%);
     -webkit-background-clip: text;
@@ -104,6 +110,11 @@ body {
 
 .heading--dark {
     color: #6a6a6a;
+
+}
+
+.subheading--red {
+    color: #c90000;
 
 }
 
@@ -437,8 +448,17 @@ tbody tr:nth-child(even) {
     color: red;
 }
 
+.error-container {
+    text-align: center;
+}
+
 .form-validation-error {
     margin-bottom: 15px;
     color: red;
     font-size: 0.9rem;
+}
+
+.error-image {
+    margin-top: 4rem;
+    text-align: center;
 }
