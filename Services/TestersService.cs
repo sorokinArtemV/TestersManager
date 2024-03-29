@@ -1,5 +1,6 @@
 using System.Globalization;
 using CsvHelper;
+using Exceptions;
 using Microsoft.Extensions.Logging;
 using RepositoryContracts;
 using ServiceContracts;
@@ -156,7 +157,7 @@ public class TestersService : ITestersService
 
         var tester = await _testersRepository.GetTesterById(testerUpdateRequest.TesterId);
 
-        ArgumentNullException.ThrowIfNull(tester);
+        if (tester is null) throw new InvalidTesterIdException();
 
         tester.TesterName = testerUpdateRequest.TesterName;
         tester.Email = testerUpdateRequest.Email;
