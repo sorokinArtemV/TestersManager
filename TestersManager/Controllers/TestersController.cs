@@ -6,7 +6,6 @@ using ServiceContracts.Enums;
 using TestersViewer.Filters;
 using TestersViewer.Filters.ActionFilters;
 using TestersViewer.Filters.AuthorizationFilter;
-using TestersViewer.Filters.ExceptionFilters;
 using TestersViewer.Filters.ResourceFilters;
 using TestersViewer.Filters.ResultFilters;
 
@@ -20,17 +19,29 @@ public class TestersController : Controller
 {
     private readonly IDevStreamsService _devStreamsService;
     private readonly ILogger<TestersController> _logger;
-    private readonly ITestersService _testersService;
+    private readonly ITestersAdderService _testersAdderService;
+    private readonly ITestersDeleterService _testersDeleterService;
+    private readonly ITestersGetterService _testersGetterService;
+    private readonly ITestersSorterService _testersSorterService;
+    private readonly ITestersUpdaterService _testersUpdaterService;
 
 
     public TestersController(
-        ITestersService testersService,
         IDevStreamsService devStreamsService,
-        ILogger<TestersController> logger)
+        ILogger<TestersController> logger,
+        ITestersGetterService testersGetterService,
+        ITestersAdderService testersAdderService,
+        ITestersSorterService testersSorterService,
+        ITestersDeleterService testersDeleterService,
+        ITestersUpdaterService testersUpdaterService)
     {
-        _testersService = testersService;
         _devStreamsService = devStreamsService;
         _logger = logger;
+        _testersGetterService = testersGetterService;
+        _testersAdderService = testersAdderService;
+        _testersSorterService = testersSorterService;
+        _testersDeleterService = testersDeleterService;
+        _testersUpdaterService = testersUpdaterService;
     }
 
     [Route("[action]")]
@@ -51,8 +62,8 @@ public class TestersController : Controller
                          + $"\nSort by: {sortBy}"
                          + $"\nSort order: {sortOrder}");
 
-        var testers = await _testersService.GetFilteredTesters(searchBy, searchString);
-        var sortedTesters = await _testersService.GetSortedTesters(testers, sortBy, sortOrder);
+        var testers = await _testersGetterService.GetFilteredTesters(searchBy, searchString);
+        var sortedTesters = await _testersSorterService.GetSortedTesters(testers, sortBy, sortOrder);
 
         return View(sortedTesters);
     }
@@ -83,7 +94,7 @@ public class TestersController : Controller
     [TypeFilter(typeof(FeatureDisableResourceFilter), Arguments = new object[] { false })]
     public async Task<IActionResult> Create(TesterAddRequest tester)
     {
-        var testerResponse = await _testersService.AddTester(tester);
+        var testerResponse = await _testersAdderService.AddTester(tester);
 
         return RedirectToAction("Index", "Testers");
     }
@@ -93,7 +104,7 @@ public class TestersController : Controller
     [TypeFilter(typeof(TokenResultFilter))]
     public async Task<IActionResult> Edit(Guid testerId)
     {
-        var testerResponse = await _testersService.GetTesterById(testerId);
+        var testerResponse = await _testersGetterService.GetTesterById(testerId);
         if (testerResponse is null) return RedirectToAction("Index", "Testers");
 
         var testerUpdateRequest = testerResponse.ToTesterUpdateRequest();
@@ -116,10 +127,10 @@ public class TestersController : Controller
     [TypeFilter(typeof(TokenAuthorizationFilter))]
     public async Task<IActionResult> Edit(TesterUpdateRequest tester)
     {
-        var testerResponse = await _testersService.GetTesterById(tester.TesterId);
+        var testerResponse = await _testersGetterService.GetTesterById(tester.TesterId);
         if (testerResponse is null) return RedirectToAction("Index", "Testers");
 
-        var updatedTester = await _testersService.UpdateTester(tester);
+        var updatedTester = await _testersUpdaterService.UpdateTester(tester);
         return RedirectToAction("Index", "Testers");
     }
 
@@ -127,7 +138,7 @@ public class TestersController : Controller
     [Route("[action]/{testerId}")]
     public async Task<IActionResult> Delete(Guid? testerId)
     {
-        var testerResponse = await _testersService.GetTesterById(testerId);
+        var testerResponse = await _testersGetterService.GetTesterById(testerId);
         if (testerResponse is null) return RedirectToAction("Index", "Testers");
 
         return View(testerResponse);
@@ -137,17 +148,17 @@ public class TestersController : Controller
     [Route("[action]/{testerId}")]
     public async Task<IActionResult> Delete(TesterUpdateRequest testerUpdateRequest)
     {
-        var testerResponse = await _testersService.GetTesterById(testerUpdateRequest.TesterId);
+        var testerResponse = await _testersGetterService.GetTesterById(testerUpdateRequest.TesterId);
         if (testerResponse is null) return RedirectToAction("Index", "Testers");
 
-        await _testersService.DeleteTester(testerUpdateRequest.TesterId);
+        await _testersDeleterService.DeleteTester(testerUpdateRequest.TesterId);
         return RedirectToAction("Index", "Testers");
     }
 
     [Route("testers-csv")]
     public async Task<IActionResult> TestersCsv()
     {
-        var testers = await _testersService.GetTestersCsv();
+        var testers = await _testersGetterService.GetTestersCsv();
 
         return File(testers, "application/octet-stream", "testers.csv");
     }

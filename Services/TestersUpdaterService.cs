@@ -1,11 +1,8 @@
-using System.Globalization;
-using CsvHelper;
 using Exceptions;
 using Microsoft.Extensions.Logging;
 using RepositoryContracts;
 using ServiceContracts;
 using ServiceContracts.DTO;
-using ServiceContracts.Enums;
 using Services.Helpers;
 
 namespace Services;
@@ -21,7 +18,7 @@ public class TestersUpdaterService : ITestersUpdaterService
         _testersRepository = testersRepository;
         _logger = logger;
     }
-    
+
     public async Task<TesterResponse> UpdateTester(TesterUpdateRequest? testerUpdateRequest)
     {
         ArgumentNullException.ThrowIfNull(testerUpdateRequest);

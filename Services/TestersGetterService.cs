@@ -1,12 +1,9 @@
 using System.Globalization;
 using CsvHelper;
-using Exceptions;
 using Microsoft.Extensions.Logging;
 using RepositoryContracts;
 using ServiceContracts;
 using ServiceContracts.DTO;
-using ServiceContracts.Enums;
-using Services.Helpers;
 
 namespace Services;
 
@@ -21,7 +18,7 @@ public class TestersGetterService : ITestersGetterService
         _testersRepository = testersRepository;
         _logger = logger;
     }
-    
+
     public async Task<List<TesterResponse>> GetAllTesters()
     {
         _logger.LogInformation("GetAllTesters method of TestersService invoked");
@@ -96,7 +93,7 @@ public class TestersGetterService : ITestersGetterService
 
         return allTesters.Select(x => x.ToTesterResponse()).ToList();
     }
-    
+
     public async Task<MemoryStream> GetTestersCsv()
     {
         var memoryStream = new MemoryStream();
