@@ -35,7 +35,8 @@ public static class ConfigureServicesExtensions
                 HttpLoggingFields.RequestPropertiesAndHeaders;
         });
 
-        services.AddScoped<IDevStreamsService, DevStreamsService>();
+        services.AddScoped<IDevStreamsGetterService, DevStreamsGetterService>();
+        services.AddScoped<IDevStreamsAdderService, DevStreamsAdderService>();
         services.AddScoped<ITestersGetterService, TestersGetterService>();
         services.AddScoped<ITestersAdderService, TestersAdderService>();
         services.AddScoped<ITestersSorterService, TestersSorterService>();

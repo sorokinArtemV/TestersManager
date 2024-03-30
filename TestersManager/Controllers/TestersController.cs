@@ -16,7 +16,8 @@ namespace TestersViewer.Controllers;
 [TypeFilter(typeof(TestersAlwaysRunResultFilter))]
 public class TestersController : Controller
 {
-    private readonly IDevStreamsService _devStreamsService;
+    private readonly IDevStreamsGetterService _devStreamsGetterService;
+    private readonly IDevStreamsAdderService _devStreamsAdderService;
     private readonly ILogger<TestersController> _logger;
     private readonly ITestersAdderService _testersAdderService;
     private readonly ITestersDeleterService _testersDeleterService;
@@ -26,21 +27,22 @@ public class TestersController : Controller
 
 
     public TestersController(
-        IDevStreamsService devStreamsService,
         ILogger<TestersController> logger,
         ITestersGetterService testersGetterService,
         ITestersAdderService testersAdderService,
         ITestersSorterService testersSorterService,
         ITestersDeleterService testersDeleterService,
-        ITestersUpdaterService testersUpdaterService)
+        ITestersUpdaterService testersUpdaterService, IDevStreamsGetterService devStreamsGetterService, 
+        IDevStreamsAdderService devStreamsAdderService)
     {
-        _devStreamsService = devStreamsService;
         _logger = logger;
         _testersGetterService = testersGetterService;
         _testersAdderService = testersAdderService;
         _testersSorterService = testersSorterService;
         _testersDeleterService = testersDeleterService;
         _testersUpdaterService = testersUpdaterService;
+        _devStreamsGetterService = devStreamsGetterService;
+        _devStreamsAdderService = devStreamsAdderService;
     }
 
     [Route("[action]")]
@@ -74,7 +76,7 @@ public class TestersController : Controller
     [ResponseHeaderFilterFactory("X-Custom-Key-Action", "X-Custom-Value-Action", 4)]
     public async Task<IActionResult> Create()
     {
-        var devStreams = await _devStreamsService.GetAllDevStreams();
+        var devStreams = await _devStreamsGetterService.GetAllDevStreams();
         ViewBag.DevStreams = devStreams;
 
         ViewBag.devStreams = devStreams.Select(x => new SelectListItem
@@ -108,7 +110,7 @@ public class TestersController : Controller
 
         var testerUpdateRequest = testerResponse.ToTesterUpdateRequest();
 
-        var devStreams = await _devStreamsService.GetAllDevStreams();
+        var devStreams = await _devStreamsGetterService.GetAllDevStreams();
         ViewBag.DevStreams = devStreams;
 
         ViewBag.devStreams = devStreams.Select(x => new SelectListItem

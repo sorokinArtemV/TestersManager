@@ -14,7 +14,10 @@ public class DevStreamsServiceTests
 {
     private readonly IDevStreamsRepository _devStreamsRepository;
     private readonly Mock<IDevStreamsRepository> _devStreamsRepositoryMock;
-    private readonly IDevStreamsService _devStreamsService;
+    
+    private readonly IDevStreamsGetterService _devStreamsGetterService;
+    private readonly IDevStreamsAdderService _devStreamsAdderService;
+    
     private readonly IFixture _fixture;
     private ITestOutputHelper _testOutputHelper;
 
@@ -22,8 +25,11 @@ public class DevStreamsServiceTests
     {
         _devStreamsRepositoryMock = new Mock<IDevStreamsRepository>();
         _devStreamsRepository = _devStreamsRepositoryMock.Object;
+
+        _devStreamsAdderService = new DevStreamsAdderService(_devStreamsRepository);
+        _devStreamsGetterService = new DevStreamsGetterService(_devStreamsRepository);          
+        
         _fixture = new Fixture();
-        _devStreamsService = new DevStreamsService(_devStreamsRepository);
         _testOutputHelper = testOutputHelper;
     }
 
@@ -34,7 +40,7 @@ public class DevStreamsServiceTests
     {
         DevStreamAddRequest? request = null;
 
-        Func<Task> action = async () => await _devStreamsService.AddDevStream(request);
+        Func<Task> action = async () => await _devStreamsAdderService.AddDevStream(request);
 
         await action.Should().ThrowAsync<ArgumentNullException>();
     }
@@ -51,7 +57,7 @@ public class DevStreamsServiceTests
 
         _devStreamsRepositoryMock.Setup(x => x.AddDevStream(It.IsAny<DevStream>())).ReturnsAsync(requestResponse);
 
-        Func<Task> action = async () => await _devStreamsService.AddDevStream(request);
+        Func<Task> action = async () => await _devStreamsAdderService.AddDevStream(request);
 
         await action.Should().ThrowAsync<ArgumentException>();
     }
@@ -69,7 +75,7 @@ public class DevStreamsServiceTests
             .ThrowsAsync(new ArgumentException("A DevStream with the same name already exists."));
 
 
-        var action = async () => { await _devStreamsService.AddDevStream(request); };
+        var action = async () => { await _devStreamsAdderService.AddDevStream(request); };
 
         await action.Should().ThrowAsync<ArgumentException>();
     }
@@ -79,7 +85,7 @@ public class DevStreamsServiceTests
     {
         var request = _fixture.Create<DevStreamAddRequest>();
 
-        var response = await _devStreamsService.AddDevStream(request);
+        var response = await _devStreamsAdderService.AddDevStream(request);
 
         response.DevStreamId.Should().NotBeEmpty();
     }
@@ -94,7 +100,7 @@ public class DevStreamsServiceTests
         List<DevStream> emptyDevStreamsList = [];
         _devStreamsRepositoryMock.Setup(x => x.GetAllDevStreams()).ReturnsAsync(emptyDevStreamsList);
 
-        var devStreamsList = await _devStreamsService.GetAllDevStreams();
+        var devStreamsList = await _devStreamsGetterService.GetAllDevStreams();
 
         devStreamsList.Should().BeEmpty(); 
     }
@@ -113,7 +119,7 @@ public class DevStreamsServiceTests
 
         _devStreamsRepositoryMock.Setup(x => x.GetAllDevStreams()).ReturnsAsync(devStreams);
         
-        var devStreamsList = await _devStreamsService.GetAllDevStreams();
+        var devStreamsList = await _devStreamsGetterService.GetAllDevStreams();
 
         devStreamsList.Should().BeEquivalentTo(devStreamsExpectedResponses);
     }
@@ -127,7 +133,7 @@ public class DevStreamsServiceTests
     {
         Guid? devStreamId = null;
 
-        Func<Task> action = async () => await _devStreamsService.GetDevStreamById(devStreamId);
+        Func<Task> action = async () => await _devStreamsGetterService.GetDevStreamById(devStreamId);
 
         await action.Should().ThrowAsync<ArgumentNullException>();
     }
@@ -136,10 +142,10 @@ public class DevStreamsServiceTests
     public async Task GetDevStreamById_ShallReturnDevStream_IfDevStreamExists()
     {
         var devStreamAddRequest = _fixture.Create<DevStreamAddRequest>();
-        var devStreamResponse = await _devStreamsService.AddDevStream(devStreamAddRequest);
+        var devStreamResponse = await _devStreamsAdderService.AddDevStream(devStreamAddRequest);
         var devStreamIdExpected = devStreamResponse.DevStreamId;
 
-        var devStreamId = await _devStreamsService.GetDevStreamById(devStreamIdExpected);
+        var devStreamId = await _devStreamsGetterService.GetDevStreamById(devStreamIdExpected);
 
         devStreamId?.DevStreamId.Should().Be(devStreamIdExpected);
     }

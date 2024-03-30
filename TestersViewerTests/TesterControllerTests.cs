@@ -13,8 +13,12 @@ namespace TestersViewerTests;
 
 public class TesterControllerTests
 {
-    private readonly IDevStreamsService _devStreamsService;
-    private readonly Mock<IDevStreamsService> _devStreamsServiceMock;
+    private readonly IDevStreamsAdderService _devStreamsAdderService;
+    private readonly Mock<IDevStreamsAdderService> _devStreamsAdderServiceMock;
+    private readonly IDevStreamsGetterService _devStreamsGetterService;
+    private readonly Mock<IDevStreamsGetterService> _devStreamsGetterServiceMock;
+
+
     private readonly Fixture _fixture;
     private readonly ILogger<TestersController> _logger;
     private readonly Mock<ILogger<TestersController>> _loggerMock;
@@ -35,8 +39,8 @@ public class TesterControllerTests
 
     public TesterControllerTests(ITestOutputHelper testOutputHelper)
     {
-        _devStreamsServiceMock = new Mock<IDevStreamsService>();
-        _devStreamsService = _devStreamsServiceMock.Object;
+        _devStreamsGetterServiceMock = new Mock<IDevStreamsGetterService>();
+        _devStreamsGetterService = _devStreamsGetterServiceMock.Object;
         _testOutputHelper = testOutputHelper;
         _fixture = new Fixture();
         _loggerMock = new Mock<ILogger<TestersController>>();
@@ -62,13 +66,14 @@ public class TesterControllerTests
     {
         var testersResponseList = _fixture.Create<List<TesterResponse>>();
         var testersController = new TestersController(
-            _devStreamsService,
             _logger,
             _testersGetterService,
             _testersAdderService,
             _testersSorterService,
             _testersDeleterService,
-            _testersUpdaterService
+            _testersUpdaterService,
+            _devStreamsGetterService,
+            _devStreamsAdderService
         );
 
         _testersGetterServiceMock
@@ -105,7 +110,7 @@ public class TesterControllerTests
         var testerResponse = _fixture.Create<TesterResponse>();
         var devStreams = _fixture.Create<List<DevStreamResponse>>();
 
-        _devStreamsServiceMock
+        _devStreamsGetterServiceMock
             .Setup(x => x.GetAllDevStreams())
             .ReturnsAsync(devStreams);
 
@@ -114,13 +119,14 @@ public class TesterControllerTests
             .ReturnsAsync(testerResponse);
 
         var testersController = new TestersController(
-            _devStreamsService,
             _logger,
             _testersGetterService,
             _testersAdderService,
             _testersSorterService,
             _testersDeleterService,
-            _testersUpdaterService
+            _testersUpdaterService,
+            _devStreamsGetterService,
+            _devStreamsAdderService
         );
 
         var actionResult = await testersController.Create(testerAddRequest);

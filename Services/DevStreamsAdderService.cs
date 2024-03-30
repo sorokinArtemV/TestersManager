@@ -4,11 +4,11 @@ using ServiceContracts.DTO;
 
 namespace Services;
 
-public class DevStreamsService : IDevStreamsService
+public class DevStreamsAdderService : IDevStreamsAdderService
 {
     private readonly IDevStreamsRepository _devStreamRepository;
 
-    public DevStreamsService(IDevStreamsRepository devStreamsRepository)
+    public DevStreamsAdderService(IDevStreamsRepository devStreamsRepository)
     {
         _devStreamRepository = devStreamsRepository;
     }
@@ -25,20 +25,5 @@ public class DevStreamsService : IDevStreamsService
         await _devStreamRepository.AddDevStream(devStream);
 
         return devStream.ToDevStreamResponse();
-    }
-
-    public async Task<List<DevStreamResponse>> GetAllDevStreams()
-    {
-        return (await _devStreamRepository.GetAllDevStreams())
-            .Select(x => x.ToDevStreamResponse()).ToList();
-    }
-
-    public async Task<DevStreamResponse?> GetDevStreamById(Guid? devStreamId)
-    {
-        ArgumentNullException.ThrowIfNull(devStreamId);
-
-        var devStreamResponse = await _devStreamRepository.GetDevStreamById(devStreamId.Value);
-
-        return devStreamResponse?.ToDevStreamResponse() ?? null;
     }
 }

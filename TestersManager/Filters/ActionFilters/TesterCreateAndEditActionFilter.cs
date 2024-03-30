@@ -7,11 +7,11 @@ namespace TestersViewer.Filters.ActionFilters;
 
 public class TesterCreateAndEditActionFilter : IAsyncActionFilter
 {
-    private readonly IDevStreamsService _devStreamsService;
+    private readonly IDevStreamsGetterService _devStreamsGetterService;
 
-    public TesterCreateAndEditActionFilter(IDevStreamsService devStreamsService)
+    public TesterCreateAndEditActionFilter(IDevStreamsGetterService devStreamsGetterService)
     {
-        _devStreamsService = devStreamsService;
+        _devStreamsGetterService = devStreamsGetterService;
     }
 
 
@@ -21,7 +21,7 @@ public class TesterCreateAndEditActionFilter : IAsyncActionFilter
         {
             if (!testersController.ModelState.IsValid)
             {
-                var devStreams = await _devStreamsService.GetAllDevStreams();
+                var devStreams = await _devStreamsGetterService.GetAllDevStreams();
                 testersController.ViewBag.DevStreams = devStreams.Select(x => new SelectListItem
                 {
                     Text = x.DevStreamName,
