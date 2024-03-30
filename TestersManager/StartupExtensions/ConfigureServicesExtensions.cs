@@ -36,7 +36,11 @@ public static class ConfigureServicesExtensions
         });
 
         services.AddScoped<IDevStreamsService, DevStreamsService>();
-        services.AddScoped<ITestersService, TestersService>();
+        services.AddScoped<ITestersGetterService, TestersGetterService>();
+        services.AddScoped<ITestersAdderService, TestersAdderService>();
+        services.AddScoped<ITestersSorterService, TestersSorterService>();
+        services.AddScoped<ITestersDeleterService, TestersDeleterService>();
+        services.AddScoped<ITestersUpdaterService, TestersUpdaterService>();
 
         services.AddScoped<IDevStreamsRepository, DevStreamsRepository>();
         services.AddScoped<ITestersRepository, TestersRepository>();
