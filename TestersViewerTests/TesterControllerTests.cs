@@ -18,9 +18,15 @@ public class TesterControllerTests
     private readonly Fixture _fixture;
     private readonly ILogger<TestersController> _logger;
     private readonly Mock<ILogger<TestersController>> _loggerMock;
-    private readonly ITestersService _testersService;
     private readonly Mock<ITestersService> _testersServiceMock;
     private readonly ITestOutputHelper _testOutputHelper;
+    
+    private readonly ITestersAdderService _testersAdderService;
+    private readonly ITestersDeleterService _testersDeleterService;
+    private readonly ITestersGetterService _testersGetterService;
+    private readonly ITestersSorterService _testersSorterService;
+    private readonly ITestersUpdaterService _testersUpdaterService;
+
 
 
     public TesterControllerTests(ITestOutputHelper testOutputHelper)
@@ -33,6 +39,8 @@ public class TesterControllerTests
         _fixture = new Fixture();
         _loggerMock = new Mock<ILogger<TestersController>>();
         _logger = _loggerMock.Object;
+        
+        
     }
 
     #region Index

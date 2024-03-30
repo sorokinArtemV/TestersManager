@@ -13,7 +13,6 @@ namespace TestersViewer.Controllers;
 
 [Route("[controller]")]
 [ResponseHeaderFilterFactory("X-Custom-Key-Controller", "X-Custom-Value-Controller", 3)]
-// [TypeFilter(typeof(HandleExceptionFilter))]
 [TypeFilter(typeof(TestersAlwaysRunResultFilter))]
 public class TestersController : Controller
 {

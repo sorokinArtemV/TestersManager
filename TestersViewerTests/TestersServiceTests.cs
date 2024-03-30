@@ -16,21 +16,33 @@ namespace TestersViewerTests;
 public class TestersServiceTests
 {
     private readonly IFixture _fixture;
+    private readonly ITestersAdderService _testersAdderService;
+    private readonly ITestersDeleterService _testersDeleterService;
+    private readonly ITestersGetterService _testersGetterService;
     private readonly ITestersRepository _testersRepository;
     private readonly Mock<ITestersRepository> _testersRepositoryMock;
-    private readonly ITestersService _testersService;
+    private readonly ITestersSorterService _testersSorterService;
+    private readonly ITestersUpdaterService _testersUpdaterService;
     private readonly ITestOutputHelper _testOutputHelper;
 
 
     public TestersServiceTests(ITestOutputHelper testOutputHelper)
     {
-        var loggerMock = new Mock<ILogger<TestersService>>();
         _testersRepositoryMock = new Mock<ITestersRepository>();
         _testersRepository = _testersRepositoryMock.Object;
         _fixture = new Fixture();
-        _testersService = new TestersService(_testersRepository, loggerMock.Object);
         _testOutputHelper = testOutputHelper;
-        
+
+        _testersGetterService =
+            new TestersGetterService(_testersRepository, new Mock<ILogger<TestersGetterService>>().Object);
+        _testersAdderService =
+            new TestersAdderService(_testersRepository, new Mock<ILogger<TestersAdderService>>().Object);
+        _testersDeleterService =
+            new TestersDeleterService(_testersRepository, new Mock<ILogger<TestersDeleterService>>().Object);
+        _testersSorterService =
+            new TestersSorterService(_testersRepository, new Mock<ILogger<TestersSorterService>>().Object);
+        _testersUpdaterService =
+            new TestersUpdaterService(_testersRepository, new Mock<ILogger<TestersUpdaterService>>().Object);
     }
 
     #region GetSortedTesters
@@ -59,9 +71,9 @@ public class TestersServiceTests
 
         _testersRepositoryMock.Setup(x => x.GetAllTesters()).ReturnsAsync(testers);
 
-        var allTesters = await _testersService.GetAllTesters();
+        var allTesters = await _testersGetterService.GetAllTesters();
 
-        var testerResponsesFromSort = await _testersService.GetSortedTesters(
+        var testerResponsesFromSort = await _testersSorterService.GetSortedTesters(
             allTesters, nameof(TesterResponse.TesterName), SortOrderOptions.Desc);
 
         testerResponsesFromSort.Should().BeInDescendingOrder(x => x.TesterName);
@@ -76,7 +88,7 @@ public class TestersServiceTests
     {
         TesterAddRequest? testerAddRequest = null;
 
-        Func<Task> action = async () => await _testersService.AddTester(testerAddRequest);
+        Func<Task> action = async () => await _testersAdderService.AddTester(testerAddRequest);
 
         await action.Should().ThrowAsync<ArgumentNullException>();
         // await Assert.ThrowsAsync<ArgumentNullException>(async () => await _testersService.AddTester(testerAddRequest));
@@ -93,7 +105,7 @@ public class TestersServiceTests
 
         _testersRepositoryMock.Setup(x => x.AddTester(It.IsAny<Tester>())).ReturnsAsync(tester);
 
-        Func<Task> action = async () => await _testersService.AddTester(testerAddRequest);
+        Func<Task> action = async () => await _testersAdderService.AddTester(testerAddRequest);
 
         await action.Should().ThrowAsync<ArgumentException>();
     }
@@ -111,7 +123,7 @@ public class TestersServiceTests
 
         _testersRepositoryMock.Setup(x => x.AddTester(It.IsAny<Tester>())).ReturnsAsync(tester);
 
-        var testerResponse = await _testersService.AddTester(testerAddRequest);
+        var testerResponse = await _testersAdderService.AddTester(testerAddRequest);
         testerResponseExpected.TesterId = testerResponse.TesterId;
 
         testerResponse.TesterId.Should().NotBe(Guid.Empty);
@@ -126,7 +138,7 @@ public class TestersServiceTests
     public async Task GetTesterById_ShallReturnNull_IfIdIsNull()
     {
         Guid? testerId = null;
-        var testerResponse = await _testersService.GetTesterById(testerId);
+        var testerResponse = await _testersGetterService.GetTesterById(testerId);
 
         testerResponse.Should().BeNull();
     }
@@ -143,7 +155,7 @@ public class TestersServiceTests
 
         _testersRepositoryMock.Setup(x => x.GetTesterById(It.IsAny<Guid>())).ReturnsAsync(tester);
 
-        var testerResponseFromGet = await _testersService.GetTesterById(tester.TesterId);
+        var testerResponseFromGet = await _testersGetterService.GetTesterById(tester.TesterId);
 
         testerResponseFromGet.Should().Be(testerResponseExpected);
     }
@@ -157,7 +169,7 @@ public class TestersServiceTests
     {
         _testersRepositoryMock.Setup(x => x.GetAllTesters()).ReturnsAsync([]);
 
-        var allTesters = await _testersService.GetAllTesters();
+        var allTesters = await _testersGetterService.GetAllTesters();
 
         allTesters.Should().BeEmpty();
     }
@@ -186,7 +198,7 @@ public class TestersServiceTests
 
         _testersRepositoryMock.Setup(x => x.GetAllTesters()).ReturnsAsync(testers);
 
-        var testersFromGet = await _testersService.GetAllTesters();
+        var testersFromGet = await _testersGetterService.GetAllTesters();
 
         testersFromGet.Should().BeEquivalentTo(testerResponsesListExpected);
     }
@@ -221,7 +233,7 @@ public class TestersServiceTests
             .ReturnsAsync(testers);
 
 
-        var testerResponsesFromSearch = await _testersService.GetFilteredTesters(nameof(TesterResponse.TesterName), "");
+        var testerResponsesFromSearch = await _testersGetterService.GetFilteredTesters(nameof(TesterResponse.TesterName), "");
 
         testerResponsesFromSearch.Should().BeEquivalentTo(testerResponsesListExpected);
     }
@@ -253,7 +265,7 @@ public class TestersServiceTests
 
 
         var testerResponsesFromSearch =
-            await _testersService.GetFilteredTesters(nameof(TesterResponse.TesterName), "sa");
+            await _testersGetterService.GetFilteredTesters(nameof(TesterResponse.TesterName), "sa");
 
         testerResponsesFromSearch.Should().BeEquivalentTo(testerResponsesListExpected);
     }
@@ -267,7 +279,7 @@ public class TestersServiceTests
     {
         TesterUpdateRequest? testerUpdateRequest = null;
 
-        Func<Task> action = async () => await _testersService.UpdateTester(testerUpdateRequest);
+        Func<Task> action = async () => await _testersUpdaterService.UpdateTester(testerUpdateRequest);
 
         await action.Should().ThrowAsync<ArgumentNullException>();
     }
@@ -279,7 +291,7 @@ public class TestersServiceTests
             .With(x => x.TesterId, Guid.NewGuid())
             .Create();
 
-        Func<Task> action = () => _testersService.UpdateTester(testerUpdateRequest);
+        Func<Task> action = () => _testersUpdaterService.UpdateTester(testerUpdateRequest);
 
         await action.Should().ThrowAsync<ArgumentException>();
     }
@@ -297,7 +309,7 @@ public class TestersServiceTests
         var testerUpdateRequest = testerResponse.ToTesterUpdateRequest();
         testerUpdateRequest.TesterName = null;
 
-        Func<Task> action = () => _testersService.UpdateTester(testerUpdateRequest);
+        Func<Task> action = () => _testersUpdaterService.UpdateTester(testerUpdateRequest);
 
         await action.Should().ThrowAsync<ArgumentException>();
     }
@@ -319,7 +331,7 @@ public class TestersServiceTests
         _testersRepositoryMock.Setup(x => x.GetTesterById(It.IsAny<Guid>())).ReturnsAsync(tester);
         _testersRepositoryMock.Setup(x => x.UpdateTester(It.IsAny<Tester>())).ReturnsAsync(tester);
 
-        var updatedTesterResponse = await _testersService.UpdateTester(testerUpdateRequest);
+        var updatedTesterResponse = await _testersUpdaterService.UpdateTester(testerUpdateRequest);
 
         updatedTesterResponse.Should().Be(testerResponseExpected);
     }
@@ -341,14 +353,14 @@ public class TestersServiceTests
         _testersRepositoryMock.Setup(x => x.GetTesterById(It.IsAny<Guid>())).ReturnsAsync(tester);
         _testersRepositoryMock.Setup(x => x.DeleteTesterById(It.IsAny<Guid>())).ReturnsAsync(true);
 
-        var isDeleted = await _testersService.DeleteTester(tester.TesterId);
+        var isDeleted = await _testersDeleterService.DeleteTester(tester.TesterId);
         isDeleted.Should().BeTrue();
     }
 
     [Fact]
     public async Task DeleteTester_ShallReturnFalse_IfTesterIdIsNotFound()
     {
-        var isDeleted = await _testersService.DeleteTester(Guid.NewGuid());
+        var isDeleted = await _testersDeleterService.DeleteTester(Guid.NewGuid());
         isDeleted.Should().BeFalse();
     }
 
