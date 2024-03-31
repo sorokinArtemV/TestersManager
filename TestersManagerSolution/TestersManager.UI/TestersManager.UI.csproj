@@ -94,4 +94,7 @@
       <PackageReference Include="Serilog.Sinks.SQLite" Version="6.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <InternalsVisibleTo Include="TestersManager.IntegrationTests"/>
+    </ItemGroup>
 </Project>

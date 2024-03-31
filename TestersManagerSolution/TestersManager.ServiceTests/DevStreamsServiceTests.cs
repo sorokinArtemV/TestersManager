@@ -1,14 +1,14 @@
 using AutoFixture;
-using Entities;
 using FluentAssertions;
 using Moq;
-using RepositoryContracts;
-using ServiceContracts;
-using ServiceContracts.DTO;
-using Services;
+using TestersManager.Core.Domain.Entities;
+using TestersManager.Core.Domain.RepositoryContracts;
+using TestersManager.Core.DTO;
+using TestersManager.Core.ServiceContracts;
+using TestersManager.Core.Services;
 using Xunit.Abstractions;
 
-namespace TestersViewerTests;
+namespace TestersManager.ServiceTests;
 
 public class DevStreamsServiceTests
 {

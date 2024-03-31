@@ -3,13 +3,13 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using ServiceContracts;
-using ServiceContracts.DTO;
-using ServiceContracts.Enums;
-using TestersViewer.Controllers;
+using TestersManager.Core.DTO;
+using TestersManager.Core.Enums;
+using TestersManager.Core.ServiceContracts;
+using TestersManager.UI.Controllers;
 using Xunit.Abstractions;
 
-namespace TestersViewerTests;
+namespace TestersManager.ControllerTests;
 
 public class TesterControllerTests
 {

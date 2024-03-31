@@ -39,9 +39,6 @@ app.Run();
 
 
 // makes program class available for testing 
-namespace TestersManager.UI
+public partial class Program
 {
-    public partial class Program
-    {
-    }
 }

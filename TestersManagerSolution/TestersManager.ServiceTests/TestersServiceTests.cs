@@ -1,17 +1,17 @@
 using System.Linq.Expressions;
 using AutoFixture;
-using Entities;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using RepositoryContracts;
-using ServiceContracts;
-using ServiceContracts.DTO;
-using ServiceContracts.Enums;
-using Services;
+using TestersManager.Core.Domain.Entities;
+using TestersManager.Core.Domain.RepositoryContracts;
+using TestersManager.Core.DTO;
+using TestersManager.Core.Enums;
+using TestersManager.Core.ServiceContracts;
+using TestersManager.Core.Services;
 using Xunit.Abstractions;
 
-namespace TestersViewerTests;
+namespace TestersManager.ServiceTests;
 
 public class TestersServiceTests
 {
