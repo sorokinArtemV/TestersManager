@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using TestersManager.Core.Domain.IdentityEntities;
 using TestersManager.Core.Domain.RepositoryContracts;
 using TestersManager.Core.ServiceContracts;
 using TestersManager.Core.Services;
@@ -27,6 +30,12 @@ public static class ConfigureServicesExtensions
         {
             options.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
         });
+
+        services.AddIdentity<ApplicationUser, ApplicationRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders()
+            .AddUserStore<UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid>>()
+            .AddRoleStore<RoleStore<ApplicationRole, ApplicationDbContext, Guid>>();
 
         services.AddHttpLogging(logging =>
         {

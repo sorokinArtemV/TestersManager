@@ -353,6 +353,7 @@ tbody tr:nth-child(even) {
 .form-create input[type=email],
 .form-create input[type=date],
 .form-create input[type=number],
+.form-create input[type=password],
 .form-create select {
     padding: 10px;
     border: 1px solid #ccc;
@@ -440,6 +441,7 @@ tbody tr:nth-child(even) {
 .form-create input[type="email"]:hover,
 .form-create input[type="date"]:hover,
 .form-create input[type="number"]:hover,
+.form-create input[type="password"]:hover,
 .form-create select:hover {
     border: 1px solid #a8a8a8;
 }
@@ -462,3 +464,4 @@ tbody tr:nth-child(even) {
     margin-top: 4rem;
     text-align: center;
 }
+

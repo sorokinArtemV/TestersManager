@@ -2,13 +2,14 @@
 
 @{
     ViewBag.Title = "Register";
+    Layout = "_LayoutEmpty";
 }
 
 <div class="container-form-wrapper">
     <div class="container-form-create">
         <div class="title-box">
-            <h2 class="container-form-create__heading">Register Tester</h2>
-            <a>Already Registered? </a><a asp-controller="Account" asp-action="Login" class="button button--secondary">Login</a>
+            <h2 class="container-form-create__heading">Sign up</h2>
+            <a asp-controller="Account" asp-action="Login" class="button button--secondary">Login</a>
         </div>
         <form asp-controller="Account" asp-action="Register" class="form-create" method="post">
 
