@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TestersManager.Core.Domain.Entities;
@@ -17,6 +18,17 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // code for compiling ///////////////////////////
+        modelBuilder.Entity<IdentityUserLogin<Guid>>().HasNoKey();
+        modelBuilder.Entity<IdentityUserRole<Guid>>().HasNoKey();
+        modelBuilder.Entity<IdentityUserClaim<Guid>>().HasNoKey();
+        modelBuilder.Entity<IdentityUserToken<Guid>>().HasNoKey();
+        modelBuilder.Entity<IdentityRoleClaim<Guid>>().HasNoKey();
+        
+        base.OnModelCreating(modelBuilder);
+       // /////////////////////////////////////////////////
+        
+        
         modelBuilder.Entity<DevStream>().ToTable("DevStreams");
         modelBuilder.Entity<Tester>().ToTable("Testers");
 
@@ -36,7 +48,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             .HasColumnName("WorksFor")
             .HasColumnType("INTEGER")
             .HasDefaultValue(1);
-
+        
         // table relations
         // modelBuilder.Entity<Tester>(entity =>
         // {
