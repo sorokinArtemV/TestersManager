@@ -1,0 +1,78 @@
+@model RegisterDto;
+
+@{
+    ViewBag.Title = "Register";
+}
+
+<div class="container-form-wrapper">
+    <div class="container-form-create">
+        <div class="title-box">
+            <h2 class="container-form-create__heading">Register Tester</h2>
+            <a>Already Registered? </a><a asp-controller="Account" asp-action="Login" class="button button--secondary">Login</a>
+        </div>
+        <form asp-controller="Account" asp-action="Register" class="form-create" method="post">
+
+            <!-- Name -->
+            <label asp-for="TesterName">Name</label>
+            <input asp-for="TesterName">
+            <span asp-validation-for="TesterName" class="form-validation-error"></span>
+
+            <!-- Email -->
+            <label asp-for="Email">Email</label>
+            <input asp-for="Email">
+            <span asp-validation-for="Email" class="form-validation-error"></span>
+
+            <!-- Password -->
+            <label asp-for="Password">Password</label>
+            <input asp-for="Password">
+            <span asp-validation-for="Password" class="form-validation-error"></span>
+
+            <!-- Password -->
+            <label asp-for="ConfirmPassword">Confirm Password</label>
+            <input asp-for="ConfirmPassword">
+            <span asp-validation-for="ConfirmPassword" class="form-validation-error"></span>
+
+            <button class="form-create__btn form-create__btn--blue" type="submit">Submit</button>
+
+            @if (ViewBag.Errors != null)
+            {
+                <ul class="error-list">
+                    @foreach (string error in ViewBag.Errors)
+                    {
+                        <li>@error</li>
+                    }
+                </ul>
+            }
+        </form>
+    </div>
+</div>
+
+@section scripts
+{
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+        asp-fallback-test="window.jQuery"
+        asp-fallback-src="~/jquery.min.js"></script>
+
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"
+        integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+        asp-fallback-test="window.jQuery.validator"
+        asp-fallback-src="~/jquery.validate.min.js"></script>
+
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"
+        integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+        asp-fallback-test="window.jQuery.validator.unobtrusive"
+        asp-fallback-src="~/jquery.validate.unobtrusive.min.js"></script>
+
+    <script defer src="~/script.js"></script>
+
+}
