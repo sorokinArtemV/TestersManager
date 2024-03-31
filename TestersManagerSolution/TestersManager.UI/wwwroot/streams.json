@@ -1,0 +1,22 @@
+[
+  {
+    "DevStreamId": "248A6FE4-AC09-452C-A205-A6CC4B7E9E56",
+    "DevStreamName": "Crew"
+  },
+  {
+    "DevStreamId": "1A76B36B-4B06-4A69-A368-7ADE27AB739E",
+    "DevStreamName": "New Year"
+  },
+  {
+    "DevStreamId": "97BE8C70-E9AA-41D8-9BC6-F8832C1B485A",
+    "DevStreamName": "Core"
+  },
+  {
+    "DevStreamId": "02DF3B54-16F9-44C7-9272-C57873F8A2CA",
+    "DevStreamName": "Tech"
+  },
+  {
+    "DevStreamId": "78FD1D57-28E2-4CD8-82A3-5DFDBA2A212A",
+    "DevStreamName": "Artillery"
+  }
+]

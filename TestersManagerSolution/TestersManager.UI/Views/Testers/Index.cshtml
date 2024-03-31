@@ -1,0 +1,125 @@
+@using TestersManager.Core.Helpers
+@model IEnumerable<TesterResponse>
+
+@{
+    ViewBag.Title = "Testers";
+}
+
+
+<div class="container">
+    <h2 class="heading heading--dark">QA Engineers</h2>
+    <form asp-controller="Testers" asp-action="Index" method="get" class="form">
+        <div class="form-container">
+            <div class="form-container__inner">
+                <select name="searchBy" id="" class="form-container__select">
+                    @foreach (var field in ViewBag.SearchFields)
+                    {
+                        if (field.Key == ViewBag.CurrentSearchBy)
+                        {
+                            <option value="@field.Key" selected="selected">@field.Value</option>
+                        }
+                        else
+                        {
+                            <option value="@field.Key">@field.Value</option>
+                        }
+                    }
+                </select>
+                <input
+                    class="form-container__search"
+                    type="search" name="searchString"
+                    id=""
+                    placeholder="Search"
+                    value="@ViewBag.CurrentSearchString">
+                <input class="form-container__submit form-container__submit--violet" type="submit" value="Search">
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+
+                @await Html.PartialAsync("_GridTableHeader", new ViewDataDictionary(ViewData)
+                {
+                    ["ColumnName"] = nameof(TesterResponse.TesterName),
+                    ["DisplayName"] = "Name"
+                })
+
+                @await Html.PartialAsync("_GridTableHeader", new ViewDataDictionary(ViewData)
+                {
+                    ["ColumnName"] = nameof(TesterResponse.Email),
+                    ["DisplayName"] = "Email"
+                })
+
+                @await Html.PartialAsync("_GridTableHeader", new ViewDataDictionary(ViewData)
+                {
+                    ["ColumnName"] = nameof(TesterResponse.Age),
+                    ["DisplayName"] = "Age"
+                })
+
+                @await Html.PartialAsync("_GridTableHeader", new ViewDataDictionary(ViewData)
+                {
+                    ["ColumnName"] = nameof(TesterResponse.Gender),
+                    ["DisplayName"] = "Gender"
+                })
+
+                @await Html.PartialAsync("_GridTableHeader", new ViewDataDictionary(ViewData)
+                {
+                    ["ColumnName"] = nameof(TesterResponse.DevStream),
+                    ["DisplayName"] = "DevStream"
+                })
+
+                @await Html.PartialAsync("_GridTableHeader", new ViewDataDictionary(ViewData)
+                {
+                    ["ColumnName"] = nameof(TesterResponse.Position),
+                    ["DisplayName"] = "Position"
+                })
+
+                @await Html.PartialAsync("_GridTableHeader", new ViewDataDictionary(ViewData)
+                {
+                    ["ColumnName"] = nameof(TesterResponse.Skills),
+                    ["DisplayName"] = "Skills"
+                })
+
+                @await Html.PartialAsync("_GridTableHeader", new ViewDataDictionary(ViewData)
+                {
+                    ["ColumnName"] = nameof(TesterResponse.MonthsOfWorkExperience),
+                    ["DisplayName"] = "Works for"
+                })
+
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var tester in Model)
+            {
+                <tr>
+                    <td>@tester.TesterName</td>
+                    <td>@tester.Email</td>
+                    <td>@tester.Age</td>
+                    <td>@tester.Gender</td>
+                    <td>@tester.DevStream</td>
+                    <td>@tester.Position</td>
+                    <td>@tester.Skills</td>
+                    <td>@ConversionHelper.ConvertMonthsToYears(tester.MonthsOfWorkExperience!.Value)</td>
+                    <td>
+                        <a
+                            asp-controller="Testers"
+                            asp-action="Edit"
+                            asp-route-testerId="@tester.TesterId"
+                            class="btn--action">
+                            Edit
+                        </a>
+                        <span>&emsp;</span>
+                        <a
+                            asp-controller="Testers"
+                            asp-action="Delete"
+                            asp-route-testerId="@tester.TesterId"
+                            class="btn--action">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </form>
+</div>

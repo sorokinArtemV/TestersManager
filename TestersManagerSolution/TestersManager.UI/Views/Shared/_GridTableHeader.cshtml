@@ -1,0 +1,34 @@
+@using TestersManager.Core.Enums
+@if (ViewBag.CurrentSortBy == ViewBag.ColumnName &&
+     ViewBag.CurrentSortOrder == SortOrderOptions.Asc.ToString())
+{
+    <th class="table__name">
+        <a class="table__link"
+           href="~/testers/index?searchBy=@ViewBag.CurrentSearchBy&searchString=@ViewBag.CurrentSearchString&sortBy=@ViewBag.ColumnName&sortOrder=@nameof(SortOrderOptions.Desc)">
+            @ViewBag.DisplayName
+        </a>
+        <ion-icon name="chevron-down-outline" class="table__icon"></ion-icon>
+    </th>
+}
+
+else if (ViewBag.CurrentSortBy == ViewBag.ColumnName &&
+         ViewBag.CurrentSortOrder == SortOrderOptions.Desc.ToString())
+{
+    <th class="table__name">
+        <a class="table__link"
+           href="~/testers/index?searchBy=@ViewBag.CurrentSearchBy&searchString=@ViewBag.CurrentSearchString&sortBy=@ViewBag.ColumnName&sortOrder=@nameof(SortOrderOptions.Asc)">
+            @ViewBag.DisplayName
+        </a>
+        <ion-icon name="chevron-up-outline" class="table__icon"></ion-icon>
+    </th>
+}
+
+else
+{
+    <th class="table__name">
+        <a class="table__link"
+           href="~/testers/index?searchBy=@ViewBag.CurrentSearchBy&searchString=@ViewBag.CurrentSearchString&sortBy=@ViewBag.ColumnName&sortOrder=@nameof(SortOrderOptions.Asc)">
+            @ViewBag.DisplayName
+        </a>
+    </th>
+}

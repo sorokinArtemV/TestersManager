@@ -1,0 +1,97 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Content Include="Filters\.DS_Store" />
+      <Content Include="obj\Debug\net8.0\apphost" />
+      <Content Include="obj\Debug\net8.0\project.razor.vscode.bin" />
+      <Content Include="obj\Debug\net8.0\refint\TestersManager.dll" />
+      <Content Include="obj\Debug\net8.0\refint\TestersViewer.dll" />
+      <Content Include="obj\Debug\net8.0\ref\TestersManager.dll" />
+      <Content Include="obj\Debug\net8.0\ref\TestersViewer.dll" />
+      <Content Include="obj\Debug\net8.0\staticwebassets.build.json" />
+      <Content Include="obj\Debug\net8.0\staticwebassets.development.json" />
+      <Content Include="obj\Debug\net8.0\staticwebassets.pack.json" />
+      <Content Include="obj\Debug\net8.0\staticwebassets\msbuild.build.TestersManager.props" />
+      <Content Include="obj\Debug\net8.0\staticwebassets\msbuild.build.TestersViewer.props" />
+      <Content Include="obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.TestersManager.props" />
+      <Content Include="obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.TestersViewer.props" />
+      <Content Include="obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.TestersManager.props" />
+      <Content Include="obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.TestersViewer.props" />
+      <Content Include="obj\Debug\net8.0\staticwebassets\msbuild.TestersManager.Microsoft.AspNetCore.StaticWebAssets.props" />
+      <Content Include="obj\Debug\net8.0\staticwebassets\msbuild.TestersViewer.Microsoft.AspNetCore.StaticWebAssets.props" />
+      <Content Include="obj\Debug\net8.0\TestersManager.AssemblyInfoInputs.cache" />
+      <Content Include="obj\Debug\net8.0\TestersManager.assets.cache" />
+      <Content Include="obj\Debug\net8.0\TestersManager.csproj.AssemblyReference.cache" />
+      <Content Include="obj\Debug\net8.0\TestersManager.csproj.CopyComplete" />
+      <Content Include="obj\Debug\net8.0\TestersManager.csproj.CoreCompileInputs.cache" />
+      <Content Include="obj\Debug\net8.0\TestersManager.csproj.FileListAbsolute.txt" />
+      <Content Include="obj\Debug\net8.0\TestersManager.dll" />
+      <Content Include="obj\Debug\net8.0\TestersManager.GeneratedMSBuildEditorConfig.editorconfig" />
+      <Content Include="obj\Debug\net8.0\TestersManager.genruntimeconfig.cache" />
+      <Content Include="obj\Debug\net8.0\TestersManager.MvcApplicationPartsAssemblyInfo.cache" />
+      <Content Include="obj\Debug\net8.0\TestersManager.pdb" />
+      <Content Include="obj\Debug\net8.0\TestersManager.RazorAssemblyInfo.cache" />
+      <Content Include="obj\Debug\net8.0\TestersManager.sourcelink.json" />
+      <Content Include="obj\Debug\net8.0\TestersViewer.AssemblyInfoInputs.cache" />
+      <Content Include="obj\Debug\net8.0\TestersViewer.assets.cache" />
+      <Content Include="obj\Debug\net8.0\TestersViewer.csproj.AssemblyReference.cache" />
+      <Content Include="obj\Debug\net8.0\TestersViewer.csproj.CopyComplete" />
+      <Content Include="obj\Debug\net8.0\TestersViewer.csproj.CoreCompileInputs.cache" />
+      <Content Include="obj\Debug\net8.0\TestersViewer.csproj.FileListAbsolute.txt" />
+      <Content Include="obj\Debug\net8.0\TestersViewer.dll" />
+      <Content Include="obj\Debug\net8.0\TestersViewer.GeneratedMSBuildEditorConfig.editorconfig" />
+      <Content Include="obj\Debug\net8.0\TestersViewer.genruntimeconfig.cache" />
+      <Content Include="obj\Debug\net8.0\TestersViewer.MvcApplicationPartsAssemblyInfo.cache" />
+      <Content Include="obj\Debug\net8.0\TestersViewer.pdb" />
+      <Content Include="obj\Debug\net8.0\TestersViewer.RazorAssemblyInfo.cache" />
+      <Content Include="obj\Debug\net8.0\TestersViewer.sourcelink.json" />
+      <Content Include="obj\project.assets.json" />
+      <Content Include="obj\project.nuget.cache" />
+      <Content Include="obj\project.packagespec.json" />
+      <Content Include="obj\rider.project.model.nuget.info" />
+      <Content Include="obj\rider.project.restore.info" />
+      <Content Include="obj\TestersManager.csproj.nuget.dgspec.json" />
+      <Content Include="obj\TestersManager.csproj.nuget.g.props" />
+      <Content Include="obj\TestersManager.csproj.nuget.g.targets" />
+      <Content Include="obj\TestersViewer.csproj.EntityFrameworkCore.targets" />
+      <Content Include="obj\TestersViewer.csproj.nuget.dgspec.json" />
+      <Content Include="obj\TestersViewer.csproj.nuget.g.props" />
+      <Content Include="obj\TestersViewer.csproj.nuget.g.targets" />
+      <Content Include="Properties\.DS_Store" />
+      <Content Include="Views\.DS_Store" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Include="obj\Debug\net8.0\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs" />
+      <Compile Include="obj\Debug\net8.0\TestersManager.AssemblyInfo.cs" />
+      <Compile Include="obj\Debug\net8.0\TestersManager.GlobalUsings.g.cs" />
+      <Compile Include="obj\Debug\net8.0\TestersManager.RazorAssemblyInfo.cs" />
+      <Compile Include="obj\Debug\net8.0\TestersViewer.AssemblyInfo.cs" />
+      <Compile Include="obj\Debug\net8.0\TestersViewer.GlobalUsings.g.cs" />
+      <Compile Include="obj\Debug\net8.0\TestersViewer.RazorAssemblyInfo.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TestersManager.Core\TestersManager.Core.csproj" />
+      <ProjectReference Include="..\TestersManager.Infrastructure\TestersManager.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.3" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.3" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Serilog" Version="4.0.0-dev-02122" />
+      <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+      <PackageReference Include="Serilog.Sinks.SQLite" Version="6.0.0" />
+    </ItemGroup>
+
+</Project>
