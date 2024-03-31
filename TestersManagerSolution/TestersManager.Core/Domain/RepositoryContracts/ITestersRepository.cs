@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
-using Entities;
+using TestersManager.Core.Domain.Entities;
 
-namespace RepositoryContracts;
+namespace TestersManager.Core.Domain.RepositoryContracts;
 
 /// <summary>
 ///     Repository contract for manipulating Tester entity

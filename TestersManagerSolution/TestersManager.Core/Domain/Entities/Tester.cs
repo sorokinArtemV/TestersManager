@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Entities;
+namespace TestersManager.Core.Domain.Entities;
 
 /// <summary>
 ///     Domain model to store Tester

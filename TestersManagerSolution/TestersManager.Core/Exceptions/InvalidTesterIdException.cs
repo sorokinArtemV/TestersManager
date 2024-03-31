@@ -1,4 +1,4 @@
-﻿namespace Exceptions;
+﻿namespace TestersManager.Core.Exceptions;
 
 public class InvalidTesterIdException : ArgumentException
 {
