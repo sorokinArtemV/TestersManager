@@ -23,7 +23,7 @@ public static class ConfigureServicesExtensions
                 { Key = "X-Custom-Key-Global", Value = "X-Custom-Value-Global", Order = 2 });
         });
 
-        services.AddDbContext<ApplicatonDbContext>(options =>
+        services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
         });

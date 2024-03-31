@@ -1,12 +1,14 @@
 using System.Text.Json;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TestersManager.Core.Domain.Entities;
+using TestersManager.Core.Domain.IdentityEntities;
 
 namespace TestersManager.Infrastructure.DbContext;
 
-public class ApplicatonDbContext : Microsoft.EntityFrameworkCore.DbContext
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
 {
-    public ApplicatonDbContext(DbContextOptions options) : base(options)
+    public ApplicationDbContext(DbContextOptions options) : base(options)
     {
     }
 

@@ -15,11 +15,11 @@ public class CustomWebAppFactory : WebApplicationFactory<Program>
         builder.ConfigureServices(services =>
         {
             var descriptor = services.SingleOrDefault(x =>
-                x.ServiceType == typeof(DbContextOptions<ApplicatonDbContext>));
+                x.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
 
             if (descriptor != null) services.Remove(descriptor);
 
-            services.AddDbContext<ApplicatonDbContext>(options => options.UseInMemoryDatabase("InMemoryDb"));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("InMemoryDb"));
         });
     }
 }

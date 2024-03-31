@@ -7,9 +7,9 @@ namespace TestersManager.Infrastructure.Repositories;
 
 public class DevStreamsRepository : IDevStreamsRepository
 {
-    private readonly ApplicatonDbContext _db;
+    private readonly ApplicationDbContext _db;
 
-    public DevStreamsRepository(ApplicatonDbContext db)
+    public DevStreamsRepository(ApplicationDbContext db)
     {
         _db = db;
     }

@@ -9,11 +9,11 @@ namespace TestersManager.Infrastructure.Repositories;
 
 public class TestersRepository : ITestersRepository
 {
-    private readonly ApplicatonDbContext _db;
+    private readonly ApplicationDbContext _db;
     private readonly ILogger<TestersRepository> _logger;
 
 
-    public TestersRepository(ApplicatonDbContext db, ILogger<TestersRepository> logger)
+    public TestersRepository(ApplicationDbContext db, ILogger<TestersRepository> logger)
     {
         _db = db;
         _logger = logger;
