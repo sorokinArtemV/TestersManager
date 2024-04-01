@@ -11,11 +11,6 @@ public class RegisterDto
     [EmailAddress(ErrorMessage = "Email is not valid")]
     public string Email { get; set; }
 
-    // [Required(ErrorMessage = "Phone number is required")]
-    // [RegularExpression("^[0-9]*$", ErrorMessage = "Phone number can contain only numbers")]
-    // [DataType(DataType.PhoneNumber)]
-    // public string PhoneNumber { get; set; }
-
     [Required(ErrorMessage = "Password is required")]
     [DataType(DataType.Password)]
     public string Password { get; set; }
@@ -23,4 +18,9 @@ public class RegisterDto
     [Required(ErrorMessage = "Confirm password is required")]
     [DataType(DataType.Password)]
     public string ConfirmPassword { get; set; }
+
+    // [Required(ErrorMessage = "Phone number is required")]
+    // [RegularExpression("^[0-9]*$", ErrorMessage = "Phone number can contain only numbers")]
+    // [DataType(DataType.PhoneNumber)]
+    // public string PhoneNumber { get; set; }
 }
