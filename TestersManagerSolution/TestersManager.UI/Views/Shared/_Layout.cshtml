@@ -29,15 +29,27 @@
             <li>
                 <a asp-controller="Testers" asp-action="Create" class="navbar__link">Create</a>
             </li>
-            <li>
-                <a asp-controller="Testers" asp-action="TestersCsv" class="navbar__link">Download CSV</a>
-            </li>
-            <li>
-                <a asp-controller="Account" asp-action="Register" class="navbar__link">Register</a>
-            </li>
-            <li>
-                <a asp-controller="Account" asp-action="Login" class="navbar__link">Login</a>
-            </li>
+            @{
+                if (User.Identity?.Name is null)
+                {
+                    <li>
+                        <a asp-controller="Account" asp-action="Register" class="navbar__link">Register</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Account" asp-action="Login" class="navbar__link">Login</a>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a asp-controller="Testers" asp-action="TestersCsv" class="navbar__link">Download CSV</a>
+                    </li>
+
+                    <li>
+                        @User.Identity?.Name
+                    </li>
+                }
+            }
         </ul>
     </div>
 </nav>

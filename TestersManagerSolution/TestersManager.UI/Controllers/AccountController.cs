@@ -8,11 +8,14 @@ namespace TestersManager.UI.Controllers;
 [Route("[controller]/[action]")]
 public class AccountController : Controller
 {
+    private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public AccountController(UserManager<ApplicationUser> userManager)
+
+    public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
     {
         _userManager = userManager;
+        _signInManager = signInManager;
     }
 
 
@@ -38,10 +41,15 @@ public class AccountController : Controller
             TesterName = registerDto.TesterName
         };
 
-        var result = await _userManager.CreateAsync(user);
+        var result = await _userManager.CreateAsync(user, registerDto.Password);
 
-        if (result.Succeeded) return RedirectToAction(nameof(TestersController.Index), "Testers");
+        if (result.Succeeded)
+        {
+            // Sign in
+            await _signInManager.SignInAsync(user, false); // can create checkbox in front for this
 
+            return RedirectToAction(nameof(TestersController.Index), "Testers");
+        }
 
         foreach (var error in result.Errors) ModelState.AddModelError("Register", error.Description);
 

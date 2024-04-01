@@ -31,7 +31,14 @@ else
 app.UseHttpLogging();
 
 app.UseStaticFiles();
+
+// Reading identity cookie
+app.UseAuthentication(); // must be before routing
+
+// Identify method based route
 app.UseRouting();
+
+// Actions + filters
 app.MapControllers();
 
 

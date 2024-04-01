@@ -24,11 +24,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         modelBuilder.Entity<IdentityUserClaim<Guid>>().HasNoKey();
         modelBuilder.Entity<IdentityUserToken<Guid>>().HasNoKey();
         modelBuilder.Entity<IdentityRoleClaim<Guid>>().HasNoKey();
-        
+
         base.OnModelCreating(modelBuilder);
-       // /////////////////////////////////////////////////
-        
-        
+        // /////////////////////////////////////////////////
+
+
         modelBuilder.Entity<DevStream>().ToTable("DevStreams");
         modelBuilder.Entity<Tester>().ToTable("Testers");
 
@@ -48,13 +48,5 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             .HasColumnName("WorksFor")
             .HasColumnType("INTEGER")
             .HasDefaultValue(1);
-        
-        // table relations
-        // modelBuilder.Entity<Tester>(entity =>
-        // {
-        //     entity.HasOne<DevStream>(s => s.DevStream)
-        //         .WithMany(t => t.Testers)
-        //         .HasForeignKey(t => t.DevStreamId);
-        // });
     }
 }
