@@ -31,7 +31,13 @@ public static class ConfigureServicesExtensions
             options.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
         });
 
-        services.AddIdentity<ApplicationUser, ApplicationRole>()
+        services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+            {
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredUniqueChars = 0;
+            })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders()
             .AddUserStore<UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid>>()

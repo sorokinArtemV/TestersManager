@@ -26,11 +26,8 @@
             <li>
                 <a asp-controller="Testers" asp-action="Index" class="navbar__link">Home</a>
             </li>
-            <li>
-                <a asp-controller="Testers" asp-action="Create" class="navbar__link">Create</a>
-            </li>
             @{
-                if (User.Identity?.Name is null)
+                if (User.Identity?.IsAuthenticated != true)
                 {
                     <li>
                         <a asp-controller="Account" asp-action="Register" class="navbar__link">Register</a>
@@ -42,11 +39,16 @@
                 else
                 {
                     <li>
+                        <a asp-controller="Testers" asp-action="Create" class="navbar__link">Create</a>
+                    </li>
+                    <li>
                         <a asp-controller="Testers" asp-action="TestersCsv" class="navbar__link">Download CSV</a>
                     </li>
-
                     <li>
                         @User.Identity?.Name
+                    </li>
+                    <li>
+                        <a asp-controller="Account" asp-action="Logout" class="navbar__link">Logout</a>
                     </li>
                 }
             }

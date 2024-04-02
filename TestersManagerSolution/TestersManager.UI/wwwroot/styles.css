@@ -88,6 +88,16 @@ body {
     border-color: #b927fc;
 }
 
+.navbar__link--active {
+    border-bottom: #b927fc 2px solid;
+    border-radius: 5px;
+    color: #b927fc;
+    background: linear-gradient(to right, #b927fc 0%, #2c64fc 100%);
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
 
 .heading {
     font-size: 1.5rem;
