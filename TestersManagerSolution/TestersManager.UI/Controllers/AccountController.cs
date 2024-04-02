@@ -28,7 +28,8 @@ public class AccountController : Controller
     [HttpPost]
     public async Task<IActionResult> Register(RegisterDto registerDto)
     {
-        if (!ModelState.IsValid)
+        // TODO does not work for password
+        if (ModelState.IsValid == false)
         {
             ViewBag.Errors = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList();
             return View(registerDto);
@@ -52,6 +53,9 @@ public class AccountController : Controller
         }
 
         foreach (var error in result.Errors) ModelState.AddModelError("Register", error.Description);
+
+        // temp sol
+        ViewBag.Errors = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList();
 
         return View(registerDto);
     }

@@ -100,4 +100,8 @@
     <ItemGroup>
         <InternalsVisibleTo Include="TestersManager.IntegrationTests"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="logs\" />
+    </ItemGroup>
 </Project>
