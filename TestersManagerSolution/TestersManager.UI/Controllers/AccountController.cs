@@ -29,7 +29,7 @@ public class AccountController : Controller
     public async Task<IActionResult> Register(RegisterDto registerDto)
     {
         // TODO does not work for password
-        if (ModelState.IsValid == false)
+        if (!ModelState.IsValid)
         {
             ViewBag.Errors = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList();
             return View(registerDto);
@@ -54,9 +54,47 @@ public class AccountController : Controller
 
         foreach (var error in result.Errors) ModelState.AddModelError("Register", error.Description);
 
-        // temp sol
+        // temp solution
         ViewBag.Errors = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList();
 
         return View(registerDto);
+    }
+
+    [HttpGet]
+    public IActionResult Login()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Login(LoginDto loginDto)
+    {
+        // TODO does not work
+        if (!ModelState.IsValid)
+        {
+            ViewBag.Errors = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList();
+            return View(loginDto);
+        }
+
+        var result = await _signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, false, false);
+
+        if (result.Succeeded)
+        {
+            return RedirectToAction(nameof(TestersController.Index), "Testers");
+        }
+        
+        ModelState.AddModelError("Login", "Invalid email or password");
+        
+        // temp solution
+        ViewBag.Errors = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList();
+        
+        return View(loginDto);
+    }
+
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        
+        return RedirectToAction(nameof(TestersController.Index), "Testers");
     }
 }
