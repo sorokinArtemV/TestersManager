@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using TestersManager.Core.Enums;
 
 namespace TestersManager.Core.DTO;
 
@@ -21,6 +22,9 @@ public class RegisterDto
     [DataType(DataType.Password)]
     [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
     public string ConfirmPassword { get; set; }
+
+    [Required(ErrorMessage = "User type is required")]
+    public UserTypeOptions UserType { get; set; } = UserTypeOptions.User;
 
     // [Required(ErrorMessage = "Phone number is required")]
     // [RegularExpression("^[0-9]*$", ErrorMessage = "Phone number can contain only numbers")]

@@ -34,6 +34,21 @@
             <input asp-for="ConfirmPassword">
             <span asp-validation-for="ConfirmPassword" class="form-validation-error"></span>
 
+            <!-- UserType -->
+            <label>User type</label>
+            <div class="radio-group">
+                <div class="radio-group__inner">
+                    @{
+                        var genders = Enum.GetNames(typeof(UserTypeOptions));
+                    }
+                    @foreach (var user in genders)
+                    {
+                        <input type="radio" asp-for="UserType" value="@user">
+                        <label for="@user">@user</label>
+                    }
+                </div>
+            </div>
+
             <button class="form-create__btn form-create__btn--blue" type="submit">Submit</button>
 
             @* @Html.ValidationMessage("Register") *@

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TestersManager.Core.Domain.IdentityEntities;
 using TestersManager.Core.DTO;
+using TestersManager.Core.Enums;
 
 namespace TestersManager.UI.Controllers;
 
@@ -12,12 +13,18 @@ public class AccountController : Controller
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly RoleManager<ApplicationRole> _roleManager;
+  
 
 
-    public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+    public AccountController(
+        UserManager<ApplicationUser> userManager, 
+        SignInManager<ApplicationUser> signInManager, 
+        RoleManager<ApplicationRole> roleManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _roleManager = roleManager;
     }
 
 
@@ -48,6 +55,26 @@ public class AccountController : Controller
 
         if (result.Succeeded)
         {
+            if (registerDto.UserType == UserTypeOptions.Admin)
+            {
+                if (await _roleManager.FindByNameAsync("Admin") is null)
+                {
+                    ApplicationRole applicationRole = new ApplicationRole()
+                    {
+                        Name = UserTypeOptions.Admin.ToString()
+                    };
+
+                    await _roleManager.CreateAsync(applicationRole);
+                }
+                
+                await _userManager.AddToRoleAsync(user, UserTypeOptions.Admin.ToString());
+            }
+            else
+            {
+                await _userManager.AddToRoleAsync(user, UserTypeOptions.User.ToString());
+
+            }
+            
             // Sign in
             await _signInManager.SignInAsync(user, false); // can create checkbox in front for this
 
