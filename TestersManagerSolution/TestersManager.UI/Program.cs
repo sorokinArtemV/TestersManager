@@ -32,11 +32,13 @@ app.UseHttpLogging();
 
 app.UseStaticFiles();
 
-// Reading identity cookie
-app.UseAuthentication(); // must be before routing
-
 // Identify method based route
 app.UseRouting();
+
+// Reading identity cookie
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 // Actions + filters
 app.MapControllers();

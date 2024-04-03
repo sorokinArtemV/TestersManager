@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -5,6 +6,7 @@ namespace TestersManager.UI.Controllers;
 
 public class HomeController : Controller
 {
+    [AllowAnonymous]
     [Route("Error")]
     public IActionResult Error()
     {

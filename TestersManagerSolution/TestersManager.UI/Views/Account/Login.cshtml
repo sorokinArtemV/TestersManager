@@ -12,7 +12,7 @@
             <h2 class="container-form-create__heading">Login</h2>
             <a asp-controller="Account" asp-action="Register" class="button button--secondary">Sign up</a>
         </div>
-        <form asp-controller="Account" asp-action="Login" class="form-create" method="post">
+        <form asp-controller="Account" asp-action="Login" asp-route-ReturnUrl="@Context.Request.Query["ReturnUrl"]" class="form-create" method="post">
 
             <!-- Email -->
             <label asp-for="Email">Email</label>

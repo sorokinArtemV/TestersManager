@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TestersManager.Core.Domain.IdentityEntities;
@@ -6,6 +7,7 @@ using TestersManager.Core.DTO;
 namespace TestersManager.UI.Controllers;
 
 [Route("[controller]/[action]")]
+[AllowAnonymous]
 public class AccountController : Controller
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
@@ -67,7 +69,7 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(LoginDto loginDto)
+    public async Task<IActionResult> Login(LoginDto loginDto, string? returnUrl)
     {
         // TODO does not work
         if (!ModelState.IsValid)
@@ -80,21 +82,29 @@ public class AccountController : Controller
 
         if (result.Succeeded)
         {
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)) return LocalRedirect(returnUrl);
             return RedirectToAction(nameof(TestersController.Index), "Testers");
         }
-        
+
         ModelState.AddModelError("Login", "Invalid email or password");
-        
+
         // temp solution
         ViewBag.Errors = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList();
-        
+
         return View(loginDto);
     }
 
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
-        
+
         return RedirectToAction(nameof(TestersController.Index), "Testers");
+    }
+
+    public async Task<IActionResult> IsEmailAlreadyRegistered(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        return user is null ? Json(true) : Json(false);
     }
 }
