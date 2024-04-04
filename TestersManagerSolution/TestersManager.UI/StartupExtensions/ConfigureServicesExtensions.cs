@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TestersManager.Core.Domain.IdentityEntities;
 using TestersManager.Core.Domain.RepositoryContracts;
@@ -25,6 +26,8 @@ public static class ConfigureServicesExtensions
         {
             options.Filters.Add(new ResponseHeaderActionFilter(logger)
                 { Key = "X-Custom-Key-Global", Value = "X-Custom-Value-Global", Order = 2 });
+
+            options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
         });
 
         services.AddDbContext<ApplicationDbContext>(options =>

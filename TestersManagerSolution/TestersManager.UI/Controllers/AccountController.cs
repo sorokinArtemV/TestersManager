@@ -72,13 +72,16 @@ public class AccountController : Controller
             }
             else
             {
-                var applicationRole = new ApplicationRole
+                if (registerDto.UserType == UserTypeOptions.User)
                 {
-                    Name = UserTypeOptions.User.ToString()
-                };
+                    var applicationRole = new ApplicationRole
+                    {
+                        Name = UserTypeOptions.User.ToString()
+                    };
 
-                await _roleManager.CreateAsync(applicationRole);
-                await _userManager.AddToRoleAsync(user, UserTypeOptions.User.ToString());
+                    await _roleManager.CreateAsync(applicationRole);
+                    await _userManager.AddToRoleAsync(user, UserTypeOptions.User.ToString());
+                }
             }
 
             // Sign in
@@ -141,6 +144,7 @@ public class AccountController : Controller
         return RedirectToAction(nameof(TestersController.Index), "Testers");
     }
 
+    [AllowAnonymous]
     public async Task<IActionResult> IsEmailAlreadyRegistered(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
