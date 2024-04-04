@@ -11,15 +11,14 @@ namespace TestersManager.UI.Controllers;
 [AllowAnonymous]
 public class AccountController : Controller
 {
+    private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly RoleManager<ApplicationRole> _roleManager;
-  
 
 
     public AccountController(
-        UserManager<ApplicationUser> userManager, 
-        SignInManager<ApplicationUser> signInManager, 
+        UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
         RoleManager<ApplicationRole> roleManager)
     {
         _userManager = userManager;
@@ -55,35 +54,31 @@ public class AccountController : Controller
 
         if (result.Succeeded)
         {
-            var neededUser = await _userManager.FindByEmailAsync(registerDto.Email);
-            if (neededUser is not null)
-            {
-                if (await _userManager.IsInRoleAsync(neededUser, UserTypeOptions.Admin.ToString()))
-                {
-                    return RedirectToAction("Index", "Home", new { area = "Admin" });
-                }
-            }
-            
             if (registerDto.UserType == UserTypeOptions.Admin)
             {
                 if (await _roleManager.FindByNameAsync("Admin") is null)
                 {
-                    ApplicationRole applicationRole = new ApplicationRole()
+                    var applicationRole = new ApplicationRole
                     {
                         Name = UserTypeOptions.Admin.ToString()
                     };
 
                     await _roleManager.CreateAsync(applicationRole);
                 }
-                
+
                 await _userManager.AddToRoleAsync(user, UserTypeOptions.Admin.ToString());
             }
             else
             {
-                await _userManager.AddToRoleAsync(user, UserTypeOptions.User.ToString());
+                var applicationRole = new ApplicationRole
+                {
+                    Name = UserTypeOptions.User.ToString()
+                };
 
+                await _roleManager.CreateAsync(applicationRole);
+                await _userManager.AddToRoleAsync(user, UserTypeOptions.User.ToString());
             }
-            
+
             // Sign in
             await _signInManager.SignInAsync(user, false); // can create checkbox in front for this
 
@@ -118,6 +113,11 @@ public class AccountController : Controller
 
         if (result.Succeeded)
         {
+            var neededUser = await _userManager.FindByEmailAsync(loginDto.Email);
+            if (neededUser is not null)
+                if (await _userManager.IsInRoleAsync(neededUser, UserTypeOptions.Admin.ToString()))
+                    return RedirectToAction("Index", "Home", new { area = "Admin" });
+
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)) return LocalRedirect(returnUrl);
             return RedirectToAction(nameof(TestersController.Index), "Testers");
         }

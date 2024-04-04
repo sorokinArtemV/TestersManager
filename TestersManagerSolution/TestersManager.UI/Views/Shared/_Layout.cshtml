@@ -44,6 +44,12 @@
                     <li>
                         <a asp-controller="Testers" asp-action="TestersCsv" class="navbar__link">Download CSV</a>
                     </li>
+                    if (User.IsInRole("Admin"))
+                    {
+                        <li>
+                            <a asp-controller="Home" asp-action="Index" class="navbar__link" asp-area="Admin">Admin</a>
+                        </li>
+                    }
                     <li>
                         Welcome,&nbsp;@User.Identity?.Name
                     </li>
