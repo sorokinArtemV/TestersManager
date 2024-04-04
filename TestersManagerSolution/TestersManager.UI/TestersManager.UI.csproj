@@ -103,8 +103,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Areas\AdminArea\Models\" />
-      <Folder Include="Areas\AdminArea\Views\" />
+      <Folder Include="Areas\Admin\Models\" />
       <Folder Include="logs\" />
     </ItemGroup>
 </Project>

@@ -43,11 +43,20 @@ app.UseAuthorization();
 // Actions + filters
 app.MapControllers();
 
+#pragma warning disable ASP0014
+app.UseEndpoints(endpoints =>
+{
+    // Admin/Home/Index
+    endpoints.MapControllerRoute("areas", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+});
 
 app.Run();
 
 
 // makes program class available for testing -
-public partial class Program
+namespace TestersManager.UI
 {
+    public partial class Program
+    {
+    }
 }

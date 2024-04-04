@@ -55,6 +55,15 @@ public class AccountController : Controller
 
         if (result.Succeeded)
         {
+            var neededUser = await _userManager.FindByEmailAsync(registerDto.Email);
+            if (neededUser is not null)
+            {
+                if (await _userManager.IsInRoleAsync(neededUser, UserTypeOptions.Admin.ToString()))
+                {
+                    return RedirectToAction("Index", "Home", new { area = "Admin" });
+                }
+            }
+            
             if (registerDto.UserType == UserTypeOptions.Admin)
             {
                 if (await _roleManager.FindByNameAsync("Admin") is null)
