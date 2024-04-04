@@ -27,6 +27,11 @@ else
     app.UseExceptionHandlingMiddleware();
 }
 
+// first
+app.UseHsts();
+
+// then after
+app.UseHttpsRedirection();
 
 app.UseHttpLogging();
 
