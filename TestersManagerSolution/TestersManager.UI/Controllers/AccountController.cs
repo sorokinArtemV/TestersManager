@@ -8,7 +8,7 @@ using TestersManager.Core.Enums;
 namespace TestersManager.UI.Controllers;
 
 [Route("[controller]/[action]")]
-[AllowAnonymous]
+// [AllowAnonymous]
 public class AccountController : Controller
 {
     private readonly RoleManager<ApplicationRole> _roleManager;
@@ -28,12 +28,14 @@ public class AccountController : Controller
 
 
     [HttpGet]
+    [Authorize("NotAuthorized")]
     public IActionResult Register()
     {
         return View();
     }
 
     [HttpPost]
+    [Authorize("NotAuthorized")]
     public async Task<IActionResult> Register(RegisterDto registerDto)
     {
         // TODO does not work for password
@@ -94,12 +96,14 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    [Authorize("NotAuthorized")]
     public IActionResult Login()
     {
         return View();
     }
 
     [HttpPost]
+    [Authorize("NotAuthorized")]
     public async Task<IActionResult> Login(LoginDto loginDto, string? returnUrl)
     {
         // TODO does not work

@@ -48,6 +48,11 @@ public static class ConfigureServicesExtensions
         services.AddAuthorization(options =>
         {
             options.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+
+            options.AddPolicy("NotAuthorized", policy =>
+            {
+                policy.RequireAssertion( context => context.User.Identity?.IsAuthenticated == false);
+            });
         });
 
         services.ConfigureApplicationCookie(options => { options.LoginPath = "/Account/Login"; });
